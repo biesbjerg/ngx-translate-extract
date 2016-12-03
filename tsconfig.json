@@ -1,0 +1,17 @@
+{
+    "compilerOptions": {
+        "allowSyntheticDefaultImports": true,
+        "experimentalDecorators": true,
+        "target": "ES6",
+        "module": "commonjs",
+        "outDir": "./dist/",
+        "sourceMap": true,
+        "declaration": true,
+        "removeComments": true,
+        "forceConsistentCasingInFileNames": true
+    },
+    "exclude": [
+        "dist",
+        "node_modules"
+    ]
+}

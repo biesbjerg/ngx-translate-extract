@@ -1,0 +1,37 @@
+{
+  "name": "ng2-translate-extract",
+  "version": "0.1.0",
+  "description": "Extract strings",
+  "main": "dist/index.js",
+  "typings": "dist/index.d.ts",
+  "scripts": {
+    "build": "tsc",
+    "watch": "tsc -w",
+    "postinstall": "npm run build"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/biesbjerg/ng2-translate-extract.git"
+  },
+  "keywords": [],
+  "author": "Kim Biesbjerg <kim@biesbjerg.com>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/biesbjerg/ng2-translate-extract/issues"
+  },
+  "homepage": "https://github.com/biesbjerg/ng2-translate-extract",
+  "engines": {
+    "node": ">=4.1.1"
+  },
+  "devDependencies": {
+    "typescript": "~2.0.10"
+  },
+  "config": {},
+  "dependencies": {
+    "@types/glob": "^5.0.30",
+    "@types/lodash": "^4.14.41",
+    "fs": "0.0.1-security",
+    "glob": "^7.1.1",
+    "lodash": "^4.17.2"
+  }
+}
