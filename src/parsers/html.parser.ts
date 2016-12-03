@@ -3,8 +3,8 @@ import { ParserInterface } from './parser.interface';
 export class HtmlParser implements ParserInterface {
 
 	public patterns = {
-		PipeSingleQuote: '{{\\s*\'((?:\\\\.|[^\'\\\\])*)\'\\s*\\|\\s*translate(:.*?)?\\s*}}',
-		PipeDoubleQuote: '{{\\s*"((?:\\\\.|[^"\\\\])*)"\\s*\\|\\s*translate(:.*?)?\\s*}}'
+		PipeSingleQuote: '\'((?:\\\\.|[^\'\\\\])*)\'\\s*\\|\\s*translate(:.*?)?',
+		PipeDoubleQuote: '"((?:\\\\.|[^"\\\\])*)"\\s*\\|\\s*translate(:.*?)?'
 	}
 
 	public process(contents: string): string[] {
