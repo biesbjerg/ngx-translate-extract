@@ -1,0 +1,1 @@
+# ng2-translate-extract
