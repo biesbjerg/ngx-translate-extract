@@ -17,7 +17,7 @@ export class TypescriptParser implements ParserInterface {
 
 		for (let patternName in this.patterns) {
 			const regExp = this._createRegExp(patternName, {
-				TRANSLATE_SERVICE: translateServiceVar
+				'TRANSLATE_SERVICE': translateServiceVar
 			});
 
 			let matches;
@@ -42,7 +42,7 @@ export class TypescriptParser implements ParserInterface {
 			pattern = pattern.replace('{{' + key + '}}', replaceVars[key]);
 		});
 
-		return new RegExp(pattern, 'gi');
+		return new RegExp(pattern, 'g');
 	}
 
 	/**

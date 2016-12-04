@@ -4,9 +4,9 @@ import { TypescriptParser } from './parsers/typescript.parser';
 import { SerializerInterface } from './serializers/serializer.interface';
 import { PotSerializer } from './serializers/pot.serializer';
 
-import { uniq as arrayUnique } from 'lodash';
-import { sync as readDir } from 'glob';
-import { readFileSync as readFile, writeFileSync as writeFile } from 'fs';
+import * as lodash from 'lodash';
+import * as glob from 'glob';
+import * as fs from 'fs';
 
 export interface TypeParserMap {
 	[ext: string]: ParserInterface
@@ -14,29 +14,36 @@ export interface TypeParserMap {
 
 export class Extractor {
 
-	public messages: string[] = [];
-
 	public parsers: TypeParserMap = {
 		html: new HtmlParser(),
 		ts: new TypescriptParser()
 	};
+
+	public globPatterns: string[] = [
+		'/**/*.ts',
+		'/**/*.html'
+	];
+
+	public messages: string[] = [];
 
 	public constructor(public serializer: SerializerInterface) { }
 
 	/**
 	 * Extracts messages from paths
 	 */
-	public extract(paths: string[]): string[] {
+	public extract(dir: string): string[] {
 		let messages = [];
-		paths.forEach(path => {
-			const filePaths = readDir(path);
-			filePaths.forEach(filePath => {
-				const result = this._extractMessages(filePath);
-				messages = [...messages, ...result];
-			});
+		this.globPatterns.forEach(globPattern => {
+			const filePaths = glob.sync(dir + globPattern);
+			filePaths
+				.filter(filePath => fs.statSync(filePath).isFile())
+				.forEach(filePath => {
+					const result = this._extractMessages(filePath);
+					messages = [...messages, ...result];
+				});
 		});
 
-		return this.messages = arrayUnique(messages);
+		return this.messages = lodash.uniq(messages);
 	}
 
 	/**
@@ -51,7 +58,7 @@ export class Extractor {
 	 */
 	public save(destination: string): string {
 		const data = this.serialize();
-		writeFile(destination, data);
+		fs.writeFileSync(destination, data);
 
 		return data;
 	}
@@ -65,7 +72,7 @@ export class Extractor {
 			return [];
 		}
 
-		const contents: string = readFile(filePath).toString();
+		const contents: string = fs.readFileSync(filePath, 'utf-8');
 		const parser: ParserInterface = this.parsers[ext];
 
 		return parser.process(contents);

@@ -13,6 +13,7 @@ export class PotSerializer implements SerializerInterface {
 		this._reset();
 		this._addHeader(this._headers);
 		this._addMessages(messages);
+
 		return this._buffer.join('\n');
 	}
 
