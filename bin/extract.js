@@ -39,7 +39,7 @@ try {
 		extractor.save(destination);
 		cli.ok(`Extracted ${messages.length} strings: '${destination}'`);
 	} else {
-		cli.info(`Found no strings extractable strings in the provided path: '${options.dir}'`);
+		cli.info(`Found no extractable strings in the supplied directory path: '${options.dir}'`);
 	}
 } catch (e) {
 	cli.fatal(e.toString());
