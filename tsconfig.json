@@ -1,17 +1,16 @@
 {
     "compilerOptions": {
         "allowSyntheticDefaultImports": true,
-        "experimentalDecorators": true,
+        "declaration": true,
         "target": "ES6",
         "module": "commonjs",
         "outDir": "./dist/",
-        "sourceMap": true,
-        "declaration": true,
-        "removeComments": true,
-        "forceConsistentCasingInFileNames": true
+        "sourceMap": true
     },
+    "include": [
+        "src/**/*.ts"
+    ],
     "exclude": [
-        "dist",
         "node_modules"
     ]
 }
