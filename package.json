@@ -4,9 +4,17 @@
   "description": "Extract strings",
   "main": "dist/index.js",
   "typings": "dist/index.d.ts",
+  "files": [
+    "bin/",
+    "dist/"
+  ],
+  "bin": {
+    "ng2-translate-extract": "bin/extract.js"
+  },
   "scripts": {
-    "build": "tsc",
-    "watch": "tsc -w",
+    "build": "npm run clean && tsc",
+    "watch": "npm run clean && tsc --watch",
+    "clean": "rm -rf ./dist",
     "postinstall": "npm run build"
   },
   "repository": {
@@ -21,17 +29,19 @@
   },
   "homepage": "https://github.com/biesbjerg/ng2-translate-extract",
   "engines": {
-    "node": ">=4.1.1"
+    "node": ">=6.9.0"
   },
+  "config": {},
   "devDependencies": {
     "typescript": "~2.0.10"
   },
-  "config": {},
   "dependencies": {
     "@types/glob": "^5.0.30",
     "@types/lodash": "^4.14.41",
+    "cli": "^1.0.1",
     "fs": "0.0.1-security",
     "glob": "^7.1.1",
-    "lodash": "^4.17.2"
+    "lodash": "^4.17.2",
+    "path": "^0.12.7"
   }
 }

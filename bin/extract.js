@@ -1,0 +1,46 @@
+#! /usr/bin/env node
+
+var cli = require('cli');
+var fs = require('fs');
+var path = require('path');
+
+var Extractor = require('../dist/extractor').Extractor;
+var JsonSerializer = require('../dist/serializers/json.serializer').JsonSerializer;
+var PotSerializer = require('../dist/serializers/pot.serializer').PotSerializer;
+
+var options = cli.parse({
+	dir: ['d', 'Directory path you would like to extract strings from', 'dir', process.env.PWD],
+	output: ['o', 'Directory path you would like to save extracted strings', 'dir', process.env.PWD],
+	format: ['f', 'Output format', ['json', 'pot'], 'json']
+});
+
+[options.dir, options.output].forEach(dir => {
+	if (!fs.existsSync(dir)) {
+		cli.fatal('The directory path you supplied was not found: ' + dir);
+	}
+});
+
+switch (options.format) {
+	case 'pot':
+		var serializer = new PotSerializer();
+		break;
+	case 'json':
+		var serializer = new JsonSerializer();
+		break;
+}
+
+var filename = 'template.' + options.format;
+var destination = path.join(options.output, filename);
+
+try {
+	var extractor = new Extractor(serializer);
+	var messages = extractor.extract(options.dir);
+	if (messages.length > 0) {
+		extractor.save(destination);
+		cli.ok(`Extracted ${messages.length} strings: '${destination}'`);
+	} else {
+		cli.info(`Found no strings extractable strings in the provided path: '${options.dir}'`);
+	}
+} catch (e) {
+	cli.fatal(e.toString());
+}
