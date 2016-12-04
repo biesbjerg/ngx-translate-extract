@@ -6,7 +6,7 @@ Extract strings from projects using ng2-translate to json or pot files.
 ## Usage
 If you only need to extract strings from one project, you can install the package locally:
 
-`npm install ng2-translate-extract --save-dev`
+`npm install @biesbjerg/ng2-translate-extract --save-dev`
 
 Add the following `extract` script your project's `package.json`:
 ```
@@ -16,12 +16,12 @@ Add the following `extract` script your project's `package.json`:
 ```
 You can now run `npm run extract` to extract strings from your project's `src` dir. The extracted strings are saved in `JSON`-format in your project's root.
 
-Modify the scripts arguments as required. 
+Modify the scripts arguments as required.
 
 ## Global install
 You can also install the package globally:
 
-`npm install ng2-translate-extract -g`
+`npm install @biesbjerg/ng2-translate-extract -g`
 
 Now you can execute the script from everywhere:
 

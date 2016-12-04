@@ -1,6 +1,6 @@
 {
   "name": "@biesbjerg/ng2-translate-extract",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Extract strings from projects using ng2-translate",
   "main": "dist/index.js",
   "typings": "dist/index.d.ts",
@@ -14,8 +14,7 @@
   "scripts": {
     "build": "npm run clean && tsc",
     "watch": "npm run clean && tsc --watch",
-    "clean": "rm -rf ./dist",
-    "postinstall": "npm run build"
+    "clean": "rm -rf ./dist"
   },
   "repository": {
     "type": "git",
