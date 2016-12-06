@@ -37,6 +37,7 @@
   "dependencies": {
     "@types/glob": "^5.0.30",
     "@types/lodash": "^4.14.41",
+    "cheerio": "~0.22.0",
     "cli": "^1.0.1",
     "fs": "0.0.1-security",
     "glob": "^7.1.1",

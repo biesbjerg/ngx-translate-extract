@@ -1,23 +1,20 @@
 import { ParserInterface } from './parsers/parser.interface';
-import { HtmlParser } from './parsers/html.parser';
-import { TypescriptParser } from './parsers/typescript.parser';
+import { PipeParser } from './parsers/pipe.parser';
+import { DirectiveParser } from "./parsers/directive.parser";
+import { ServiceParser } from './parsers/service.parser';
 import { SerializerInterface } from './serializers/serializer.interface';
-import { PotSerializer } from './serializers/pot.serializer';
 
 import * as lodash from 'lodash';
 import * as glob from 'glob';
 import * as fs from 'fs';
 
-export interface TypeParserMap {
-	[ext: string]: ParserInterface
-}
-
 export class Extractor {
 
-	public parsers: TypeParserMap = {
-		html: new HtmlParser(),
-		ts: new TypescriptParser()
-	};
+	public parsers: ParserInterface[] = [
+		new PipeParser(),
+		new ServiceParser(),
+		new DirectiveParser()
+	];
 
 	public globPatterns: string[] = [
 		'/**/*.ts',
@@ -67,15 +64,14 @@ export class Extractor {
 	 * Extract messages from file using specialized parser
 	 */
 	protected _extractMessages(filePath: string): string[] {
-		const ext: string = filePath.split('.').pop();
-		if (!this.parsers.hasOwnProperty(ext)) {
-			return [];
-		}
+		let results = [];
 
 		const contents: string = fs.readFileSync(filePath, 'utf-8');
-		const parser: ParserInterface = this.parsers[ext];
+		this.parsers.forEach((parser: ParserInterface) => {
+			results = results.concat(parser.process(contents));
+		});
 
-		return parser.process(contents);
+		return results;
 	}
 
 }
