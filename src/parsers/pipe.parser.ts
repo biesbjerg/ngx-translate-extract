@@ -1,11 +1,10 @@
 import { ParserInterface } from './parser.interface';
 
-export class HtmlParser implements ParserInterface {
+export class PipeParser implements ParserInterface {
 
 	public patterns = {
-		PipeSingleQuote: '\'((?:\\\\.|[^\'\\\\])*)\'\\s*\\|\\s*translate(:.*?)?',
-		PipeDoubleQuote: '"((?:\\\\.|[^"\\\\])*)"\\s*\\|\\s*translate(:.*?)?'
-	}
+		pipe: `(['"\`])([^\\1\\r\\n]*)\\1\\s+\\|\\s*translate(:.*?)?`
+	};
 
 	public process(contents: string): string[] {
 		let results: string[] = [];
@@ -15,7 +14,7 @@ export class HtmlParser implements ParserInterface {
 
 			let matches;
 			while (matches = regExp.exec(contents)) {
-				results.push(matches[1]);
+				results.push(matches[2]);
 			}
 		}
 
