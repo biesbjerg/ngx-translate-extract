@@ -16,8 +16,8 @@ export class DirectiveParser extends AbstractTemplateParser implements ParserInt
 		let results: string[] = [];
 
 		template = this._normalizeTemplateAttributes(template);
-
-		$(template).find('[translate]')
+		$(template)
+			.find('[translate]')
 			.each((i: number, element: CheerioElement) => {
 				const $element = $(element);
 				const attr = $element.attr('translate');
