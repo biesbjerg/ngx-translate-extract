@@ -12,7 +12,8 @@ var options = cli.parse({
 	dir: ['d', 'Directory path you would like to extract strings from', 'dir', process.env.PWD],
 	output: ['o', 'Directory path you would like to save extracted strings', 'dir', process.env.PWD],
 	format: ['f', 'Output format', ['json', 'pot'], 'json'],
-	merge: ['m', 'Merge options, true to merge, false to replace, clean to remove unused keys while merging', [true, false, 'clean'], true]
+	replace: ['r', 'Replace the content of the file if it exists (merging by default)'],
+	clean: ['c', 'Remove unused keys when merging'],
 });
 
 [options.dir, options.output].forEach(dir => {
@@ -37,7 +38,7 @@ try {
 	var extractor = new Extractor(serializer);
 	var messages = extractor.extract(options.dir);
 	if (messages.length > 0) {
-		extractor.save(destination, options.merge);
+		extractor.save(destination, options.replace, options.clean);
 		cli.ok(`Extracted ${messages.length} strings: '${destination}'`);
 	} else {
 		cli.info(`Found no extractable strings in the supplied directory path: '${options.dir}'`);

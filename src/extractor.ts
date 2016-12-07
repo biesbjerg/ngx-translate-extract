@@ -57,14 +57,14 @@ export class Extractor {
 	/**
 	 * Serialize and save to destination
 	 */
-	public save(destination: string, merge: boolean | 'clean' = true): string {
+	public save(destination: string, replace: boolean = false, clean: boolean = true): string {
 		let extractedData = this._prepareMessages(this.messages),
 			output: string;
 
-		if (merge && fs.existsSync(destination)) {
+		if (!replace && fs.existsSync(destination)) {
 			const fileData = this.parse(fs.readFileSync(destination, 'utf8'));
 
-			extractedData = this._merge(fileData, extractedData, merge);
+			extractedData = this._merge(fileData, extractedData, clean);
 		}
 
 		output = this.serialize(extractedData);
@@ -82,8 +82,8 @@ export class Extractor {
 		return result;
 	}
 
-	protected _merge(fileData: {[key: string]: string}, extractedData: {[key: string]: string}, merge: boolean | 'clean'): {[key: string]: string} {
-		if (merge === 'clean') {
+	protected _merge(fileData: {[key: string]: string}, extractedData: {[key: string]: string}, clean: boolean = true): {[key: string]: string} {
+		if (clean) {
 			let existingKeys: string[] = lodash.keys(extractedData);
 			let pickedExisting = lodash.pick(fileData, existingKeys);
 			return <{[key: string]: string}>lodash.defaultsDeep(pickedExisting, extractedData);

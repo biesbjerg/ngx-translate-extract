@@ -22,7 +22,6 @@ export class DirectiveParser extends AbstractTemplateParser implements ParserInt
 			.find('[translate],[ng2-translate]')
 			.contents() // get child nodes
 			.filter(function() { // only keep text nodes
-				console.log(this.data);
 				return this.nodeType === 3; // node type 3 = text node
 			}).each((i: number, element: CheerioElement) => {
 			const $element = $(element);
