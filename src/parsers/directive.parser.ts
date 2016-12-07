@@ -22,7 +22,7 @@ export class DirectiveParser extends AbstractTemplateParser implements ParserInt
 			.each((i: number, element: CheerioElement) => {
 				const $element = $(element);
 				const attr = $element.attr('translate');
-				const text = $element.text().trim();
+				const text = $element.html().trim();
 
 				if (attr) {
 					results.push(attr);
