@@ -1,6 +1,5 @@
 import { Extractor } from './extractor';
 import { JsonSerializer } from './serializers/json.serializer';
-import { PotSerializer } from './serializers/pot.serializer';
 
 const dir = '/path/to/extract/strings/from';
 const dest = '/path/to/save/template/to/template.pot';
