@@ -1,21 +1,24 @@
 import { ParserInterface } from './parser.interface';
+import { AbstractTemplateParser } from './abstract-template.parser';
 
-export class PipeParser implements ParserInterface {
+export class PipeParser extends AbstractTemplateParser implements ParserInterface {
 
-	public patterns = {
-		pipe: `(['"\`])([^\\1\\r\\n]*)\\1\\s+\\|\\s*translate(:.*?)?`
-	};
+	public process(filePath: string, contents: string): string[] {
+		if (this._isAngularComponent(filePath)) {
+			contents = this._extractInlineTemplate(contents);
+		}
 
-	public process(contents: string): string[] {
+		return this._parseTemplate(contents);
+	}
+
+	protected _parseTemplate(template: string): string[] {
 		let results: string[] = [];
 
-		for (let patternName in this.patterns) {
-			const regExp = new RegExp(this.patterns[patternName], 'g');
+		const regExp = new RegExp('([\'"`])([^\\1\\r\\n]*)\\1\\s+\\|\\s*translate(:.*?)?', 'g');
 
-			let matches;
-			while (matches = regExp.exec(contents)) {
-				results.push(matches[2]);
-			}
+		let matches;
+		while (matches = regExp.exec(template)) {
+			results.push(matches[2]);
 		}
 
 		return results;
