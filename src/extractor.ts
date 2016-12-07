@@ -2,7 +2,7 @@ import { ParserInterface } from './parsers/parser.interface';
 import { PipeParser } from './parsers/pipe.parser';
 import { DirectiveParser } from './parsers/directive.parser';
 import { ServiceParser } from './parsers/service.parser';
-import { SerializerInterface } from './serializers/serializer.interface';
+import { SerializerInterface, MessageType } from './serializers/serializer.interface';
 
 import * as lodash from 'lodash';
 import * as glob from 'glob';
@@ -43,14 +43,14 @@ export class Extractor {
 	/**
 	 * Serialize and return output
 	 */
-	public serialize(messages: {[key: string]: string}): string {
+	public serialize(messages: MessageType): string {
 		return this.serializer.serialize(messages);
 	}
 
 	/**
 	 * Parse the content of a file and return output as an object
 	 */
-	public parse(contents: string): {[key: string]: string} {
+	public parse(contents: string): MessageType {
 		return this.serializer.parse(contents);
 	}
 
@@ -72,7 +72,7 @@ export class Extractor {
 		return output;
 	}
 
-	protected _prepareMessages(messages: string[]): {[key: string]: string} {
+	protected _prepareMessages(messages: string[]): MessageType {
 		let result = {};
 
 		messages.forEach(message => {
@@ -82,13 +82,13 @@ export class Extractor {
 		return result;
 	}
 
-	protected _merge(fileData: {[key: string]: string}, extractedData: {[key: string]: string}, clean: boolean = true): {[key: string]: string} {
+	protected _merge(fileData: MessageType, extractedData: MessageType, clean: boolean = true): MessageType {
 		if (clean) {
 			let existingKeys: string[] = lodash.keys(extractedData);
 			let pickedExisting = lodash.pick(fileData, existingKeys);
-			return <{[key: string]: string}>lodash.defaultsDeep(pickedExisting, extractedData);
+			return <MessageType>lodash.defaultsDeep(pickedExisting, extractedData);
 		} else {
-			return <{[key: string]: string}>lodash.defaultsDeep(fileData, extractedData);
+			return <MessageType>lodash.defaultsDeep(fileData, extractedData);
 		}
 	}
 

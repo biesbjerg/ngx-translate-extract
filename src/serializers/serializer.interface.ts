@@ -1,6 +1,8 @@
+export type MessageType = { [key: string]: string };
+
 export interface SerializerInterface {
 
-	serialize(messages: {[key: string]: string}): string;
-	parse(contents: string): {[key: string]: string};
+	serialize(messages: MessageType): string;
+	parse(contents: string): MessageType;
 
 }

@@ -1,4 +1,4 @@
-import { SerializerInterface } from './serializer.interface';
+import { SerializerInterface, MessageType } from './serializer.interface';
 import * as po2json from 'po2json';
 
 export class PotSerializer implements SerializerInterface {
@@ -10,7 +10,7 @@ export class PotSerializer implements SerializerInterface {
 
 	protected _buffer: string[] = [];
 
-	public serialize(messages: {[key: string]: string}): string {
+	public serialize(messages: MessageType): string {
 		this._reset();
 		this._addHeader(this._headers);
 		this._addMessages(messages);
@@ -18,7 +18,7 @@ export class PotSerializer implements SerializerInterface {
 		return this._buffer.join('\n');
 	}
 
-	public parse(contents: string): {[key: string]: string} {
+	public parse(contents: string): MessageType {
 		return po2json.parse(contents, {format: 'mf'});
 	}
 
@@ -30,7 +30,7 @@ export class PotSerializer implements SerializerInterface {
 		});
 	}
 
-	protected _addMessages(messages: {[key: string]: string}): void {
+	protected _addMessages(messages: MessageType): void {
 		Object.keys(messages).forEach((key: string) => {
 			this._add('msgid', key);
 			this._add('msgstr', messages[key]);
