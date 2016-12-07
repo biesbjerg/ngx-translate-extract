@@ -32,9 +32,12 @@ Usage:
   ng2-translate-extract [OPTIONS] [ARGS]
 
 Options:
-  -d, --dir [DIR]        Directory path you would like to extract strings from  (Default is /Users/kim/ionic/ng2-translate-extract/bin)
-  -o, --output [DIR]     Directory path you would like to save extracted
-                         strings  (Default is /Users/kim/ionic/ng2-translate-extract/bin)
+  -d, --dir DIR          Directory path you would like to extract strings from
+  -o, --output DIR       Directory path you would like to save extracted
+                         strings
   -f, --format [VALUE]   Output format. VALUE must be either [json|pot]  (Default is json)
-  -h, --help             Display help and usage details
+  -m, --merge [VALUE]    Merge options, true to merge, false to replace, clean
+                         to remove unused keys while merging. VALUE must be
+                         either [true|false|clean]  (Default is true)
+  -h, --help             Display help and usage details
 ```

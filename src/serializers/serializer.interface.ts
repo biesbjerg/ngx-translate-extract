@@ -1,5 +1,6 @@
 export interface SerializerInterface {
 
-	serialize(messages: string[]): string;
+	serialize(messages: {[key: string]: string}): string;
+	parse(contents: string): {[key: string]: string};
 
 }

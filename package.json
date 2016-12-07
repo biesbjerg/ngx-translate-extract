@@ -1,6 +1,6 @@
 {
   "name": "@biesbjerg/ng2-translate-extract",
-  "version": "0.2.1",
+  "version": "0.2.2",
   "description": "Extract strings from projects using ng2-translate",
   "main": "dist/index.js",
   "typings": "dist/index.d.ts",
@@ -54,6 +54,7 @@
     "fs": "0.0.1-security",
     "glob": "^7.1.1",
     "lodash": "^4.17.2",
-    "path": "^0.12.7"
+    "path": "^0.12.7",
+    "po2json": "~0.4.5"
   }
 }

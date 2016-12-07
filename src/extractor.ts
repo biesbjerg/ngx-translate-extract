@@ -1,6 +1,6 @@
 import { ParserInterface } from './parsers/parser.interface';
 import { PipeParser } from './parsers/pipe.parser';
-import { DirectiveParser } from "./parsers/directive.parser";
+import { DirectiveParser } from './parsers/directive.parser';
 import { ServiceParser } from './parsers/service.parser';
 import { SerializerInterface } from './serializers/serializer.interface';
 
@@ -18,7 +18,8 @@ export class Extractor {
 
 	public globPatterns: string[] = [
 		'/**/*.html',
-		'/**/*.ts'
+		'/**/*.ts',
+		'/**/*.js'
 	];
 
 	public messages: string[] = [];
@@ -42,17 +43,53 @@ export class Extractor {
 	/**
 	 * Serialize and return output
 	 */
-	public serialize(): string {
-		return this.serializer.serialize(this.messages);
+	public serialize(messages: {[key: string]: string}): string {
+		return this.serializer.serialize(messages);
+	}
+
+	/**
+	 * Parse the content of a file and return output as an object
+	 */
+	public parse(contents: string): {[key: string]: string} {
+		return this.serializer.parse(contents);
 	}
 
 	/**
 	 * Serialize and save to destination
 	 */
-	public save(destination: string): string {
-		const data = this.serialize();
-		fs.writeFileSync(destination, data);
-		return data;
+	public save(destination: string, merge: boolean | 'clean' = true): string {
+		let extractedData = this._prepareMessages(this.messages),
+			output: string;
+
+		if (merge && fs.existsSync(destination)) {
+			const fileData = this.parse(fs.readFileSync(destination, 'utf8'));
+
+			extractedData = this._merge(fileData, extractedData, merge);
+		}
+
+		output = this.serialize(extractedData);
+		fs.writeFileSync(destination, output);
+		return output;
+	}
+
+	protected _prepareMessages(messages: string[]): {[key: string]: string} {
+		let result = {};
+
+		messages.forEach(message => {
+			result[message] = '';
+		});
+
+		return result;
+	}
+
+	protected _merge(fileData: {[key: string]: string}, extractedData: {[key: string]: string}, merge: boolean | 'clean'): {[key: string]: string} {
+		if (merge === 'clean') {
+			let existingKeys: string[] = lodash.keys(extractedData);
+			let pickedExisting = lodash.pick(fileData, existingKeys);
+			return <{[key: string]: string}>lodash.defaultsDeep(pickedExisting, extractedData);
+		} else {
+			return <{[key: string]: string}>lodash.defaultsDeep(fileData, extractedData);
+		}
 	}
 
 	/**
