@@ -1,5 +1,6 @@
 import { ParserInterface } from './parser.interface';
 import { AbstractTemplateParser } from './abstract-template.parser';
+
 import * as $ from 'cheerio';
 
 export class DirectiveParser extends AbstractTemplateParser implements ParserInterface {

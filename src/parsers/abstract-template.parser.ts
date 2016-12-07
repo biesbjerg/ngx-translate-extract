@@ -26,7 +26,7 @@ export abstract class AbstractTemplateParser {
 	 * This method replaces `[attr]="'val'""` with `attr="val"`
 	 */
 	protected _normalizeTemplateAttributes(template: string): string {
-		return template.replace(/\[([^\]]+)\]="'([^\"]*)'"/g, '$1="$2"');
+		return template.replace(/\[([^\]]+)\]="'([^']*)'"/g, '$1="$2"');
 	}
 
 }

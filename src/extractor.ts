@@ -18,7 +18,8 @@ export class Extractor {
 
 	public globPatterns: string[] = [
 		'/**/*.html',
-		'/**/*.ts'
+		'/**/*.ts',
+		'/**/*.js'
 	];
 
 	public messages: string[] = [];
