@@ -14,7 +14,8 @@
   "scripts": {
     "build": "npm run clean && tsc",
     "watch": "npm run clean && tsc --watch",
-    "clean": "rm -rf ./dist"
+    "clean": "rm -rf ./dist",
+    "lint": "tslint --force './src/**/*.ts'"
   },
   "repository": {
     "type": "git",
@@ -40,11 +41,14 @@
   },
   "config": {},
   "devDependencies": {
-    "typescript": "~2.0.10"
-  },
-  "dependencies": {
+    "@types/cheerio": "^0.17.31",
     "@types/glob": "^5.0.30",
     "@types/lodash": "^4.14.41",
+    "tslint": "^4.0.2",
+    "tslint-eslint-rules": "^3.1.0",
+    "typescript": "^2.0.10"
+  },
+  "dependencies": {
     "cheerio": "~0.22.0",
     "cli": "^1.0.1",
     "fs": "0.0.1-security",

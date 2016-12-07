@@ -1,6 +1,7 @@
 {
     "compilerOptions": {
         "allowSyntheticDefaultImports": true,
+        "noUnusedLocals": true,
         "declaration": true,
         "target": "ES6",
         "module": "commonjs",
