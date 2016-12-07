@@ -36,8 +36,8 @@ Options:
   -o, --output DIR       Directory path you would like to save extracted
                          strings
   -f, --format [VALUE]   Output format. VALUE must be either [json|pot]  (Default is json)
-  -m, --merge [VALUE]    Merge options, true to merge, false to replace, clean
-                         to remove unused keys while merging. VALUE must be
-                         either [true|false|clean]  (Default is true)
+  -r, --replace BOOLEAN  Replace the content of the file if it exists (merging
+                         by default)
+  -c, --clean BOOLEAN    Remove unused keys when merging
   -h, --help             Display help and usage details
 ```
