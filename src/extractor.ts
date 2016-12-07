@@ -2,7 +2,7 @@ import { ParserInterface } from './parsers/parser.interface';
 import { PipeParser } from './parsers/pipe.parser';
 import { DirectiveParser } from './parsers/directive.parser';
 import { ServiceParser } from './parsers/service.parser';
-import { SerializerInterface } from './serializers/serializer.interface';
+import { SerializerInterface, MessageType } from './serializers/serializer.interface';
 
 import * as lodash from 'lodash';
 import * as glob from 'glob';
@@ -43,17 +43,53 @@ export class Extractor {
 	/**
 	 * Serialize and return output
 	 */
-	public serialize(): string {
-		return this.serializer.serialize(this.messages);
+	public serialize(messages: MessageType): string {
+		return this.serializer.serialize(messages);
+	}
+
+	/**
+	 * Parse the content of a file and return output as an object
+	 */
+	public parse(contents: string): MessageType {
+		return this.serializer.parse(contents);
 	}
 
 	/**
 	 * Serialize and save to destination
 	 */
-	public save(destination: string): string {
-		const data = this.serialize();
-		fs.writeFileSync(destination, data);
-		return data;
+	public save(destination: string, replace: boolean = false, clean: boolean = true): string {
+		let extractedData = this._prepareMessages(this.messages),
+			output: string;
+
+		if (!replace && fs.existsSync(destination)) {
+			const fileData = this.parse(fs.readFileSync(destination, 'utf8'));
+
+			extractedData = this._merge(fileData, extractedData, clean);
+		}
+
+		output = this.serialize(extractedData);
+		fs.writeFileSync(destination, output);
+		return output;
+	}
+
+	protected _prepareMessages(messages: string[]): MessageType {
+		let result = {};
+
+		messages.forEach(message => {
+			result[message] = '';
+		});
+
+		return result;
+	}
+
+	protected _merge(fileData: MessageType, extractedData: MessageType, clean: boolean = true): MessageType {
+		if (clean) {
+			let existingKeys: string[] = lodash.keys(extractedData);
+			let pickedExisting = lodash.pick(fileData, existingKeys);
+			return <MessageType>lodash.defaultsDeep(pickedExisting, extractedData);
+		} else {
+			return <MessageType>lodash.defaultsDeep(fileData, extractedData);
+		}
 	}
 
 	/**

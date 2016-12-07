@@ -1,14 +1,13 @@
-import { SerializerInterface } from './serializer.interface';
+import { SerializerInterface, MessageType } from './serializer.interface';
 
 export class JsonSerializer implements SerializerInterface {
 
-	public serialize(messages: string[]): string {
-		let result = {};
-		messages.forEach(message => {
-			result[message] = '';
-		});
+	public serialize(messages: MessageType): string {
+		return JSON.stringify(messages, null, '\t');
+	}
 
-		return JSON.stringify(result, null, '\t');
+	public parse(contents: string): MessageType {
+		return JSON.parse(contents);
 	}
 
 }
