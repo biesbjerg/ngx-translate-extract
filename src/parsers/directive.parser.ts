@@ -1,66 +1,45 @@
-import {ParserInterface} from './parser.interface';
+import { ParserInterface } from './parser.interface';
+import { AbstractTemplateParser } from './abstract-template.parser';
 import * as $ from 'cheerio';
 
-export class DirectiveParser implements ParserInterface {
+export class DirectiveParser extends AbstractTemplateParser implements ParserInterface {
 
-    public patterns = {
-        template: `template:\\s?(("|'|\`)(.|[\\r\\n])+?[^\\\\]\\2)`
-    };
+	public process(filePath: string, contents: string): string[] {
+		if (this._isAngularComponent(filePath)) {
+			contents = this._extractInlineTemplate(contents);
+		}
 
-    protected _parseTemplate(content) {
-        let results: string[] = [],
-            template = content.trim()
-            // hack for cheerio that doesn't support wrapped attributes
-                .replace('[translate]=', '__translate__=');
+		return this._parseTemplate(contents);
+	}
 
-        $(template).find('[translate],[__translate__]').contents().filter(function() {
-            return this.nodeType === 3; // node type 3 = text node
-        }).each(function() {
-            let key,
-                $this = $(this),
-                element = $(this).parent(),
-                wrappedAttr = element.attr('__translate__'), // previously [translate]=
-                attr = element.attr('translate'); // translate=
+	protected _parseTemplate(template: string): string[] {
+		let results: string[] = [];
 
-            // only support string values for now
-            if(wrappedAttr && wrappedAttr.match(/^['"].*['"]$/)) {
-                key = wrappedAttr.substr(1, wrappedAttr.length - 2);
-            } else if(attr) {
-                key = attr;
-            }
+		template = this._normalizeTemplateAttributes(template);
 
-            if(!key) {
-                key = $this.text().replace(/\\n/gi, '').trim();
-            }
+		$(template).find('[translate]')
+			.each((i: number, element: CheerioElement) => {
+				const $element = $(element);
+				const attr = $element.attr('translate');
+				const text = $element.text();
 
-            if(key) {
-                results.push(key);
-            }
-        });
+				if (attr) {
+					results.push(attr);
+				} else if (text) {
+					results.push(text);
+				}
+			});
 
-        return results;
-    }
+		return results;
+	}
 
-    public process(contents: string): string[] {
-        const regExp = new RegExp(this.patterns.template, 'gi');
-
-        let results: string[] = [],
-            hasTemplate = false,
-            matches;
-
-        while(matches = regExp.exec(contents)) {
-            let content = matches[1]
-                .substr(1, matches[1].length - 2);
-
-            hasTemplate = true;
-            results = results.concat(this._parseTemplate(content));
-        }
-
-        if(!hasTemplate) {
-            this._parseTemplate(contents);
-        }
-
-        return results;
-    }
+	/**
+	 * Angular's `[attr]="'val'"` syntax is not valid HTML,
+	 * so Cheerio is not able to parse it.
+	 * This method replaces `[attr]="'val'""` with `attr="val"`
+	 */
+	protected _normalizeTemplateAttributes(template: string): string {
+		return template.replace(/\[([^\]]+)\]="'([^\"]*)'"/g, '$1="$2"');
+	}
 
 }

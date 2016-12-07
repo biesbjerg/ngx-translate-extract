@@ -1,5 +1,5 @@
 export interface ParserInterface {
 
-	process(contents: string): string[];
+	process(filePath: string, contents: string): string[];
 
 }
