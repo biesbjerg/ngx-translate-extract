@@ -20,7 +20,15 @@
     "type": "git",
     "url": "https://github.com/biesbjerg/ng2-translate-extract.git"
   },
-  "keywords": [],
+  "keywords": [
+    "angular2",
+    "ionic",
+    "ng2-translate",
+    "extract",
+    "translate",
+    "i18n",
+    "gettext"
+  ],
   "author": "Kim Biesbjerg <kim@biesbjerg.com>",
   "license": "MIT",
   "bugs": {
