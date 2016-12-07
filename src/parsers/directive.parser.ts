@@ -33,13 +33,4 @@ export class DirectiveParser extends AbstractTemplateParser implements ParserInt
 		return results;
 	}
 
-	/**
-	 * Angular's `[attr]="'val'"` syntax is not valid HTML,
-	 * so Cheerio is not able to parse it.
-	 * This method replaces `[attr]="'val'""` with `attr="val"`
-	 */
-	protected _normalizeTemplateAttributes(template: string): string {
-		return template.replace(/\[([^\]]+)\]="'([^\"]*)'"/g, '$1="$2"');
-	}
-
 }

@@ -20,4 +20,13 @@ export abstract class AbstractTemplateParser {
 		return '';
 	}
 
+	/**
+	 * Angular's `[attr]="'val'"` syntax is not valid HTML,
+	 * so it can't be parsed by standard HTML parsers.
+	 * This method replaces `[attr]="'val'""` with `attr="val"`
+	 */
+	protected _normalizeTemplateAttributes(template: string): string {
+		return template.replace(/\[([^\]]+)\]="'([^\"]*)'"/g, '$1="$2"');
+	}
+
 }
