@@ -1,6 +1,6 @@
 import { ParserInterface } from './parsers/parser.interface';
 import { PipeParser } from './parsers/pipe.parser';
-import { DirectiveParser } from "./parsers/directive.parser";
+import { DirectiveParser } from './parsers/directive.parser';
 import { ServiceParser } from './parsers/service.parser';
 import { SerializerInterface } from './serializers/serializer.interface';
 

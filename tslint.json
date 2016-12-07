@@ -1,0 +1,52 @@
+{
+	"rulesDirectory": [
+		"node_modules/tslint-eslint-rules/dist/rules"
+	],
+	"rules": {
+		"indent": [true, "tabs"],
+		"semicolon": [true, "always", "ignore-interfaces"],
+		"quotemark": [true, "single", "avoid-escape"],
+		"no-duplicate-variable": true,
+		"member-access": true,
+		"member-ordering": [
+			true,
+			{
+				"order": [
+					"public-static-field",
+					"public-static-method",
+					"protected-static-field",
+					"protected-static-method",
+					"private-static-field",
+					"private-static-method",
+					"public-instance-field",
+					"protected-instance-field",
+					"private-instance-field",
+					"constructor",
+					"public-instance-method",
+					"protected-instance-method",
+					"private-instance-method"
+				]
+			}
+		],
+		"curly": true,
+		"eofline": true,
+		"no-trailing-whitespace": true,
+		"trailing-comma": [
+			true,
+			{
+				"multiline": "never",
+				"singleline": "never"
+			}
+		],
+		"whitespace": [
+			true,
+			"check-branch",
+			"check-decl",
+			"check-operator",
+			"check-module",
+			"check-separator",
+			"check-type",
+			"check-typecast"
+		]
+	}
+}
