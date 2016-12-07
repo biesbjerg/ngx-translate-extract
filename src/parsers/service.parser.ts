@@ -1,11 +1,10 @@
 import { ParserInterface } from './parser.interface';
 
-export class TypescriptParser implements ParserInterface {
+export class ServiceParser implements ParserInterface {
 
 	public patterns = {
-		TranslateServiceMethodsSingleQuote: '{{TRANSLATE_SERVICE}}\.(?:get|instant)\\s*\\\(\\s*\'((?:\\\\.|[^\'\\\\])*)\\s*\'',
-		TranslateServiceMethodsDoubleQuote: '{{TRANSLATE_SERVICE}}\.(?:get|instant)\\s*\\\(\\s*"((?:\\\\.|[^"\\\\])*)\\s*"',
-	}
+		translateServiceMethods: `{{TRANSLATE_SERVICE}}\.(?:get|instant)\\s*\\\(\\s*(['"\`])([^\\1\\r\\n]+)\\1`,
+	};
 
 	public process(contents: string): string[] {
 		let results: string[] = [];
@@ -22,7 +21,7 @@ export class TypescriptParser implements ParserInterface {
 
 			let matches;
 			while (matches = regExp.exec(contents)) {
-				results.push(matches[1]);
+				results.push(matches[2]);
 			}
 		}
 
@@ -49,7 +48,7 @@ export class TypescriptParser implements ParserInterface {
 	 * Extract name of TranslateService variable for use in patterns
 	 */
 	protected _extractTranslateServiceVar(contents: string): string {
-		const matches = contents.match(/([a-z0-9_]+)\s*:\s*TranslateService/i)
+		const matches = contents.match(/([a-z0-9_]+)\s*:\s*TranslateService/i);
 		if (matches === null) {
 			return '';
 		}
