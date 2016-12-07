@@ -1,6 +1,6 @@
 {
   "name": "@biesbjerg/ng2-translate-extract",
-  "version": "0.1.1",
+  "version": "0.2.0",
   "description": "Extract strings from projects using ng2-translate",
   "main": "dist/index.js",
   "typings": "dist/index.d.ts",
