@@ -1,6 +1,6 @@
 {
   "name": "@biesbjerg/ng2-translate-extract",
-  "version": "0.2.3",
+  "version": "0.2.4",
   "description": "Extract strings from projects using ng2-translate",
   "main": "dist/index.js",
   "typings": "dist/index.d.ts",
@@ -25,6 +25,7 @@
   "keywords": [
     "angular2",
     "ionic",
+    "ionic2",
     "ng2-translate",
     "extract",
     "translate",
