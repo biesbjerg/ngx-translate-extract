@@ -80,4 +80,10 @@ describe('DirectiveParser', () => {
 		expect(messages).to.deep.equal(['Hello World']);
 	});
 
+	it('should extract when using alternate translate attribute', () => {
+		const contents = '<div ng2-translate>Hello World<div>';
+		const messages = parser.process(templateFilename, contents);
+		expect(messages).to.deep.equal(['Hello World']);
+	});
+
 });
