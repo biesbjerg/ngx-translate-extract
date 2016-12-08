@@ -1,6 +1,6 @@
 import { expect } from 'chai';
 
-import { ServiceParser } from '../src/parsers/service.parser';
+import { ServiceParser } from '../../src/parsers/service.parser';
 
 class TestServiceParser extends ServiceParser {
 

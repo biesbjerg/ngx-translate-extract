@@ -1,6 +1,6 @@
 import { expect } from 'chai';
 
-import { AbstractTemplateParser } from '../src/parsers/abstract-template.parser';
+import { AbstractTemplateParser } from '../../src/parsers/abstract-template.parser';
 
 class TestTemplateParser extends AbstractTemplateParser {
 

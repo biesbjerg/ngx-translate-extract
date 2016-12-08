@@ -1,6 +1,6 @@
 import { expect } from 'chai';
 
-import { DirectiveParser } from '../src/parsers/directive.parser';
+import { DirectiveParser } from '../../src/parsers/directive.parser';
 
 describe('DirectiveParser', () => {
 
