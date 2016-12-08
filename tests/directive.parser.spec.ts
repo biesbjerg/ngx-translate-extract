@@ -26,7 +26,7 @@ describe('DirectiveParser', () => {
 	});
 
 	it('should extract bound translate attribute as key if provided', () => {
-		const contents = '<div [translate]="\'KEY\'">Hello World<div>';
+		const contents = `<div [translate]="'KEY'">Hello World<div>`;
 		const messages = parser.process(templateFilename, contents);
 		expect(messages).to.deep.equal(['KEY']);
 	});
