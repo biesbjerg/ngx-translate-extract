@@ -34,7 +34,7 @@ describe('ServiceParser', () => {
 		expect(messages).to.equal('_translateService');
 	});
 
-	it('should extract string passed to translateService.get()', () => {
+	it('should extract strings in TranslateService\'s get() method', () => {
 		const contents = `
 			@Component({ })
 			export class AppComponent {
@@ -47,7 +47,7 @@ describe('ServiceParser', () => {
 		expect(messages).to.deep.equal(['Hello World']);
 	});
 
-	it('should extract string passed to translateService.instant()', () => {
+	it('should extract strings in TranslateService\'s instant() method', () => {
 		const contents = `
 			@Component({ })
 			export class AppComponent {
@@ -60,7 +60,33 @@ describe('ServiceParser', () => {
 		expect(messages).to.deep.equal(['Hello World']);
 	});
 
-	it('should not extract string passed to get() or instant() methods of other services', () => {
+	it('should extract array of strings in TranslateService\'s get() method', () => {
+		const contents = `
+			@Component({ })
+			export class AppComponent {
+				public constructor(protected _translateService: TranslateService) { }
+				public test() {
+					this._translateService.get(['Hello', 'World']);
+				}
+		`;
+		const messages = parser.process(componentFilename, contents);
+		expect(messages).to.deep.equal(['Hello', 'World']);
+	});
+
+	it('should extract array of strings in TranslateService\'s instant() method', () => {
+		const contents = `
+			@Component({ })
+			export class AppComponent {
+				public constructor(protected _translateService: TranslateService) { }
+				public test() {
+					this._translateService.instant(['Hello', 'World']);
+				}
+		`;
+		const messages = parser.process(componentFilename, contents);
+		expect(messages).to.deep.equal(['Hello', 'World']);
+	});
+
+	it('should not extract strings in get()/instant() methods of other services', () => {
 		const contents = `
 			@Component({ })
 			export class AppComponent {
