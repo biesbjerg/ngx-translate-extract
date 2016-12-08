@@ -14,7 +14,7 @@ export class PipeParser extends AbstractTemplateParser implements ParserInterfac
 	protected _parseTemplate(template: string): string[] {
 		let results: string[] = [];
 
-		const regExp = new RegExp('([\'"`])([^\\1\\r\\n]*)\\1\\s+\\|\\s*translate(:.*?)?', 'g');
+		const regExp = new RegExp(/([\'"`])([^\1\r\n]*)\1\s+\|\s*translate(:.*?)?/, 'g');
 
 		let matches;
 		while (matches = regExp.exec(template)) {
