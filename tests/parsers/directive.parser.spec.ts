@@ -80,10 +80,26 @@ describe('DirectiveParser', () => {
 		expect(messages).to.deep.equal(['Hello World']);
 	});
 
-	it('should extract when using alternate translate attribute', () => {
-		const contents = '<div ng2-translate>Hello World<div>';
+
+
+
+
+	it('should extract contents when no ng2-translate attribute value is provided', () => {
+		const contents = '<div ng2-translate>Hello World</div>';
 		const messages = parser.process(templateFilename, contents);
 		expect(messages).to.deep.equal(['Hello World']);
+	});
+
+	it('should extract ng2-translate attribute if provided', () => {
+		const contents = '<div ng2-translate="KEY">Hello World<div>';
+		const messages = parser.process(templateFilename, contents);
+		expect(messages).to.deep.equal(['KEY']);
+	});
+
+	it('should extract bound ng2-translate attribute as key if provided', () => {
+		const contents = `<div [ng2-translate]="'KEY'">Hello World<div>`;
+		const messages = parser.process(templateFilename, contents);
+		expect(messages).to.deep.equal(['KEY']);
 	});
 
 });

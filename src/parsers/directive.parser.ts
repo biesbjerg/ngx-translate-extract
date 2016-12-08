@@ -22,7 +22,7 @@ export class DirectiveParser extends AbstractTemplateParser implements ParserInt
 			.addBack()
 			.each((i: number, element: CheerioElement) => {
 				const $element = $(element);
-				const attr = $element.attr('translate');
+				const attr = $element.attr('translate') || $element.attr('ng2-translate');
 
 				if (attr) {
 					results.push(attr);
