@@ -80,10 +80,6 @@ describe('DirectiveParser', () => {
 		expect(messages).to.deep.equal(['Hello World']);
 	});
 
-
-
-
-
 	it('should extract contents when no ng2-translate attribute value is provided', () => {
 		const contents = '<div ng2-translate>Hello World</div>';
 		const messages = parser.process(templateFilename, contents);
