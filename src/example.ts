@@ -1,17 +1,16 @@
 import { Extractor } from './extractor';
-import { JsonSerializer } from './serializers/json.serializer';
-import { StringCollection } from './utils/string.collection';
+import { JsonCompiler } from './compilers/json.compiler';
+import { TranslationCollection } from './utils/translation.collection';
 
-const serializer = new JsonSerializer();
-const extractor = new Extractor(serializer);
+const compiler = new JsonCompiler();
+const extractor = new Extractor();
 
-const src = '/your/project';
-const dest = '/your/project/template.json';
+const dirPath = '/your/project';
 
 try {
-	const collection: StringCollection = extractor.process(src);
-	const serialized: string = extractor.save(dest);
-	console.log({ strings: collection.keys(), serialized });
+	const collection: TranslationCollection = extractor.process(dirPath);
+	const result: string = compiler.compile(collection);
+	console.log(result);
 } catch (e) {
 	console.log(`Something went wrong: ${e.toString()}`);
 }

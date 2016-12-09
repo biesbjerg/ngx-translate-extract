@@ -25,16 +25,19 @@ You can also install the package globally:
 
 Now you can execute the script from everywhere:
 
-`ng2-translate-extract --dir /extract/from/this/dir --output /save/to/this/dir --format pot`
+`ng2-translate-extract --dir /extract/from/this/dir --output /save/to/this/dir --format json --merge --clean`
 ## Commandline arguments
 ```
 Usage:
   ng2-translate-extract [OPTIONS] [ARGS]
 
 Options:
-  -d, --dir [DIR]        Directory path you would like to extract strings from  (Default is /Users/kim/ionic/ng2-translate-extract/bin)
+  -d, --dir [DIR]        Directory path you would like to extract strings from  (Default is current directory)
   -o, --output [DIR]     Directory path you would like to save extracted
-                         strings  (Default is /Users/kim/ionic/ng2-translate-extract/bin)
+                         strings  (Default is Default is current directory)
   -f, --format [VALUE]   Output format. VALUE must be either [json|pot]  (Default is json)
-  -h, --help             Display help and usage details
+  -m, --merge [BOOLEAN]  Merge extracted strings with existing file if it
+                         exists  (Default is true)
+  -c, --clean BOOLEAN    Remove unused keys when merging
+  -h, --help             Display help and usage details
 ```

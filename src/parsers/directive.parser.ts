@@ -1,12 +1,12 @@
 import { ParserInterface } from './parser.interface';
 import { AbstractTemplateParser } from './abstract-template.parser';
-import { StringCollection } from '../utils/string.collection';
+import { TranslationCollection } from '../utils/translation.collection';
 
 import * as $ from 'cheerio';
 
 export class DirectiveParser extends AbstractTemplateParser implements ParserInterface {
 
-	public extract(contents: string, path?: string): StringCollection {
+	public extract(contents: string, path?: string): TranslationCollection {
 		if (path && this._isAngularComponent(path)) {
 			contents = this._extractInlineTemplate(contents);
 		}
@@ -14,8 +14,8 @@ export class DirectiveParser extends AbstractTemplateParser implements ParserInt
 		return this._parseTemplate(contents);
 	}
 
-	protected _parseTemplate(template: string): StringCollection {
-		const collection = new StringCollection();
+	protected _parseTemplate(template: string): TranslationCollection {
+		let collection: TranslationCollection = new TranslationCollection();
 
 		template = this._normalizeTemplateAttributes(template);
 		$(template)
@@ -26,7 +26,7 @@ export class DirectiveParser extends AbstractTemplateParser implements ParserInt
 				const attr = $element.attr('translate') || $element.attr('ng2-translate');
 
 				if (attr) {
-					collection.add(attr);
+					collection = collection.add(attr);
 				} else {
 					$element
 						.contents()
@@ -34,7 +34,7 @@ export class DirectiveParser extends AbstractTemplateParser implements ParserInt
 						.filter(node => node.type === 'text')
 						.map(node => node.nodeValue.trim())
 						.filter(text => text.length > 0)
-						.forEach(text => collection.add(text));
+						.forEach(text => collection = collection.add(text));
 				}
 			});
 

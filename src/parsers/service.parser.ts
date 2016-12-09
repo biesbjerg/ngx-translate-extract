@@ -1,10 +1,10 @@
 import { ParserInterface } from './parser.interface';
-import { StringCollection } from '../utils/string.collection';
+import { TranslationCollection } from '../utils/translation.collection';
 
 export class ServiceParser implements ParserInterface {
 
-	public extract(contents: string, path?: string): StringCollection {
-		const collection = new StringCollection();
+	public extract(contents: string, path?: string): TranslationCollection {
+		let collection: TranslationCollection = new TranslationCollection();
 
 		const translateServiceVar = this._extractTranslateServiceVar(contents);
 		if (!translateServiceVar) {
@@ -17,10 +17,9 @@ export class ServiceParser implements ParserInterface {
 		let matches;
 		while (matches = regExp.exec(contents)) {
 			if (this._stringContainsArray(matches[1])) {
-				const matchCollection = StringCollection.fromArray(this._stringToArray(matches[1]));
-				collection.merge(matchCollection);
+				collection = collection.addKeys(this._stringToArray(matches[1]));
 			} else {
-				collection.add(matches[3]);
+				collection = collection.add(matches[3]);
 			}
 		}
 

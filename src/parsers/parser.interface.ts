@@ -1,7 +1,7 @@
-import { StringCollection } from '../utils/string.collection';
+import { TranslationCollection } from '../utils/translation.collection';
 
 export interface ParserInterface {
 
-	extract(contents: string, path?: string): StringCollection;
+	extract(contents: string, path?: string): TranslationCollection;
 
 }

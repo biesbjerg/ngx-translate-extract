@@ -58,6 +58,7 @@
     "cheerio": "~0.22.0",
     "cli": "^1.0.1",
     "fs": "0.0.1-security",
+    "gettext-parser": "^1.2.1",
     "glob": "^7.1.1",
     "path": "^0.12.7"
   }
