@@ -10,16 +10,16 @@ import * as fs from 'fs';
 
 export class Extractor {
 
+	public patterns: string[] = [
+		'/**/*.html',
+		'/**/*.ts',
+		'/**/*.js'
+	];
+
 	public parsers: ParserInterface[] = [
 		new PipeParser(),
 		new DirectiveParser(),
 		new ServiceParser()
-	];
-
-	public find: string[] = [
-		'/**/*.html',
-		'/**/*.ts',
-		'/**/*.js'
 	];
 
 	public collection: StringCollection = new StringCollection();
@@ -30,7 +30,7 @@ export class Extractor {
 	 * Process dir
 	 */
 	public process(dir: string): StringCollection {
-		this._getFiles(dir).forEach(path => {
+		this._readDir(dir, this.patterns).forEach(path => {
 			const contents: string = fs.readFileSync(path, 'utf-8');
 			this.parsers.forEach((parser: ParserInterface) => {
 				this.collection.merge(parser.extract(contents, path));
@@ -57,20 +57,14 @@ export class Extractor {
 	}
 
 	/**
-	 * Get all files in dir that matches glob patterns
+	 * Get all files in dir matching find patterns
 	 */
-	protected _getFiles(dir: string): string[] {
-		let results: string[] = [];
-
-		this.find.forEach(pattern => {
-			const files = glob
-				.sync(dir + pattern)
-				.filter(path => fs.statSync(path).isFile());
-
-			results = [...results, ...files];
-		});
-
-		return results;
+	protected _readDir(dir: string, patterns: string[]): string[] {
+		return patterns.reduce((results, pattern) => {
+			return glob.sync(dir + pattern)
+				.filter(path => fs.statSync(path).isFile())
+				.concat(results);
+		}, []);
 	}
 
 }

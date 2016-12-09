@@ -10,8 +10,8 @@ const dest = '/your/project/template.json';
 
 try {
 	const collection: StringCollection = extractor.process(src);
-	const output: string = extractor.save(dest);
-	console.log({ strings: collection.keys(), output: output });
+	const serialized: string = extractor.save(dest);
+	console.log({ strings: collection.keys(), serialized });
 } catch (e) {
 	console.log(`Something went wrong: ${e.toString()}`);
 }

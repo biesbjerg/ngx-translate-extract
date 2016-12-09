@@ -11,19 +11,32 @@ export class ServiceParser implements ParserInterface {
 			return collection;
 		}
 
-		const methodRegExp: RegExp = new RegExp(/(?:get|instant)\s*\(\s*(\[?([\'"`])([^\1\r\n]+)\2\]?)/);
+		const methodRegExp: RegExp = new RegExp(/(?:get|instant)\s*\(\s*(\[?(['"`])([^\1\r\n]+)\2\]?)/);
 		const regExp: RegExp = new RegExp(`${translateServiceVar}\.${methodRegExp.source}`, 'g');
 
 		let matches;
 		while (matches = regExp.exec(contents)) {
 			if (this._stringContainsArray(matches[1])) {
-				collection.add(this._stringToArray(matches[1]));
+				const matchCollection = StringCollection.fromArray(this._stringToArray(matches[1]));
+				collection.merge(matchCollection);
 			} else {
 				collection.add(matches[3]);
 			}
 		}
 
 		return collection;
+	}
+
+	/**
+	 * Extracts name of TranslateService variable for use in patterns
+	 */
+	protected _extractTranslateServiceVar(contents: string): string {
+		const matches = contents.match(/([a-z0-9_]+)\s*:\s*TranslateService/i);
+		if (matches === null) {
+			return '';
+		}
+
+		return matches[1];
 	}
 
 	/**
@@ -42,18 +55,6 @@ export class ServiceParser implements ParserInterface {
 		}
 
 		return [];
-	}
-
-	/**
-	 * Extracts name of TranslateService variable for use in patterns
-	 */
-	protected _extractTranslateServiceVar(contents: string): string {
-		const matches = contents.match(/([a-z0-9_]+)\s*:\s*TranslateService/i);
-		if (matches === null) {
-			return '';
-		}
-
-		return matches[1];
 	}
 
 }

@@ -19,7 +19,7 @@ export class DirectiveParser extends AbstractTemplateParser implements ParserInt
 
 		template = this._normalizeTemplateAttributes(template);
 		$(template)
-			.find('[translate],[ng2-translate]')
+			.find('[translate], [ng2-translate]')
 			.addBack()
 			.each((i: number, element: CheerioElement) => {
 				const $element = $(element);
@@ -31,8 +31,8 @@ export class DirectiveParser extends AbstractTemplateParser implements ParserInt
 					$element
 						.contents()
 						.toArray()
-						.filter(textNode => textNode.type === 'text')
-						.map(textNode => textNode.nodeValue.trim())
+						.filter(node => node.type === 'text')
+						.map(node => node.nodeValue.trim())
 						.filter(text => text.length > 0)
 						.forEach(text => collection.add(text));
 				}
