@@ -46,7 +46,6 @@
     "@types/chai": "^3.4.34",
     "@types/cheerio": "^0.17.31",
     "@types/glob": "^5.0.30",
-    "@types/lodash": "^4.14.41",
     "@types/mocha": "^2.2.33",
     "chai": "^3.5.0",
     "mocha": "^3.2.0",
@@ -60,7 +59,6 @@
     "cli": "^1.0.1",
     "fs": "0.0.1-security",
     "glob": "^7.1.1",
-    "lodash": "^4.17.2",
     "path": "^0.12.7"
   }
 }

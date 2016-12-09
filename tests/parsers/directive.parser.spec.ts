@@ -15,20 +15,20 @@ describe('DirectiveParser', () => {
 
 	it('should extract contents when no translate attribute value is provided', () => {
 		const contents = '<div translate>Hello World</div>';
-		const messages = parser.process(templateFilename, contents);
-		expect(messages).to.deep.equal(['Hello World']);
+		const keys = parser.extract(contents, templateFilename).keys();
+		expect(keys).to.deep.equal(['Hello World']);
 	});
 
 	it('should extract translate attribute if provided', () => {
 		const contents = '<div translate="KEY">Hello World<div>';
-		const messages = parser.process(templateFilename, contents);
-		expect(messages).to.deep.equal(['KEY']);
+		const keys = parser.extract(contents, templateFilename).keys();
+		expect(keys).to.deep.equal(['KEY']);
 	});
 
 	it('should extract bound translate attribute as key if provided', () => {
 		const contents = `<div [translate]="'KEY'">Hello World<div>`;
-		const messages = parser.process(templateFilename, contents);
-		expect(messages).to.deep.equal(['KEY']);
+		const keys = parser.extract(contents, templateFilename).keys();
+		expect(keys).to.deep.equal(['KEY']);
 	});
 
 	it('should extract direct text nodes when no translate attribute value is provided', () => {
@@ -39,8 +39,8 @@ describe('DirectiveParser', () => {
 				Hi <em>there</em>
 			</div>
 		`;
-		const messages = parser.process(templateFilename, contents);
-		expect(messages).to.deep.equal(['Hello', 'Hi']);
+		const keys = parser.extract(contents, templateFilename).keys();
+		expect(keys).to.deep.equal(['Hello', 'Hi']);
 	});
 
 	it('should extract direct text nodes of tags with a translate attribute', () => {
@@ -51,8 +51,8 @@ describe('DirectiveParser', () => {
 				<div translate>Hi there</div>
 			</div>
 		`;
-		const messages = parser.process(templateFilename, contents);
-		expect(messages).to.deep.equal(['Hello World', 'Hi there']);
+		const keys = parser.extract(contents, templateFilename).keys();
+		expect(keys).to.deep.equal(['Hello World', 'Hi there']);
 	});
 
 	it('should extract translate attribute if provided or direct text nodes if not', () => {
@@ -64,8 +64,8 @@ describe('DirectiveParser', () => {
 				<p [translate]="'OTHER_KEY'">Lorem Ipsum</p>
 			</div>
 		`;
-		const messages = parser.process(templateFilename, contents);
-		expect(messages).to.deep.equal(['KEY', 'Hi there', 'OTHER_KEY']);
+		const keys = parser.extract(contents, templateFilename).keys();
+		expect(keys).to.deep.equal(['KEY', 'Hi there', 'OTHER_KEY']);
 	});
 
 	it('should extract and parse inline template', () => {
@@ -76,26 +76,26 @@ describe('DirectiveParser', () => {
 			})
 			export class TestComponent { }
 		`;
-		const messages = parser.process(componentFilename, contents);
-		expect(messages).to.deep.equal(['Hello World']);
+		const keys = parser.extract(contents, componentFilename).keys();
+		expect(keys).to.deep.equal(['Hello World']);
 	});
 
 	it('should extract contents when no ng2-translate attribute value is provided', () => {
 		const contents = '<div ng2-translate>Hello World</div>';
-		const messages = parser.process(templateFilename, contents);
-		expect(messages).to.deep.equal(['Hello World']);
+		const keys = parser.extract(contents, templateFilename).keys();
+		expect(keys).to.deep.equal(['Hello World']);
 	});
 
 	it('should extract ng2-translate attribute if provided', () => {
 		const contents = '<div ng2-translate="KEY">Hello World<div>';
-		const messages = parser.process(templateFilename, contents);
-		expect(messages).to.deep.equal(['KEY']);
+		const keys = parser.extract(contents, templateFilename).keys();
+		expect(keys).to.deep.equal(['KEY']);
 	});
 
 	it('should extract bound ng2-translate attribute as key if provided', () => {
 		const contents = `<div [ng2-translate]="'KEY'">Hello World<div>`;
-		const messages = parser.process(templateFilename, contents);
-		expect(messages).to.deep.equal(['KEY']);
+		const keys = parser.extract(contents, templateFilename).keys();
+		expect(keys).to.deep.equal(['KEY']);
 	});
 
 });

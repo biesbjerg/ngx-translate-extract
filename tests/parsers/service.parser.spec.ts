@@ -30,8 +30,8 @@ describe('ServiceParser', () => {
 					protected _translateService: TranslateService
 			) { }
 		`;
-		const messages = parser.extractTranslateServiceVar(contents);
-		expect(messages).to.equal('_translateService');
+		const name = parser.extractTranslateServiceVar(contents);
+		expect(name).to.equal('_translateService');
 	});
 
 	it('should extract strings in TranslateService\'s get() method', () => {
@@ -43,8 +43,8 @@ describe('ServiceParser', () => {
 					this._translateService.get('Hello World');
 				}
 		`;
-		const messages = parser.process(componentFilename, contents);
-		expect(messages).to.deep.equal(['Hello World']);
+		const keys = parser.extract(contents, componentFilename).keys();
+		expect(keys).to.deep.equal(['Hello World']);
 	});
 
 	it('should extract strings in TranslateService\'s instant() method', () => {
@@ -56,8 +56,8 @@ describe('ServiceParser', () => {
 					this._translateService.instant('Hello World');
 				}
 		`;
-		const messages = parser.process(componentFilename, contents);
-		expect(messages).to.deep.equal(['Hello World']);
+		const keys = parser.extract(contents, componentFilename).keys();
+		expect(keys).to.deep.equal(['Hello World']);
 	});
 
 	it('should extract array of strings in TranslateService\'s get() method', () => {
@@ -69,8 +69,8 @@ describe('ServiceParser', () => {
 					this._translateService.get(['Hello', 'World']);
 				}
 		`;
-		const messages = parser.process(componentFilename, contents);
-		expect(messages).to.deep.equal(['Hello', 'World']);
+		const keys = parser.extract(contents, componentFilename).keys();
+		expect(keys).to.deep.equal(['Hello', 'World']);
 	});
 
 	it('should extract array of strings in TranslateService\'s instant() method', () => {
@@ -82,8 +82,8 @@ describe('ServiceParser', () => {
 					this._translateService.instant(['Hello', 'World']);
 				}
 		`;
-		const messages = parser.process(componentFilename, contents);
-		expect(messages).to.deep.equal(['Hello', 'World']);
+		const key = parser.extract(contents, componentFilename).keys();
+		expect(key).to.deep.equal(['Hello', 'World']);
 	});
 
 	it('should not extract strings in get()/instant() methods of other services', () => {
@@ -99,8 +99,8 @@ describe('ServiceParser', () => {
 					this._otherService.instant('Hi there');
 				}
 		`;
-		const messages = parser.process(componentFilename, contents);
-		expect(messages).to.deep.equal([]);
+		const keys = parser.extract(contents, componentFilename).keys();
+		expect(keys).to.deep.equal([]);
 	});
 
 });

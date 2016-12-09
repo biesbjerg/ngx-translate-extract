@@ -1,5 +1,7 @@
+import { StringCollection } from '../utils/string.collection';
+
 export interface SerializerInterface {
 
-	serialize(messages: string[]): string;
+	serialize(collection: StringCollection): string;
 
 }

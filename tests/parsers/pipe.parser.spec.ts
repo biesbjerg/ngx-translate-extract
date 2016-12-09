@@ -14,20 +14,20 @@ describe('PipeParser', () => {
 
 	it('should extract interpolated strings using translate pipe', () => {
 		const contents = `Hello {{ 'World' | translate }}`;
-		const messages = parser.process(templateFilename, contents);
-		expect(messages).to.deep.equal(['World']);
+		const keys = parser.extract(contents, templateFilename).keys();
+		expect(keys).to.deep.equal(['World']);
 	});
 
 	it('should extract interpolated strings using translate pipe in attributes', () => {
 		const contents = `<span attr="{{ 'Hello World' | translate }}"></span>`;
-		const messages = parser.process(templateFilename, contents);
-		expect(messages).to.deep.equal(['Hello World']);
+		const keys = parser.extract(contents, templateFilename).keys();
+		expect(keys).to.deep.equal(['Hello World']);
 	});
 
 	it('should extract bound strings using translate pipe in attributes', () => {
 		const contents = `<span [attr]="'Hello World' | translate"></span>`;
-		const messages = parser.process(templateFilename, contents);
-		expect(messages).to.deep.equal(['Hello World']);
+		const keys = parser.extract(contents, templateFilename).keys();
+		expect(keys).to.deep.equal(['Hello World']);
 	});
 
 });

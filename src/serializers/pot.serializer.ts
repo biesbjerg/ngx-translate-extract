@@ -1,4 +1,5 @@
 import { SerializerInterface } from './serializer.interface';
+import { StringCollection } from '../utils/string.collection';
 
 export class PotSerializer implements SerializerInterface {
 
@@ -9,10 +10,10 @@ export class PotSerializer implements SerializerInterface {
 
 	protected _buffer: string[] = [];
 
-	public serialize(messages: string[]): string {
+	public serialize(collection: StringCollection): string {
 		this._reset();
 		this._addHeader(this._headers);
-		this._addMessages(messages);
+		this._addMessages(collection);
 
 		return this._buffer.join('\n');
 	}
@@ -25,10 +26,10 @@ export class PotSerializer implements SerializerInterface {
 		});
 	}
 
-	protected _addMessages(messages: string[]): void {
-		messages.forEach(message => {
-			this._add('msgid', message);
-			this._add('msgstr', '');
+	protected _addMessages(collection: StringCollection): void {
+		Object.keys(collection.values).forEach(key => {
+			this._add('msgid', key);
+			this._add('msgstr', collection.get(key));
 		});
 	}
 

@@ -34,10 +34,10 @@ var destination = path.join(options.output, filename);
 
 try {
 	var extractor = new Extractor(serializer);
-	var messages = extractor.extract(options.dir);
-	if (messages.length > 0) {
+	var collection = extractor.process(options.dir);
+	if (collection.count() > 0) {
 		extractor.save(destination);
-		cli.ok(`Extracted ${messages.length} strings: '${destination}'`);
+		cli.ok(`Extracted ${collection.count()} strings: '${destination}'`);
 	} else {
 		cli.info(`Found no extractable strings in the supplied directory path: '${options.dir}'`);
 	}

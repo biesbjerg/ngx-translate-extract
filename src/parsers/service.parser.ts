@@ -1,13 +1,14 @@
 import { ParserInterface } from './parser.interface';
+import { StringCollection } from '../utils/string.collection';
 
 export class ServiceParser implements ParserInterface {
 
-	public process(filePath: string, contents: string): string[] {
-		let results: string[] = [];
+	public extract(contents: string, path?: string): StringCollection {
+		const collection = new StringCollection();
 
 		const translateServiceVar = this._extractTranslateServiceVar(contents);
 		if (!translateServiceVar) {
-			return results;
+			return collection;
 		}
 
 		const methodRegExp: RegExp = new RegExp(/(?:get|instant)\s*\(\s*(\[?([\'"`])([^\1\r\n]+)\2\]?)/);
@@ -16,13 +17,13 @@ export class ServiceParser implements ParserInterface {
 		let matches;
 		while (matches = regExp.exec(contents)) {
 			if (this._stringContainsArray(matches[1])) {
-				results.push(...this._stringToArray(matches[1]));
+				collection.add(this._stringToArray(matches[1]));
 			} else {
-				results.push(matches[3]);
+				collection.add(matches[3]);
 			}
 		}
 
-		return results;
+		return collection;
 	}
 
 	/**

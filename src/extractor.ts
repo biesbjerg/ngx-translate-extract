@@ -3,8 +3,8 @@ import { PipeParser } from './parsers/pipe.parser';
 import { DirectiveParser } from './parsers/directive.parser';
 import { ServiceParser } from './parsers/service.parser';
 import { SerializerInterface } from './serializers/serializer.interface';
+import { StringCollection } from './utils/string.collection';
 
-import * as lodash from 'lodash';
 import * as glob from 'glob';
 import * as fs from 'fs';
 
@@ -16,35 +16,35 @@ export class Extractor {
 		new ServiceParser()
 	];
 
-	public globPatterns: string[] = [
+	public find: string[] = [
 		'/**/*.html',
 		'/**/*.ts',
 		'/**/*.js'
 	];
 
-	public messages: string[] = [];
+	public collection: StringCollection = new StringCollection();
 
 	public constructor(public serializer: SerializerInterface) { }
 
 	/**
-	 * Extracts messages from paths
+	 * Process dir
 	 */
-	public extract(dir: string): string[] {
-		let messages = [];
-
-		this._getFiles(dir).forEach(filePath => {
-			const result = this._extractMessages(filePath);
-			messages = [...messages, ...result];
+	public process(dir: string): StringCollection {
+		this._getFiles(dir).forEach(path => {
+			const contents: string = fs.readFileSync(path, 'utf-8');
+			this.parsers.forEach((parser: ParserInterface) => {
+				this.collection.merge(parser.extract(contents, path));
+			});
 		});
 
-		return this.messages = lodash.uniq(messages);
+		return this.collection;
 	}
 
 	/**
 	 * Serialize and return output
 	 */
 	public serialize(): string {
-		return this.serializer.serialize(this.messages);
+		return this.serializer.serialize(this.collection);
 	}
 
 	/**
@@ -62,26 +62,12 @@ export class Extractor {
 	protected _getFiles(dir: string): string[] {
 		let results: string[] = [];
 
-		this.globPatterns.forEach(globPattern => {
+		this.find.forEach(pattern => {
 			const files = glob
-				.sync(dir + globPattern)
-				.filter(filePath => fs.statSync(filePath).isFile());
+				.sync(dir + pattern)
+				.filter(path => fs.statSync(path).isFile());
 
 			results = [...results, ...files];
-		});
-
-		return results;
-	}
-
-	/**
-	 * Extract messages from file using parser
-	 */
-	protected _extractMessages(filePath: string): string[] {
-		let results: string[] = [];
-
-		const contents: string = fs.readFileSync(filePath, 'utf-8');
-		this.parsers.forEach((parser: ParserInterface) => {
-			results = [...results, ...parser.process(filePath, contents)];
 		});
 
 		return results;

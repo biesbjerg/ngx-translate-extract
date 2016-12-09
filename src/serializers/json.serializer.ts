@@ -1,14 +1,10 @@
 import { SerializerInterface } from './serializer.interface';
+import { StringCollection } from '../utils/string.collection';
 
 export class JsonSerializer implements SerializerInterface {
 
-	public serialize(messages: string[]): string {
-		let result = {};
-		messages.forEach(message => {
-			result[message] = '';
-		});
-
-		return JSON.stringify(result, null, '\t');
+	public serialize(collection: StringCollection): string {
+		return JSON.stringify(collection.values, null, '\t');
 	}
 
 }

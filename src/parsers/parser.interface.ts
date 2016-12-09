@@ -1,5 +1,7 @@
+import { StringCollection } from '../utils/string.collection';
+
 export interface ParserInterface {
 
-	process(filePath: string, contents: string): string[];
+	extract(contents: string, path?: string): StringCollection;
 
 }

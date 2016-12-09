@@ -1,20 +1,21 @@
 import { ParserInterface } from './parser.interface';
 import { AbstractTemplateParser } from './abstract-template.parser';
+import { StringCollection } from '../utils/string.collection';
 
 import * as $ from 'cheerio';
 
 export class DirectiveParser extends AbstractTemplateParser implements ParserInterface {
 
-	public process(filePath: string, contents: string): string[] {
-		if (this._isAngularComponent(filePath)) {
+	public extract(contents: string, path?: string): StringCollection {
+		if (path && this._isAngularComponent(path)) {
 			contents = this._extractInlineTemplate(contents);
 		}
 
 		return this._parseTemplate(contents);
 	}
 
-	protected _parseTemplate(template: string): string[] {
-		let results: string[] = [];
+	protected _parseTemplate(template: string): StringCollection {
+		const collection = new StringCollection();
 
 		template = this._normalizeTemplateAttributes(template);
 		$(template)
@@ -25,7 +26,7 @@ export class DirectiveParser extends AbstractTemplateParser implements ParserInt
 				const attr = $element.attr('translate') || $element.attr('ng2-translate');
 
 				if (attr) {
-					results.push(attr);
+					collection.add(attr);
 				} else {
 					$element
 						.contents()
@@ -33,11 +34,11 @@ export class DirectiveParser extends AbstractTemplateParser implements ParserInt
 						.filter(textNode => textNode.type === 'text')
 						.map(textNode => textNode.nodeValue.trim())
 						.filter(text => text.length > 0)
-						.forEach(text => results.push(text));
+						.forEach(text => collection.add(text));
 				}
 			});
 
-		return results;
+		return collection;
 	}
 
 }

@@ -4,8 +4,8 @@ export abstract class AbstractTemplateParser {
 	 * Checks if file is of type javascript or typescript and
 	 * makes the assumption that it is an Angular Component
 	 */
-	protected _isAngularComponent(filePath: string): boolean {
-		return new RegExp(/\.(ts|js)$/, 'i').test(filePath);
+	protected _isAngularComponent(path: string): boolean {
+		return new RegExp(/\.(ts|js)$/, 'i').test(path);
 	}
 
 	/**
