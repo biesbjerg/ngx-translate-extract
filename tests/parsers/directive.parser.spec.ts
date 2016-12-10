@@ -98,4 +98,10 @@ describe('DirectiveParser', () => {
 		expect(keys).to.deep.equal(['KEY']);
 	});
 
+	it('should not extract translate pipe in html tag', () => {
+		const contents = `<p>{{ 'Audiobooks for personal development' | translate }}</p>`;
+		const collection = parser.extract(contents, templateFilename);
+		expect(collection.values).to.deep.equal({});
+	});
+
 });
