@@ -1,11 +1,11 @@
-import { Extractor } from '../extractor';
+import { Extractor } from '../utils/extractor';
+import { TranslationCollection } from '../utils/translation.collection';
 import { ParserInterface } from '../parsers/parser.interface';
 import { PipeParser } from '../parsers/pipe.parser';
 import { DirectiveParser } from '../parsers/directive.parser';
 import { ServiceParser } from '../parsers/service.parser';
 import { JsonCompiler } from '../compilers/json.compiler';
 import { PoCompiler } from '../compilers/po.compiler';
-import { TranslationCollection } from '../utils/translation.collection';
 
 import * as fs from 'fs';
 import * as path from 'path';
