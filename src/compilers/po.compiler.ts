@@ -19,7 +19,7 @@ export class PoCompiler implements CompilerInterface {
 				'content-transfer-encoding': '8bit'
 			},
 			translations: {
-				'default': Object.keys(collection.values).reduce((translations, key) => {
+				[this.domain]: Object.keys(collection.values).reduce((translations, key) => {
 					translations[key] = {
 						msgid: key,
 						msgstr: collection.get(key)
