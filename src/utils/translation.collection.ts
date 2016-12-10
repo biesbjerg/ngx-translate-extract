@@ -23,13 +23,22 @@ export class TranslationCollection {
 	}
 
 	public remove(key: string): TranslationCollection {
-		let newCollection = new TranslationCollection();
-		Object.keys(this.values).forEach(collectionKey => {
-			if (key !== collectionKey) {
-				newCollection = newCollection.add(key, this.values[key]);
+		return this.filter(k => key !== k);
+	}
+
+	public forEach(callback: (key?: string, val?: string) => void): TranslationCollection {
+		Object.keys(this.values).forEach(key => callback.call(this, key, this.values[key]));
+		return this;
+	}
+
+	public filter(callback: (key?: string, val?: string) => boolean): TranslationCollection {
+		let values: TranslationType = {};
+		this.forEach((key: string, val: string) => {
+			if (callback.call(this, key, val)) {
+				values[key] = val;
 			}
 		});
-		return newCollection;
+		return new TranslationCollection(values);
 	}
 
 	public union(collection: TranslationCollection): TranslationCollection {
@@ -37,13 +46,13 @@ export class TranslationCollection {
 	}
 
 	public intersect(collection: TranslationCollection): TranslationCollection {
-		let newCollection = new TranslationCollection();
-		Object.keys(this.values).forEach(key => {
-			if (collection.has(key)) {
-				newCollection = newCollection.add(key, this.values[key]);
-			}
-		});
-		return newCollection;
+		let values: TranslationType = {};
+		this.filter(key => collection.has(key))
+			.forEach((key: string, val: string) => {
+				values[key] = val;
+			});
+
+		return new TranslationCollection(values);
 	}
 
 	public has(key: string): boolean {
