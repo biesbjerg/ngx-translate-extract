@@ -74,7 +74,7 @@ describe('StringCollection', () => {
 	});
 
 	it('should intersect with passed collection and keep original values', () => {
-		collection = new TranslationCollection({ red: 'rød', blue: 'blå' });
+		collection = new TranslationCollection({ red: 'rød', green: 'grøn', blue: 'blå' });
 		const newCollection = new TranslationCollection({ red: 'no value', blue: 'also no value' });
 		expect(collection.intersect(newCollection).values).to.deep.equal({ red: 'rød', blue: 'blå' });
 	});
