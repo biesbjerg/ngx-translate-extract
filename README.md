@@ -34,10 +34,10 @@ Usage:
 Options:
   -d, --dir [DIR]        Directory path you would like to extract strings from  (Default is current directory)
   -o, --output [DIR]     Directory path you would like to save extracted
-                         strings  (Default is Default is current directory)
+                         strings  (Default is current directory)
   -f, --format [VALUE]   Output format. VALUE must be either [json|pot]  (Default is json)
-  -m, --merge [BOOLEAN]  Merge extracted strings with existing file if it
-                         exists  (Default is true)
+  -r, --replace BOOLEAN  Replace the contents of output file if it exists
+                         (merging by default)
   -c, --clean BOOLEAN    Remove unused keys when merging
   -h, --help             Display help and usage details
 ```
