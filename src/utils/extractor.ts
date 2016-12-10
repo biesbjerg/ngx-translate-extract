@@ -1,5 +1,5 @@
-import { ParserInterface } from './parsers/parser.interface';
-import { TranslationCollection } from './utils/translation.collection';
+import { ParserInterface } from '../parsers/parser.interface';
+import { TranslationCollection } from './translation.collection';
 
 import * as glob from 'glob';
 import * as fs from 'fs';
