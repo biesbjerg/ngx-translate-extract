@@ -1,5 +1,5 @@
 import { CompilerInterface } from './compiler.interface';
-import { TranslationCollection } from '../utils/translation.collection';
+import { TranslationCollection, TranslationType } from '../utils/translation.collection';
 
 import * as gettext from 'gettext-parser';
 
@@ -25,7 +25,7 @@ export class PoCompiler implements CompilerInterface {
 						msgstr: collection.get(key)
 					};
 					return translations;
-				}, {})
+				}, <any>{})
 			}
 		};
 
@@ -45,7 +45,7 @@ export class PoCompiler implements CompilerInterface {
 			.reduce((values, key) => {
 				values[key] = po.translations[this.domain][key].msgstr.pop();
 				return values;
-			}, {});
+			}, <TranslationType>{});
 
 		return new TranslationCollection(values);
 	}

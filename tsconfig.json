@@ -2,6 +2,7 @@
     "compilerOptions": {
         "allowSyntheticDefaultImports": true,
         "noUnusedLocals": true,
+        "noImplicitAny": true,
         "removeComments": true,
         "declaration": true,
         "target": "ES6",
