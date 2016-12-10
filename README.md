@@ -25,7 +25,7 @@ You can also install the package globally:
 
 Now you can execute the script from everywhere:
 
-`ng2-translate-extract --dir /extract/from/this/dir --output /save/to/this/dir --format json --merge --clean`
+`ng2-translate-extract --dir /extract/from/this/dir --output /save/to/this/dir --format json --clean`
 ## Commandline arguments
 ```
 Usage:
