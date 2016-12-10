@@ -1,18 +1,21 @@
 #! /usr/bin/env node
 
-var cli = require('cli');
-var fs = require('fs');
-var path = require('path');
+const Extractor = require('../dist/extractor').Extractor;
+const PipeParser = require('../dist/parsers/pipe.parser').PipeParser;
+const DirectiveParser = require('../dist/parsers/directive.parser').DirectiveParser;
+const ServiceParser = require('../dist/parsers/service.parser').ServiceParser;
+const JsonCompiler = require('../dist/compilers/json.compiler').JsonCompiler;
+const PoCompiler = require('../dist/compilers/po.compiler').PoCompiler
 
-var Extractor = require('../dist/extractor').Extractor;
-var JsonCompiler = require('../dist/compilers/json.compiler').JsonCompiler;
-var PoCompiler = require('../dist/compilers/po.compiler').PoCompiler
+const fs = require('fs');
+const path = require('path');
+const cli = require('cli');
 
-var options = cli.parse({
+const options = cli.parse({
 	dir: ['d', 'Directory path you would like to extract strings from', 'dir', process.env.PWD],
 	output: ['o', 'Directory path you would like to save extracted strings', 'dir', process.env.PWD],
 	format: ['f', 'Output format', ['json', 'pot'], 'json'],
-	merge: ['m', 'Merge extracted strings with existing file if it exists', 'boolean', true],
+	replace: ['r', 'Replace the contents of output file if it exists (merging by default)', 'boolean', false],
 	clean: ['c', 'Remove unused keys when merging', 'boolean', false]
 });
 
@@ -22,21 +25,26 @@ var options = cli.parse({
 	}
 });
 
-switch (options.format) {
-	case 'pot':
-		var compiler = new PoCompiler();
-		break;
-	case 'json':
-		var compiler = new JsonCompiler();
-		break;
-}
+const filename = 'template.' + options.format;
+const dest = path.join(options.output, filename);
 
-var filename = 'template.' + options.format;
-var dest = path.join(options.output, filename);
+const parsers = [
+	new PipeParser(),
+	new DirectiveParser(),
+	new ServiceParser()
+];
+const patterns = [
+	'/**/*.html',
+	'/**/*.ts',
+	'/**/*.js'
+];
+
+const extractor = new Extractor(parsers, patterns);
 
 try {
-	var extracted = new Extractor().process(options.dir);
-	cli.info(`* Extracted ${extracted.count()} strings`);
+	cli.info(`Extracting strings from '${options.dir}'`);
+	const extracted = extractor.process(options.dir);
+	cli.ok(`* Extracted ${extracted.count()} strings`);
 
 	if (extracted.isEmpty()) {
 		process.exit();
@@ -44,21 +52,29 @@ try {
 
 	let collection = extracted;
 
-	if (options.merge && fs.existsSync(dest)) {
+	let compiler = new JsonCompiler();
+	if (options.format === 'pot') {
+		compiler = new PoCompiler();
+	}
+
+	if (!options.replace && fs.existsSync(dest)) {
 		const existing = compiler.parse(fs.readFileSync(dest, 'utf-8'));
 
 		collection = extracted.union(existing);
-		cli.info(`* Merged with existing strings`);
+		cli.ok(`* Merged ${existing.count()} existing strings`);
 
 		if (options.clean) {
-			const stringCount = collection.count();
+			const collectionCount = collection.count();
 			collection = collection.intersect(extracted);
-			cli.info(`* Removed ${stringCount - collection.count()} unused strings`);
+			const removeCount = collectionCount - collection.count();
+			if (removeCount > 0) {
+				cli.ok(`* Removed ${removeCount} unused strings`);
+			}
 		}
 	}
 
 	fs.writeFileSync(dest, compiler.compile(collection));
-	cli.ok(`Saved to: '${dest}'`);
+	cli.ok(`* Saved to '${dest}'`);
 } catch (e) {
 	cli.fatal(e.toString());
 }
