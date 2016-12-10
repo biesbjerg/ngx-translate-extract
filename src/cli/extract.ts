@@ -13,7 +13,7 @@ import * as cli from 'cli';
 
 const options = cli.parse({
 	dir: ['d', 'Directory path you would like to extract strings from', 'dir', process.env.PWD],
-	output: ['o', 'Directory path you would like to save extracted strings', 'dir', process.env.PWD],
+	output: ['o', 'Directory path you would like to save extracted strings to', 'dir', process.env.PWD],
 	format: ['f', 'Output format', ['json', 'pot'], 'json'],
 	replace: ['r', 'Replace the contents of output file if it exists (merging by default)', 'boolean', false],
 	clean: ['c', 'Remove unused keys when merging', 'boolean', false]
