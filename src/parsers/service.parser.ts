@@ -11,10 +11,10 @@ export class ServiceParser implements ParserInterface {
 			return collection;
 		}
 
-		const methodRegExp: RegExp = new RegExp(/(?:get|instant)\s*\(\s*(\[?(['"`])([^\1\r\n]+)\2\]?)/);
+		const methodRegExp: RegExp = new RegExp(/(?:get|instant)\s*\(\s*(\[?\s*(['"`])([^\1\r\n]*)\2\s*\]?)/);
 		const regExp: RegExp = new RegExp(`${translateServiceVar}\.${methodRegExp.source}`, 'g');
 
-		let matches;
+		let matches: RegExpExecArray;
 		while (matches = regExp.exec(contents)) {
 			if (this._stringContainsArray(matches[1])) {
 				collection = collection.addKeys(this._stringToArray(matches[1]));

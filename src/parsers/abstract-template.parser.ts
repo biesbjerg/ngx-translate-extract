@@ -12,7 +12,7 @@ export abstract class AbstractTemplateParser {
 	 * Extracts inline template from components
 	 */
 	protected _extractInlineTemplate(contents: string): string {
-		const match = new RegExp(/template\s*:\s*(["'`])((.|[\r\n])+?[^\\])\1/).exec(contents);
+		const match = new RegExp(/template\s*:\s*(["'`])([^\1]*?)\1/).exec(contents);
 		if (match !== null) {
 			return match[2];
 		}

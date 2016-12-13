@@ -41,6 +41,12 @@ describe('AbstractTemplateParser', () => {
 		expect(result).to.equal(false);
 	});
 
+	it('should normalize bound attributes', () => {
+		const contents = `<p [translate]="'KEY'">Hello World</p>`;
+		const template = parser.normalizeTemplateAttributes(contents);
+		expect(template).to.equal('<p translate="KEY">Hello World</p>');
+	});
+
 	it('should extract inline template', () => {
 		const contents = `
 			@Component({
@@ -53,10 +59,25 @@ describe('AbstractTemplateParser', () => {
 		expect(template).to.equal('<p translate>Hello World</p>');
 	});
 
-	it('should normalize bound attributes', () => {
-		const contents = `<p [translate]="'KEY'">Hello World</p>`;
-		const template = parser.normalizeTemplateAttributes(contents);
-		expect(template).to.equal('<p translate="KEY">Hello World</p>');
+	it('should extract inline template spanning multiple lines', () => {
+		const contents = `
+			@Component({
+				selector: 'test',
+				template: '
+					<p>
+						Hello World
+					</p>
+				',
+				styles: ['
+					p {
+						color: red;
+					}
+				']
+			})
+			export class TestComponent { }
+		`;
+		const template = parser.extractInlineTemplate(contents);
+		expect(template).to.equal('\n\t\t\t\t\t<p>\n\t\t\t\t\t\tHello World\n\t\t\t\t\t</p>\n\t\t\t\t');
 	});
 
 });

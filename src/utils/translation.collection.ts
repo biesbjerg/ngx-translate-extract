@@ -18,7 +18,7 @@ export class TranslationCollection {
 		const values = keys.reduce((results, key) => {
 			results[key] = '';
 			return results;
-		}, <TranslationType>{});
+		}, <TranslationType> {});
 		return new TranslationCollection(Object.assign({}, this.values, values));
 	}
 

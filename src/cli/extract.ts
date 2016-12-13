@@ -21,7 +21,7 @@ const options = cli.parse({
 
 [options.dir, options.output].forEach(dir => {
 	if (!fs.existsSync(dir)) {
-		cli.fatal('The directory path you supplied was not found: ' + dir);
+		cli.fatal(`The directory path you supplied was not found: '${dir}'`);
 	}
 });
 
@@ -39,16 +39,11 @@ const patterns: string[] = [
 	'/**/*.js'
 ];
 
-const extractor: Extractor = new Extractor(parsers, patterns);
-
 try {
+	const extractor: Extractor = new Extractor(parsers, patterns);
 	cli.info(`Extracting strings from '${options.dir}'`);
 	const extracted: TranslationCollection = extractor.process(options.dir);
 	cli.ok(`* Extracted ${extracted.count()} strings`);
-
-	if (extracted.isEmpty()) {
-		process.exit();
-	}
 
 	let collection: TranslationCollection = extracted;
 
@@ -60,8 +55,10 @@ try {
 	if (!options.replace && fs.existsSync(dest)) {
 		const existing: TranslationCollection = compiler.parse(fs.readFileSync(dest, 'utf-8'));
 
-		collection = extracted.union(existing);
-		cli.ok(`* Merged ${existing.count()} existing strings`);
+		if (existing.count() > 0) {
+			collection = extracted.union(existing);
+			cli.ok(`* Merged ${existing.count()} existing strings`);
+		}
 
 		if (options.clean) {
 			const collectionCount = collection.count();

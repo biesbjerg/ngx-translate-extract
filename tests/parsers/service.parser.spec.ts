@@ -103,4 +103,24 @@ describe('ServiceParser', () => {
 		expect(keys).to.deep.equal([]);
 	});
 
+	it('should extract strings with liberal spacing', () => {
+		const contents = `
+			@Component({ })
+			export class AppComponent {
+				public constructor(
+					protected _translateService: TranslateService,
+					protected _otherService: OtherService
+				) { }
+				public test() {
+					this._translateService.instant('Hello');
+					this._translateService.get ( 'World' );
+					this._translateService.instant ( ['How'] );
+					this._translateService.get([ 'Are' ]);
+					this._translateService.get([ 'You' , 'Today' ]);
+				}
+		`;
+		const keys = parser.extract(contents, componentFilename).keys();
+		expect(keys).to.deep.equal(['Hello', 'World', 'How', 'Are', 'You', 'Today']);
+	});
+
 });
