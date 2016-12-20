@@ -15,8 +15,8 @@ const options = cli.parse({
 	dir: ['d', 'Directory path you would like to extract strings from', 'dir', process.env.PWD],
 	output: ['o', 'Directory path you would like to save extracted strings to', 'dir', process.env.PWD],
 	format: ['f', 'Output format', ['json', 'pot'], 'json'],
-	replace: ['r', 'Replace the contents of output file if it exists (merging by default)', 'boolean', false],
-	clean: ['c', 'Remove unused keys when merging', 'boolean', false]
+	replace: ['r', 'Replace the contents of output file if it exists (Merges by default)', 'boolean', false],
+	clean: ['c', 'Remove obsolete strings when merging', 'boolean', false]
 });
 
 [options.dir, options.output].forEach(dir => {
@@ -42,6 +42,7 @@ const patterns: string[] = [
 try {
 	const extractor: Extractor = new Extractor(parsers, patterns);
 	cli.info(`Extracting strings from '${options.dir}'`);
+
 	const extracted: TranslationCollection = extractor.process(options.dir);
 	cli.ok(`* Extracted ${extracted.count()} strings`);
 
@@ -54,10 +55,9 @@ try {
 
 	if (!options.replace && fs.existsSync(dest)) {
 		const existing: TranslationCollection = compiler.parse(fs.readFileSync(dest, 'utf-8'));
-
 		if (existing.count() > 0) {
 			collection = extracted.union(existing);
-			cli.ok(`* Merged ${existing.count()} existing strings`);
+			cli.ok(`* Merged with ${existing.count()} existing strings`);
 		}
 
 		if (options.clean) {
@@ -65,7 +65,7 @@ try {
 			collection = collection.intersect(extracted);
 			const removeCount = collectionCount - collection.count();
 			if (removeCount > 0) {
-				cli.ok(`* Removed ${removeCount} unused strings`);
+				cli.ok(`* Removed ${removeCount} obsolete strings`);
 			}
 		}
 	}

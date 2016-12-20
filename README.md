@@ -1,31 +1,22 @@
 # ng2-translate-extract
-Extract strings from projects using ng2-translate to json or pot files.
-
-**THIS IS STILL VERY MUCH A WORK IN PROGRESS**
+Extract translatable (ng2-translate) strings and save as a JSON or Gettext pot file.
+Merges with existing strings if the output file already exists.
 
 ## Usage
-If you only need to extract strings from one project, you can install the package locally:
+Install the package in your project:
 
 `npm install @biesbjerg/ng2-translate-extract --save-dev`
 
-Add the following `extract` script your project's `package.json`:
+Add an `extract` script to your project's `package.json`:
 ```
 "scripts": {
-  "extract": "ng2-translate-extract --dir ./src --output ./ --format=json"
+  "extract": "ng2-translate-extract --dir ./src --output ./ --format=json --clean"
 }
 ```
 You can now run `npm run extract` to extract strings from your project's `src` dir. The extracted strings are saved in `JSON`-format in your project's root.
 
 Modify the scripts arguments as required.
 
-## Global install
-You can also install the package globally:
-
-`npm install @biesbjerg/ng2-translate-extract -g`
-
-Now you can execute the script from everywhere:
-
-`ng2-translate-extract --dir /extract/from/this/dir --output /save/to/this/dir --format json --clean`
 ## Commandline arguments
 ```
 Usage:
@@ -37,7 +28,7 @@ Options:
                          strings  (Default is current directory)
   -f, --format [VALUE]   Output format. VALUE must be either [json|pot]  (Default is json)
   -r, --replace BOOLEAN  Replace the contents of output file if it exists
-                         (merging by default)
-  -c, --clean BOOLEAN    Remove unused keys when merging
+                         (Merges by default)
+  -c, --clean BOOLEAN    Remove obsolete strings when merging
   -h, --help             Display help and usage details
 ```
