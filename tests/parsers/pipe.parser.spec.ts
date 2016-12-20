@@ -56,4 +56,31 @@ describe('PipeParser', () => {
 		expect(keys).to.deep.equal(['Info', 'Loading...']);
 	});
 
+	it('should extract strings on same line', () => {
+		const contents = `<span [attr]="'Hello' | translate"></span><span [attr]="'World' | translate"></span>`;
+		const keys = parser.extract(contents, templateFilename).keys();
+		expect(keys).to.deep.equal(['Hello', 'World']);
+	});
+
+	it('should extract strings from this template', () => {
+		const contents = `
+			<ion-list inset>
+				<ion-item>
+					<ion-icon item-left name="person" color="dark"></ion-icon>
+					<ion-input formControlName="name" type="text" [placeholder]="'Name' | translate"></ion-input>
+				</ion-item>
+				<ion-item>
+					<p color="danger" danger *ngFor="let error of form.get('name').getError('remote')">
+						{{ error }}
+					</p>
+				</ion-item>
+			</ion-list>
+			<div class="form-actions">
+				<button ion-button (click)="onSubmit()" color="secondary" block>{{ 'Create account' | translate }}</button>
+			</div>
+		`;
+		const keys = parser.extract(contents, templateFilename).keys();
+		expect(keys).to.deep.equal(['Name', 'Create account']);
+	});
+
 });
