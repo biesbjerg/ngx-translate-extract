@@ -5,7 +5,11 @@
         "noImplicitAny": true,
         "removeComments": true,
         "declaration": true,
-        "target": "ES6",
+        "target": "es5",
+        "lib": [
+            "dom",
+            "es2015"
+        ],
         "module": "commonjs",
         "outDir": "./dist/",
         "sourceMap": true
