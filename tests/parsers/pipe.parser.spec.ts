@@ -36,4 +36,24 @@ describe('PipeParser', () => {
 		expect(keys).to.deep.equal(['Hello World']);
 	});
 
+	it('should not use a greedy regular expression', () => {
+		const contents = `
+			<ion-header>
+				<ion-navbar color="brand">
+					<ion-title>{{ 'Info' | translate }}</ion-title>
+				</ion-navbar>
+			</ion-header>
+
+			<ion-content>
+
+				<content-loading *ngIf="isLoading">
+					{{ 'Loading...' | translate }}
+				</content-loading>
+
+			</ion-content>
+		`;
+		const keys = parser.extract(contents, templateFilename).keys();
+		expect(keys).to.deep.equal(['Info', 'Loading...']);
+	});
+
 });
