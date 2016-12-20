@@ -43,23 +43,23 @@
   },
   "config": {},
   "devDependencies": {
-    "@types/chai": "^3.4.34",
-    "@types/cheerio": "^0.17.31",
-    "@types/glob": "^5.0.30",
-    "@types/mocha": "^2.2.33",
-    "chai": "^3.5.0",
-    "mocha": "^3.2.0",
-    "ts-node": "^1.7.0",
-    "tslint": "^4.0.2",
-    "tslint-eslint-rules": "^3.1.0",
-    "typescript": "^2.0.10"
+    "@types/chai": "3.4.34",
+    "@types/cheerio": "0.17.31",
+    "@types/glob": "5.0.30",
+    "@types/mocha": "2.2.34",
+    "chai": "3.5.0",
+    "mocha": "3.2.0",
+    "ts-node": "1.7.2",
+    "tslint": "4.1.1",
+    "tslint-eslint-rules": "3.2.0",
+    "typescript": "2.0.10"
   },
   "dependencies": {
-    "cheerio": "~0.22.0",
-    "cli": "^1.0.1",
+    "cheerio": "0.22.0",
+    "cli": "1.0.1",
     "fs": "0.0.1-security",
-    "gettext-parser": "^1.2.1",
-    "glob": "^7.1.1",
-    "path": "^0.12.7"
+    "gettext-parser": "1.2.1",
+    "glob": "7.1.1",
+    "path": "0.12.7"
   }
 }
