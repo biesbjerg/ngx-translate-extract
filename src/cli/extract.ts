@@ -13,6 +13,7 @@ import * as cli from 'cli';
 
 const options = cli.parse({
 	dir: ['d', 'Directory path you would like to extract strings from', 'dir', process.env.PWD],
+	name: ['n', 'Name of the file containing extracted strings', 'string', 'template'],
 	output: ['o', 'Directory path you would like to save extracted strings to', 'dir', process.env.PWD],
 	format: ['f', 'Output format', ['json', 'pot'], 'json'],
 	replace: ['r', 'Replace the contents of output file if it exists (Merges by default)', 'boolean', false],
@@ -25,7 +26,7 @@ const options = cli.parse({
 	}
 });
 
-const filename: string = 'template.' + options.format;
+const filename: string = options.name + '.' + options.format;
 const dest: string = path.join(options.output, filename);
 
 const parsers: ParserInterface[] = [
