@@ -2,15 +2,23 @@ import { expect } from 'chai';
 
 import { DirectiveParser } from '../../src/parsers/directive.parser';
 
+class TestDirectiveParser extends DirectiveParser {
+
+	public normalizeTemplateAttributes(template: string): string {
+		return this._normalizeTemplateAttributes(template);
+	}
+
+}
+
 describe('DirectiveParser', () => {
 
 	const templateFilename: string = 'test.template.html';
 	const componentFilename: string = 'test.component.ts';
 
-	let parser: DirectiveParser;
+	let parser: TestDirectiveParser;
 
 	beforeEach(() => {
-		parser = new DirectiveParser();
+		parser = new TestDirectiveParser();
 	});
 
 	it('should extract contents when no translate attribute value is provided', () => {
@@ -102,6 +110,12 @@ describe('DirectiveParser', () => {
 		const contents = `<p>{{ 'Audiobooks for personal development' | translate }}</p>`;
 		const collection = parser.extract(contents, templateFilename);
 		expect(collection.values).to.deep.equal({});
+	});
+
+	it('should normalize bound attributes', () => {
+		const contents = `<p [translate]="'KEY'">Hello World</p>`;
+		const template = parser.normalizeTemplateAttributes(contents);
+		expect(template).to.equal('<p translate="KEY">Hello World</p>');
 	});
 
 });

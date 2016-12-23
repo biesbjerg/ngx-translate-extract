@@ -8,10 +8,6 @@ class TestTemplateParser extends AbstractTemplateParser {
 		return this._isAngularComponent(filePath);
 	}
 
-	public normalizeTemplateAttributes(template: string): string {
-		return this._normalizeTemplateAttributes(template);
-	}
-
 	public extractInlineTemplate(contents: string): string {
 		return this._extractInlineTemplate(contents);
 	}
@@ -39,12 +35,6 @@ describe('AbstractTemplateParser', () => {
 	it('should not recognize html extension as angular component', () => {
 		const result = parser.isAngularComponent('test.html');
 		expect(result).to.equal(false);
-	});
-
-	it('should normalize bound attributes', () => {
-		const contents = `<p [translate]="'KEY'">Hello World</p>`;
-		const template = parser.normalizeTemplateAttributes(contents);
-		expect(template).to.equal('<p translate="KEY">Hello World</p>');
 	});
 
 	it('should extract inline template', () => {
