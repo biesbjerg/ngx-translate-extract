@@ -12,21 +12,29 @@ import * as path from 'path';
 import * as cli from 'cli';
 
 const options = cli.parse({
-	dir: ['d', 'Directory path you would like to extract strings from', 'dir', process.env.PWD],
-	output: ['o', 'Directory path you would like to save extracted strings to', 'dir', process.env.PWD],
+	dir: ['d', 'Path you would like to extract strings from', 'dir', process.env.PWD],
+	output: ['o', 'Path you would like to save extracted strings to', 'dir', process.env.PWD],
 	format: ['f', 'Output format', ['json', 'pot'], 'json'],
 	replace: ['r', 'Replace the contents of output file if it exists (Merges by default)', 'boolean', false],
 	clean: ['c', 'Remove obsolete strings when merging', 'boolean', false]
 });
 
-[options.dir, options.output].forEach(dir => {
-	if (!fs.existsSync(dir)) {
-		cli.fatal(`The directory path you supplied was not found: '${dir}'`);
+const normalizedDir: string = path.resolve(options.dir);
+const normalizedOutput: string = path.resolve(options.output);
+
+let outputDir: string = normalizedOutput;
+let outputFilename: string = `template.${options.format}`;
+if (!fs.existsSync(normalizedOutput) || !fs.statSync(normalizedOutput).isDirectory()) {
+	outputDir = path.dirname(normalizedOutput);
+	outputFilename = path.basename(normalizedOutput);
+}
+const outputPath: string = path.join(outputDir, outputFilename);
+
+[normalizedDir, outputDir].forEach(dir => {
+	if (!fs.existsSync(dir) || !fs.statSync(dir).isDirectory()) {
+		cli.fatal(`The path you supplied was not found: '${dir}'`);
 	}
 });
-
-const filename: string = 'template.' + options.format;
-const dest: string = path.join(options.output, filename);
 
 const parsers: ParserInterface[] = [
 	new PipeParser(),
@@ -41,9 +49,9 @@ const patterns: string[] = [
 
 try {
 	const extractor: Extractor = new Extractor(parsers, patterns);
-	cli.info(`Extracting strings from '${options.dir}'`);
+	cli.info(`Extracting strings from '${normalizedDir}'`);
 
-	const extracted: TranslationCollection = extractor.process(options.dir);
+	const extracted: TranslationCollection = extractor.process(normalizedDir);
 	cli.ok(`* Extracted ${extracted.count()} strings`);
 
 	let collection: TranslationCollection = extracted;
@@ -53,8 +61,8 @@ try {
 		compiler = new PoCompiler();
 	}
 
-	if (!options.replace && fs.existsSync(dest)) {
-		const existing: TranslationCollection = compiler.parse(fs.readFileSync(dest, 'utf-8'));
+	if (!options.replace && fs.existsSync(outputPath)) {
+		const existing: TranslationCollection = compiler.parse(fs.readFileSync(outputPath, 'utf-8'));
 		if (existing.count() > 0) {
 			collection = extracted.union(existing);
 			cli.ok(`* Merged with ${existing.count()} existing strings`);
@@ -70,8 +78,8 @@ try {
 		}
 	}
 
-	fs.writeFileSync(dest, compiler.compile(collection));
-	cli.ok(`* Saved to '${dest}'`);
+	fs.writeFileSync(outputPath, compiler.compile(collection));
+	cli.ok(`* Saved to '${outputPath}'`);
 } catch (e) {
 	cli.fatal(e.toString());
 }
