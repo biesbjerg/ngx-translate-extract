@@ -1,4 +1,4 @@
-export * from './extractor';
+export * from './utils/extractor';
 export * from './utils/translation.collection';
 
 export * from './parsers/parser.interface';
