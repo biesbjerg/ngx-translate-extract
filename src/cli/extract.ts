@@ -36,6 +36,10 @@ const outputPath: string = path.join(outputDir, outputFilename);
 	}
 });
 
+let compiler = new JsonCompiler();
+if (options.format === 'pot') {
+	compiler = new PoCompiler();
+}
 const parsers: ParserInterface[] = [
 	new PipeParser(),
 	new DirectiveParser(),
@@ -55,11 +59,6 @@ try {
 	cli.ok(`* Extracted ${extracted.count()} strings`);
 
 	let collection: TranslationCollection = extracted;
-
-	let compiler = new JsonCompiler();
-	if (options.format === 'pot') {
-		compiler = new PoCompiler();
-	}
 
 	if (!options.replace && fs.existsSync(outputPath)) {
 		const existing: TranslationCollection = compiler.parse(fs.readFileSync(outputPath, 'utf-8'));
