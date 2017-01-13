@@ -18,7 +18,7 @@ export class TranslationCollection {
 		const values = keys.reduce((results, key) => {
 			results[key] = '';
 			return results;
-		}, <TranslationType>{});
+		}, <TranslationType> {});
 		return new TranslationCollection(Object.assign({}, this.values, values));
 	}
 
@@ -76,7 +76,6 @@ export class TranslationCollection {
 	}
 
 	public sort(compareFn?: (a: string, b: string) => number): TranslationCollection {
-
 		if (!compareFn) {
 			// if no compare functions is provided use a case insensitive sorting function
 			compareFn = (a, b) => a.toLowerCase().localeCompare(b.toLowerCase());

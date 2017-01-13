@@ -16,7 +16,7 @@ const options = cli.parse({
 	output: ['o', 'Path you would like to save extracted strings to', 'dir', process.env.PWD],
 	format: ['f', 'Output format', ['json', 'pot'], 'json'],
 	replace: ['r', 'Replace the contents of output file if it exists (Merges by default)', 'boolean', false],
-	sort: ['s', 'Sort translations in the output file in alphabetical order in', 'boolean', false],
+	sort: ['s', 'Sort translations in the output file in alphabetical order', 'boolean', false],
 	clean: ['c', 'Remove obsolete strings when merging', 'boolean', false]
 });
 
@@ -78,7 +78,7 @@ try {
 		}
 	}
 
-	if(options.sort) {
+	if (options.sort) {
 		collection = collection.sort();
 	}
 

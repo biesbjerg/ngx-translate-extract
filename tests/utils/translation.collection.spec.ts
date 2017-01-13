@@ -79,4 +79,10 @@ describe('StringCollection', () => {
 		expect(collection.intersect(newCollection).values).to.deep.equal({ red: 'rød', blue: 'blå' });
 	});
 
+	it('should sort translations in alphabetical order', () => {
+		collection = new TranslationCollection({ red: 'rød', green: 'grøn', blue: 'blå' });
+		collection = collection.sort();
+		expect(collection.keys()).deep.equal(['blue', 'green', 'red']);
+	});
+
 });
