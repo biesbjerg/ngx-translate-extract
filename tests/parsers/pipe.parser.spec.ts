@@ -12,6 +12,12 @@ describe('PipeParser', () => {
 		parser = new PipeParser();
 	});
 
+	it('should only extract string using pipe', () => {
+		const contents = `<button [style.background]="'lime'">{{ 'SomeKey_NotWorking' | translate }}</button>`;
+		const keys = parser.extract(contents, templateFilename).keys();
+		expect(keys).to.deep.equal(['SomeKey_NotWorking']);
+	});
+
 	it('should extract interpolated strings using translate pipe', () => {
 		const contents = `Hello {{ 'World' | translate }}`;
 		const keys = parser.extract(contents, templateFilename).keys();
