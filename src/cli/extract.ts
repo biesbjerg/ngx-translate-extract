@@ -4,7 +4,9 @@ import { ParserInterface } from '../parsers/parser.interface';
 import { PipeParser } from '../parsers/pipe.parser';
 import { DirectiveParser } from '../parsers/directive.parser';
 import { ServiceParser } from '../parsers/service.parser';
+import { CompilerInterface } from '../compilers/compiler.interface';
 import { JsonCompiler } from '../compilers/json.compiler';
+import { NamespacedJsonCompiler } from '../compilers/namespaced-json.compiler';
 import { PoCompiler } from '../compilers/po.compiler';
 
 import * as fs from 'fs';
@@ -14,17 +16,45 @@ import * as cli from 'cli';
 const options = cli.parse({
 	dir: ['d', 'Path you would like to extract strings from', 'dir', process.env.PWD],
 	output: ['o', 'Path you would like to save extracted strings to', 'dir', process.env.PWD],
-	format: ['f', 'Output format', ['json', 'pot'], 'json'],
+	format: ['f', 'Output format', ['json', 'namespaced-json', 'pot'], 'json'],
 	replace: ['r', 'Replace the contents of output file if it exists (Merges by default)', 'boolean', false],
 	sort: ['s', 'Sort translations in the output file in alphabetical order', 'boolean', false],
 	clean: ['c', 'Remove obsolete strings when merging', 'boolean', false]
 });
 
+const patterns: string[] = [
+	'/**/*.html',
+	'/**/*.ts',
+	'/**/*.js'
+];
+const parsers: ParserInterface[] = [
+	new PipeParser(),
+	new DirectiveParser(),
+	new ServiceParser()
+];
+
+let compiler: CompilerInterface;
+let ext: string;
+switch (options.format) {
+	case 'pot':
+		compiler = new PoCompiler();
+		ext = 'pot';
+		break;
+	case 'json':
+		compiler = new JsonCompiler();
+		ext = 'json';
+		break;
+	case 'namespaced-json':
+		compiler = new NamespacedJsonCompiler();
+		ext = 'json';
+		break;
+}
+
 const normalizedDir: string = path.resolve(options.dir);
 const normalizedOutput: string = path.resolve(options.output);
 
 let outputDir: string = normalizedOutput;
-let outputFilename: string = `template.${options.format}`;
+let outputFilename: string = `template.${ext}`;
 if (!fs.existsSync(normalizedOutput) || !fs.statSync(normalizedOutput).isDirectory()) {
 	outputDir = path.dirname(normalizedOutput);
 	outputFilename = path.basename(normalizedOutput);
@@ -36,21 +66,6 @@ const outputPath: string = path.join(outputDir, outputFilename);
 		cli.fatal(`The path you supplied was not found: '${dir}'`);
 	}
 });
-
-let compiler = new JsonCompiler();
-if (options.format === 'pot') {
-	compiler = new PoCompiler();
-}
-const parsers: ParserInterface[] = [
-	new PipeParser(),
-	new DirectiveParser(),
-	new ServiceParser()
-];
-const patterns: string[] = [
-	'/**/*.html',
-	'/**/*.ts',
-	'/**/*.js'
-];
 
 try {
 	const extractor: Extractor = new Extractor(parsers, patterns);

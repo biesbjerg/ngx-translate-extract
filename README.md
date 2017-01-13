@@ -26,7 +26,8 @@ Options:
   -d, --dir [DIR]        Directory path you would like to extract strings from  (Default is current directory)
   -o, --output [DIR]     Directory path you would like to save extracted
                          strings  (Default is current directory/template.json)
-  -f, --format [VALUE]   Output format. VALUE must be either [json|pot]  (Default is json)
+  -f, --format [VALUE]   Output format. VALUE must be either
+                         [json|namespaced-json|pot]  (Default is json)
   -r, --replace BOOLEAN  Replace the contents of output file if it exists
                          (Merges by default)
   -s, --sort BOOLEAN     Sort translations in the output file in alphabetical

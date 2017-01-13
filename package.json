@@ -1,6 +1,6 @@
 {
   "name": "@biesbjerg/ng2-translate-extract",
-  "version": "0.4.0",
+  "version": "0.5.0",
   "description": "Extract strings from projects using ng2-translate",
   "main": "dist/index.js",
   "typings": "dist/index.d.ts",
@@ -60,6 +60,7 @@
     "fs": "0.0.1-security",
     "gettext-parser": "1.2.1",
     "glob": "7.1.1",
-    "path": "0.12.7"
+    "path": "0.12.7",
+    "flat": "2.0.1"
   }
 }
