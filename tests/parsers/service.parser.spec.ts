@@ -123,4 +123,18 @@ describe('ServiceParser', () => {
 		expect(keys).to.deep.equal(['Hello', 'World', 'How', 'Are', 'You', 'Today']);
 	});
 
+	it('should extract strings with params', () => {
+		const contents = `
+			@Component({ })
+			export class AppComponent {
+				public constructor(protected trans: TranslateService) { }
+				public test() {
+					trans.get("You are expected at {{time}}", {time: moment.format('H:mm')}).subscribe();
+				}
+			}
+		`;
+		const keys = parser.extract(contents, componentFilename).keys();
+		expect(keys).to.deep.equal(['You are expected at {{time}}']);
+	});
+
 });
