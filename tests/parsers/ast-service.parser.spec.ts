@@ -1,26 +1,26 @@
 import { expect } from 'chai';
 
-import { ServiceParser } from '../../src/parsers/service.parser';
+import { AstServiceParser } from '../../src/parsers/ast-service.parser';
 
-class TestServiceParser extends ServiceParser {
+class TestAstServiceParser extends AstServiceParser {
 
-	public extractTranslateServiceVar(contents: string): string {
-		return this._extractTranslateServiceVar(contents);
-	}
+	/*public getInstancePropertyName(): string {
+		return this._getInstancePropertyName();
+	}*/
 
 }
 
-describe('ServiceParser', () => {
+describe('AstServiceParser', () => {
 
 	const componentFilename: string = 'test.component.ts';
 
-	let parser: TestServiceParser;
+	let parser: TestAstServiceParser;
 
 	beforeEach(() => {
-		parser = new TestServiceParser();
+		parser = new TestAstServiceParser();
 	});
 
-	it('should extract variable used for TranslateService', () => {
+	/*it('should extract variable used for TranslateService', () => {
 		const contents = `
 			@Component({ })
 			export class AppComponent {
@@ -30,9 +30,9 @@ describe('ServiceParser', () => {
 					protected _translateService: TranslateService
 			) { }
 		`;
-		const name = parser.extractTranslateServiceVar(contents);
+		const name = parser.getInstancePropertyName();
 		expect(name).to.equal('_translateService');
-	});
+	});*/
 
 	it('should extract strings in TranslateService\'s get() method', () => {
 		const contents = `
@@ -129,7 +129,7 @@ describe('ServiceParser', () => {
 			export class AppComponent {
 				public constructor(protected trans: TranslateService) { }
 				public test() {
-					trans.get('Hello World');
+					trans.get("You are expected at {{time}}", {time: moment.format('H:mm')}).subscribe();
 				}
 			}
 		`;
@@ -137,8 +137,7 @@ describe('ServiceParser', () => {
 		expect(keys).to.deep.equal([]);
 	});
 
-	// FAILS (Use AstServiceParser)
-	/*it('should extract string with params on same line', () => {
+	it('should extract string with params on same line', () => {
 		const contents = `
 			@Component({ })
 			export class AppComponent {
@@ -150,6 +149,6 @@ describe('ServiceParser', () => {
 		`;
 		const keys = parser.extract(contents, componentFilename).keys();
 		expect(keys).to.deep.equal(['You are expected at {{time}}']);
-	});*/
+	});
 
 });

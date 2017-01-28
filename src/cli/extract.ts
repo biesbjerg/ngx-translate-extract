@@ -4,6 +4,7 @@ import { ParserInterface } from '../parsers/parser.interface';
 import { PipeParser } from '../parsers/pipe.parser';
 import { DirectiveParser } from '../parsers/directive.parser';
 import { ServiceParser } from '../parsers/service.parser';
+import { AstServiceParser } from '../parsers/ast-service.parser';
 import { CompilerInterface } from '../compilers/compiler.interface';
 import { JsonCompiler } from '../compilers/json.compiler';
 import { NamespacedJsonCompiler } from '../compilers/namespaced-json.compiler';
@@ -19,18 +20,18 @@ const options = cli.parse({
 	format: ['f', 'Output format', ['json', 'namespaced-json', 'pot'], 'json'],
 	replace: ['r', 'Replace the contents of output file if it exists (Merges by default)', 'boolean', false],
 	sort: ['s', 'Sort translations in the output file in alphabetical order', 'boolean', false],
-	clean: ['c', 'Remove obsolete strings when merging', 'boolean', false]
+	clean: ['c', 'Remove obsolete strings when merging', 'boolean', false],
+	experimental: ['e', 'Use experimental AST Service Parser', 'boolean', false]
 });
 
 const patterns: string[] = [
 	'/**/*.html',
-	'/**/*.ts',
-	'/**/*.js'
+	'/**/*.ts'
 ];
 const parsers: ParserInterface[] = [
 	new PipeParser(),
 	new DirectiveParser(),
-	new ServiceParser()
+	options.experimental ? new AstServiceParser() : new ServiceParser()
 ];
 
 let compiler: CompilerInterface;
