@@ -1,3 +1,5 @@
+If you like this project please show your support with a GitHub star. Much appreciated!
+
 # ng2-translate-extract
 Extract translatable (ng2-translate) strings and save as a JSON or Gettext pot file.
 Merges with existing strings if the output file already exists.
@@ -33,5 +35,6 @@ Options:
   -s, --sort BOOLEAN     Sort translations in the output file in alphabetical
                          order
   -c, --clean BOOLEAN    Remove obsolete strings when merging
+  -e, --experimental BOOLEAN Use experimental AST Service Parser
   -h, --help             Display help and usage details
 ```
