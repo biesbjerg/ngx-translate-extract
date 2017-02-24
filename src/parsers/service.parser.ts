@@ -7,21 +7,40 @@ export class ServiceParser implements ParserInterface {
 		let collection: TranslationCollection = new TranslationCollection();
 
 		const translateServiceVar = this._extractTranslateServiceVar(contents);
-		if (!translateServiceVar) {
+		if (!translateServiceVar && contents.indexOf('//translate') === -1) {
 			return collection;
 		}
 
-		const methodRegExp: RegExp = /(?:get|instant)\s*\(\s*(\[?\s*(['"`])([^\1\r\n]*)\2\s*\]?)/;
-		const regExp: RegExp = new RegExp(`\\.${translateServiceVar}\\.${methodRegExp.source}`, 'g');
+		let methodRegExp: RegExp = /(?:get|instant)\s*\(\s*(\[?\s*(['"`])([^\1\r\n]*)\2\s*\]?)/;
+		let regExp: RegExp = new RegExp(`\\.${translateServiceVar}\\.${methodRegExp.source}`, 'g');
 
 		let matches: RegExpExecArray;
-		while (matches = regExp.exec(contents)) {
-			if (this._stringContainsArray(matches[1])) {
-				collection = collection.addKeys(this._stringToArray(matches[1]));
-			} else {
-				collection = collection.add(matches[3]);
+        let matche: any;
+        if (translateServiceVar){
+			while (matches = regExp.exec(contents)) {
+				if (this._stringContainsArray(matches[1])) {
+					collection = collection.addKeys(this._stringToArray(matches[1]));
+				} else {
+					collection = collection.add(matches[3]);
+				}
 			}
 		}
+        contents = contents
+        .replace(new RegExp("''", 'g'), "\"DBL_ONE_QUOTED\"")
+        .replace(new RegExp('""', 'g'), "\"DBL_TWO_QUOTED\"");
+        methodRegExp = /(?:'|")(.*?)\/\/translate/;
+        regExp = new RegExp(methodRegExp.source, 'g');
+        while (matches = regExp.exec(contents)) {
+          matche = matches[1].trim();
+          if (",;:+".indexOf(matche[matche.length-1])!==-1){
+            matche = matche.substr(0,matche.length-1);
+          }
+          matche = matche.substr(0,matche.length-1);
+          matche = matche
+          .replace(new RegExp("\"DBL_ONE_QUOTED\"", 'g'), "''")
+          .replace(new RegExp("\"DBL_TWO_QUOTED\"", 'g'), '""')
+          collection = collection.add(matche);
+        }
 
 		return collection;
 	}
