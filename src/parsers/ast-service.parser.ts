@@ -34,7 +34,7 @@ export class AstServiceParser implements ParserInterface {
 	}
 
 	protected _createSourceFile(path: string, contents: string): ts.SourceFile {
-		return ts.createSourceFile(path, contents, ts.ScriptTarget.ES6, /*setParentNodes */ false);
+		return ts.createSourceFile(path, contents, null, /*setParentNodes */ false);
 	}
 
 	/**
