@@ -13,6 +13,7 @@ import { PoCompiler } from '../compilers/po.compiler';
 import * as fs from 'fs';
 import * as path from 'path';
 import * as cli from 'cli';
+import * as glob from 'glob';
 
 const options = cli.parse({
 	dir: ['d', 'Path you would like to extract strings from', 'dir', process.env.PWD],
@@ -56,11 +57,10 @@ const normalizedOutput: string = path.resolve(options.output);
 
 let outputDir: string = normalizedOutput;
 let outputFilename: string = `template.${ext}`;
-if (!fs.existsSync(normalizedOutput) || !fs.statSync(normalizedOutput).isDirectory()) {
+if ((!fs.existsSync(normalizedOutput) || !fs.statSync(normalizedOutput).isDirectory()) && path.extname(normalizedOutput) !== '') {
 	outputDir = path.dirname(normalizedOutput);
 	outputFilename = path.basename(normalizedOutput);
 }
-const outputPath: string = path.join(outputDir, outputFilename);
 
 [normalizedDir, outputDir].forEach(dir => {
 	if (!fs.existsSync(dir) || !fs.statSync(dir).isDirectory()) {
@@ -68,15 +68,7 @@ const outputPath: string = path.join(outputDir, outputFilename);
 	}
 });
 
-try {
-	const extractor: Extractor = new Extractor(parsers, patterns);
-	cli.info(`Extracting strings from '${normalizedDir}'`);
-
-	const extracted: TranslationCollection = extractor.process(normalizedDir);
-	cli.ok(`* Extracted ${extracted.count()} strings`);
-
-	let collection: TranslationCollection = extracted;
-
+function parse(outputPath: string, collection: TranslationCollection, extracted: TranslationCollection) {
 	if (!options.replace && fs.existsSync(outputPath)) {
 		const existing: TranslationCollection = compiler.parse(fs.readFileSync(outputPath, 'utf-8'));
 		if (existing.count() > 0) {
@@ -100,6 +92,38 @@ try {
 
 	fs.writeFileSync(outputPath, compiler.compile(collection));
 	cli.ok(`* Saved to '${outputPath}'`);
+}
+
+try {
+	const extractor: Extractor = new Extractor(parsers, patterns);
+	cli.info(`Extracting strings from '${normalizedDir}'`);
+
+	const extracted: TranslationCollection = extractor.process(normalizedDir);
+	cli.ok(`* Extracted ${extracted.count()} strings`);
+
+	let collection: TranslationCollection = extracted;
+
+	if (ext === 'json') {
+		glob(outputDir + '/*.json', options, function (err, files) {
+			console.log(files);
+			if (err) {
+				cli.fatal(err);
+			}
+			else if (files && files.length > 0) {
+				for (let file of files) {
+					parse(file, collection, extracted);
+				}
+			}
+			else {
+				let outputPath: string = path.join(outputDir, outputFilename);
+				parse(outputPath, collection, extracted);
+			}
+		});
+	}
+	else {
+		let outputPath: string = path.join(outputDir, outputFilename);
+		parse(outputPath, collection, extracted);
+	}
 } catch (e) {
 	cli.fatal(e.toString());
 }

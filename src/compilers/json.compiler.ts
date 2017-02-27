@@ -8,6 +8,7 @@ export class JsonCompiler implements CompilerInterface {
 	}
 
 	public parse(contents: string): TranslationCollection {
+		contents = contents || '{}';
 		return new TranslationCollection(JSON.parse(contents));
 	}
 
