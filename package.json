@@ -23,6 +23,7 @@
     "url": "https://github.com/biesbjerg/ngx-translate-extract.git"
   },
   "keywords": [
+    "angular",
     "angular2",
     "ionic",
     "ionic2",
@@ -31,6 +32,7 @@
     "extract",
     "extractor",
     "translate",
+    "translation",
     "i18n",
     "gettext"
   ],
