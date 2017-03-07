@@ -1,18 +1,18 @@
 If you like this project please show your support with a GitHub star. Much appreciated!
 
-# ng2-translate-extract
-Extract translatable (ng2-translate) strings and save as a JSON or Gettext pot file.
+# ngx-translate-extract
+Extract translatable (ngx-translate) strings and save as a JSON or Gettext pot file.
 Merges with existing strings if the output file already exists.
 
 ## Usage
 Install the package in your project:
 
-`npm install @biesbjerg/ng2-translate-extract --save-dev`
+`npm install @biesbjerg/ngx-translate-extract --save-dev`
 
 Add an `extract` script to your project's `package.json`:
 ```
 "scripts": {
-  "extract": "ng2-translate-extract --dir ./src --output ./ --format=json --clean"
+  "extract": "ngx-translate-extract --dir ./src --output ./ --format=json --clean"
 }
 ```
 You can now run `npm run extract` to extract strings from your project's `src` dir. The extracted strings are saved in `JSON`-format in your project's root.
@@ -22,7 +22,7 @@ Modify the scripts arguments as required.
 ## Commandline arguments
 ```
 Usage:
-  ng2-translate-extract [OPTIONS] [ARGS]
+  ngx-translate-extract [OPTIONS] [ARGS]
 
 Options:
   -d, --dir [DIR]        Directory path you would like to extract strings from  (Default is current directory)
