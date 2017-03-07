@@ -11,6 +11,7 @@ export class NamespacedJsonCompiler implements CompilerInterface {
 	}
 
 	public parse(contents: string): TranslationCollection {
+		contents = contents || '{}';
 		const values = flat.flatten(JSON.parse(contents));
 		return new TranslationCollection(values);
 	}
