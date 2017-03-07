@@ -77,15 +77,14 @@ export class TranslationCollection {
 
 	public sort(compareFn?: (a: string, b: string) => number): TranslationCollection {
 		if (!compareFn) {
-			// if no compare functions is provided use a case insensitive sorting function
-			compareFn = (a, b) => a.toLowerCase().localeCompare(b.toLowerCase());
+			// If no compare function is provided use a case insensitive sorting function
+			compareFn = (a: string, b: string) => a.toLowerCase().localeCompare(b.toLowerCase());
 		}
-
-		let collection = new TranslationCollection();
-		let sortedKeys = this.keys().sort(compareFn);
-		sortedKeys.forEach((key) => {
-			collection = collection.add(key, this.get(key));
+		let values: TranslationType = {};
+		this.keys().sort(compareFn).forEach((key) => {
+			values[key] = this.get(key);
 		});
-		return collection;
+
+		return new TranslationCollection(values);
 	}
 }
