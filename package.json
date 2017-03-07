@@ -1,7 +1,7 @@
 {
-  "name": "@biesbjerg/ng2-translate-extract",
-  "version": "0.6.0",
-  "description": "Extract strings from projects using ng2-translate",
+  "name": "@biesbjerg/ngx-translate-extract",
+  "version": "1.0.0",
+  "description": "Extract strings from projects using ngx-translate",
   "main": "dist/index.js",
   "typings": "dist/index.d.ts",
   "files": [
@@ -9,7 +9,7 @@
     "dist/"
   ],
   "bin": {
-    "ng2-translate-extract": "bin/extract.js"
+    "ngx-translate-extract": "bin/extract.js"
   },
   "scripts": {
     "build": "npm run clean && tsc",
@@ -20,14 +20,16 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/biesbjerg/ng2-translate-extract.git"
+    "url": "https://github.com/biesbjerg/ngx-translate-extract.git"
   },
   "keywords": [
     "angular2",
     "ionic",
     "ionic2",
     "ng2-translate",
+    "ngx-translate",
     "extract",
+    "extractor",
     "translate",
     "i18n",
     "gettext"
@@ -35,30 +37,30 @@
   "author": "Kim Biesbjerg <kim@biesbjerg.com>",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/biesbjerg/ng2-translate-extract/issues"
+    "url": "https://github.com/biesbjerg/ngx-translate-extract/issues"
   },
-  "homepage": "https://github.com/biesbjerg/ng2-translate-extract",
+  "homepage": "https://github.com/biesbjerg/ngx-translate-extract",
   "engines": {
     "node": ">=4.3.2"
   },
   "config": {},
   "devDependencies": {
-    "@types/chai": "3.4.34",
+    "@types/chai": "3.4.35",
     "@types/cheerio": "0.17.31",
     "@types/glob": "5.0.30",
-    "@types/mocha": "2.2.34",
+    "@types/mocha": "2.2.39",
     "chai": "3.5.0",
     "mocha": "3.2.0",
-    "ts-node": "1.7.2",
-    "tslint": "4.1.1",
-    "tslint-eslint-rules": "3.2.0",
-    "typescript": "2.0.10"
+    "ts-node": "2.1.0",
+    "tslint": "4.5.1",
+    "tslint-eslint-rules": "3.4.0",
+    "typescript": "2.2.1"
   },
   "dependencies": {
     "cheerio": "0.22.0",
     "cli": "1.0.1",
     "fs": "0.0.1-security",
-    "gettext-parser": "1.2.1",
+    "gettext-parser": "1.2.2",
     "glob": "7.1.1",
     "path": "0.12.7",
     "flat": "2.0.1"

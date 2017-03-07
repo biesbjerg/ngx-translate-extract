@@ -34,7 +34,7 @@ export class AstServiceParser implements ParserInterface {
 	}
 
 	protected _createSourceFile(path: string, contents: string): ts.SourceFile {
-		return ts.createSourceFile(path, contents, ts.ScriptTarget.ES6, /*setParentNodes */ false);
+		return ts.createSourceFile(path, contents, null, /*setParentNodes */ false);
 	}
 
 	/**
@@ -43,6 +43,10 @@ export class AstServiceParser implements ParserInterface {
 	 */
 	protected _getInstancePropertyName(): string {
 		const constructorNode = this._findConstructorNode();
+		if (!constructorNode) {
+			return null;
+		}
+
 		const result = constructorNode.parameters.find(parameter => {
 			// Skip if visibility modifier is not present (we want it set as an instance property)
 			if (!parameter.modifiers) {
@@ -50,7 +54,7 @@ export class AstServiceParser implements ParserInterface {
 			}
 
 			// Make sure className is of the correct type
-			const className: string = ( (parameter.type as ts.TypeReferenceNode).typeName as ts.Identifier).text;
+			const className: string = ((parameter.type as ts.TypeReferenceNode).typeName as ts.Identifier).text;
 			if (className !== this._serviceClassName) {
 				return false;
 			}
