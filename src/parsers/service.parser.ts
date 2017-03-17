@@ -12,7 +12,7 @@ export class ServiceParser implements ParserInterface {
 		}
 
 		const methodRegExp: RegExp = /(?:get|instant)\s*\(\s*(\[?\s*(['"`])([^\1\r\n]*)\2\s*\]?)/;
-		const regExp: RegExp = new RegExp(`\\.${translateServiceVar}\\.${methodRegExp.source}`, 'g');
+		const regExp: RegExp = new RegExp(`${translateServiceVar}\\.${methodRegExp.source}`, 'g');
 
 		let matches: RegExpExecArray;
 		while (matches = regExp.exec(contents)) {
