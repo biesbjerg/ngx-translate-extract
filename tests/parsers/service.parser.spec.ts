@@ -2,7 +2,7 @@ import { expect } from 'chai';
 
 import { ServiceParser } from '../../src/parsers/service.parser';
 
-class TestAstServiceParser extends ServiceParser {
+class TestServiceParser extends ServiceParser {
 
 	/*public getInstancePropertyName(): string {
 		return this._getInstancePropertyName();
@@ -14,10 +14,10 @@ describe('ServiceParser', () => {
 
 	const componentFilename: string = 'test.component.ts';
 
-	let parser: TestAstServiceParser;
+	let parser: TestServiceParser;
 
 	beforeEach(() => {
-		parser = new TestAstServiceParser();
+		parser = new TestServiceParser();
 	});
 
 	/*it('should extract variable used for TranslateService', () => {
