@@ -18,18 +18,28 @@ import * as yargs from 'yargs';
 
 const options: CliOptionsInterface = yargs
 	.usage('Extract strings from files for translation.\nUsage: $0 [options]')
-	.help('help')
-	.option('dir', {
-		alias: 'd',
-		describe: 'Paths you would like to extract strings from. Multiple paths can be specified',
+	.help('h')
+	.alias('h', 'help')
+	.option('input', {
+		alias: ['i', 'dir', 'd'],
+		describe: 'Paths you would like to extract strings from. You can use path expansion, glob patterns and multiple paths',
 		default: process.env.PWD,
-		type: 'array'
+		type: 'array',
+	})
+	.check((options: CliOptionsInterface) => {
+		options.input.forEach(dir => {
+			if (!fs.existsSync(dir) || !fs.statSync(dir).isDirectory()) {
+				throw new Error(`The path you supplied was not found: '${dir}'`)
+			}
+
+		});
+		return true;
 	})
 	.option('output', {
 		alias: 'o',
-		describe: 'Path you would like to save extracted strings to. Multiple paths can be specified',
-		default: process.env.PWD,
-		type: 'array'
+		describe: 'Paths where you would like to save extracted strings. You can use path expansion, glob patterns and multiple paths',
+		type: 'array',
+		required: true
 	})
 	.option('format', {
 		alias: 'f',
@@ -91,13 +101,8 @@ let extractedStrings: TranslationCollection = new TranslationCollection();
 
 // Extract strings from paths
 console.log(chalk.bold('Extracting strings from...'));
-options.dir.forEach(dir => {
+options.input.forEach(dir => {
 	const normalizedDir: string = path.resolve(dir);
-	if (!fs.existsSync(dir) || !fs.statSync(dir).isDirectory()) {
-		console.log(`The path you supplied was not found: '${dir}'`);
-		process.exit(1);
-	}
-
 	console.log(chalk.gray('- %s'), normalizedDir);
 	extractedStrings = extractedStrings.union(extractor.process(normalizedDir));
 });

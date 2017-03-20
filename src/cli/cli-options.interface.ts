@@ -1,5 +1,5 @@
 export interface CliOptionsInterface {
-	dir: string[];
+	input: string[];
 	output: string[];
 	format: 'json' | 'namespaced-json' | 'pot';
 	replace: boolean;
