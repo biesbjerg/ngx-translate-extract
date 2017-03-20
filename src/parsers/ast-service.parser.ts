@@ -54,7 +54,11 @@ export class AstServiceParser implements ParserInterface {
 			}
 
 			// Make sure className is of the correct type
-			const className: string = ((parameter.type as ts.TypeReferenceNode).typeName as ts.Identifier).text;
+			const parameterType: ts.Identifier = (parameter.type as ts.TypeReferenceNode).typeName as ts.Identifier;
+			if (!parameterType) {
+				return false;
+			}
+			const className: string = parameterType.text;
 			if (className !== this._serviceClassName) {
 				return false;
 			}
