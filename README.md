@@ -12,29 +12,56 @@ Install the package in your project:
 Add an `extract` script to your project's `package.json`:
 ```
 "scripts": {
-  "extract": "ngx-translate-extract --dir ./src --output ./ --format=json --clean"
+  "extract": "ngx-translate-extract --input ./src --output ./src/assets/i18n/*.json --clean --sort --format namespaced-json"
 }
 ```
-You can now run `npm run extract` to extract strings from your project's `src` dir. The extracted strings are saved in `JSON`-format in your project's root.
+You can now run `npm run extract` to extract strings.
+
+## Commandline examples
+
+**Extract from dir and save to file**
+
+`ngx-translate-extract -i ./src -o ./src/i18n/strings.json`
+
+**Extract from multiple dirs**
+
+`ngx-translate-extract -i ./src/folder-a ./src/folder-b -o ./src/i18n/strings.json`
+
+**Extract and save to multiple files**
+
+`ngx-translate-extract -i ./src -o ./src/i18n/{da,en,fr}.json`
+
+**or**
+
+`ngx-translate-extract -i ./src -o ./src/i18n/da.json ./src/i18n/en.json ./src/i18n/fr.json`
+
+**or (update only)**
+
+`ngx-translate-extract -i ./src -o ./src/i18n/*.json`
+
 
 Modify the scripts arguments as required.
 
 ## Commandline arguments
 ```
 Usage:
-  ngx-translate-extract [OPTIONS] [ARGS]
+ngx-translate-extract [options]
 
 Options:
-  -d, --dir [DIR]        Directory path you would like to extract strings from  (Default is current directory)
-  -o, --output [DIR]     Directory path you would like to save extracted
-                         strings  (Default is current directory/template.json)
-  -f, --format [VALUE]   Output format. VALUE must be either
-                         [json|namespaced-json|pot]  (Default is json)
-  -r, --replace BOOLEAN  Replace the contents of output file if it exists
-                         (Merges by default)
-  -s, --sort BOOLEAN     Sort translations in the output file in alphabetical
-                         order
-  -c, --clean BOOLEAN    Remove obsolete strings when merging
-  -e, --experimental BOOLEAN Use experimental AST Service Parser
-  -h, --help             Display help and usage details
-```
+  --version, -v   Show version number                                  [boolean]
+  --help, -h      Show help                                            [boolean]
+  --input, -i     Paths you would like to extract strings from. You can use path
+                  expansion, glob patterns and multiple paths
+                     [array] [default: "/Users/kim/ionic/ngx-translate-extract"]
+  --patterns, -p  Extract strings from the following file patterns
+                                    [array] [default: ["/**/*.html","/**/*.ts"]]
+  --output, -o    Paths where you would like to save extracted strings. You can
+                  use path expansion, glob patterns and multiple paths
+                                                              [array] [required]
+  --format, -f    Output format
+          [string] [choices: "json", "namespaced-json", "pot"] [default: "json"]
+  --replace, -r   Replace the contents of output file if it exists (Merges by
+                  default)                            [boolean] [default: false]
+  --sort, -s      Sort strings in alphabetical order when saving
+                                                      [boolean] [default: false]
+  --clean, -c     Remove obsolete strings when merging[boolean] [default: false]
