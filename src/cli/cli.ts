@@ -30,7 +30,7 @@ export const cli = yargs
 	})
 	.option('patterns', {
 		alias: 'p',
-		describe: 'Input file patterns to parse',
+		describe: 'Extract strings from the following file patterns',
 		type: 'array',
 		default: ['/**/*.html', '/**/*.ts']
 	})
@@ -56,7 +56,7 @@ export const cli = yargs
 	})
 	.option('sort', {
 		alias: 's',
-		describe: 'Sort translations in the output file in alphabetical order',
+		describe: 'Sort strings in alphabetical order when saving',
 		default: false,
 		type: 'boolean'
 	})
