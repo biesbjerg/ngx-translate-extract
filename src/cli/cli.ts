@@ -8,7 +8,7 @@ import * as yargs from 'yargs';
 
 export const cli = yargs
 	.usage('Extract strings from files for translation.\nUsage: $0 [options]')
-	.version('2.0.0') // TODO: Read from package.json
+	.version(require(__dirname + '/../../package.json').version)
 	.alias('version', 'v')
 	.help('help')
 	.alias('help', 'h')
