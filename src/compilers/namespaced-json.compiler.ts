@@ -5,6 +5,8 @@ import * as flat from 'flat';
 
 export class NamespacedJsonCompiler implements CompilerInterface {
 
+	public extension = 'json';
+
 	public compile(collection: TranslationCollection): string {
 		const values: {} = flat.unflatten(collection.values);
 		return JSON.stringify(values, null, '\t');

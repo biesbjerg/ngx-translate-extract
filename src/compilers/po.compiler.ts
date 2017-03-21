@@ -5,6 +5,8 @@ import * as gettext from 'gettext-parser';
 
 export class PoCompiler implements CompilerInterface {
 
+	public extension = 'po';
+
 	/**
 	 * Translation domain
 	 */
