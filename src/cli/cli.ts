@@ -25,7 +25,7 @@ export const cli = yargs
 	.check(options => {
 		options.input.forEach((dir: string) => {
 			if (!fs.existsSync(dir) || !fs.statSync(dir).isDirectory()) {
-				throw new Error(`The path you supplied was not found: '${dir}'`)
+				throw new Error(`The path you supplied was not found: '${dir}'`);
 			}
 
 		});
