@@ -35,4 +35,14 @@ describe('NamespacedJsonCompiler', () => {
 		expect(result).to.equal('{\n\t"NAMESPACE": {\n\t\t"KEY": {\n\t\t\t"FIRST_KEY": "",\n\t\t\t"SECOND_KEY": "VALUE"\n\t\t}\n\t}\n}');
 	});
 
+	it('should preserve numeric values on compile', () => {
+		const collection = new TranslationCollection({
+			"option.0": '',
+			"option.1": '',
+			"option.2": ''
+		});
+		const result: string = compiler.compile(collection);
+		expect(result).to.equal('{\n\t"option": {\n\t\t"0": "",\n\t\t"1": "",\n\t\t"2": ""\n\t}\n}');
+	});
+
 });

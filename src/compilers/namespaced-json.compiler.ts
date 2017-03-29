@@ -8,7 +8,9 @@ export class NamespacedJsonCompiler implements CompilerInterface {
 	public extension = 'json';
 
 	public compile(collection: TranslationCollection): string {
-		const values: {} = flat.unflatten(collection.values);
+		const values: {} = flat.unflatten(collection.values, {
+			object: true
+		});
 		return JSON.stringify(values, null, '\t');
 	}
 
