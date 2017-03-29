@@ -17,7 +17,7 @@ Add an `extract` script to your project's `package.json`:
 ```
 You can now run `npm run extract` to extract strings.
 
-## Commandline examples
+## Extract examples
 
 **Extract from dir and save to file**
 
@@ -39,6 +39,17 @@ You can now run `npm run extract` to extract strings.
 
 `ngx-translate-extract -i ./src -o ./src/i18n/*.json`
 
+**or (update only)**
+
+## Custom indentation
+By default, tabs are used for indentation when writing extracted strings to json formats:
+
+`ngx-translate-extract -i ./src -o ./src/i18n/en.json --format-indentation $'\t'`
+
+If you want to use spaces instead, you can do the following:
+
+`ngx-translate-extract -i ./src -o ./src/i18n/en.json --format-indentation '  '`
+
 
 Modify the scripts arguments as required.
 
@@ -48,20 +59,23 @@ Usage:
 ngx-translate-extract [options]
 
 Options:
-  --version, -v   Show version number                                  [boolean]
-  --help, -h      Show help                                            [boolean]
-  --input, -i     Paths you would like to extract strings from. You can use path
-                  expansion, glob patterns and multiple paths
-                     [array] [default: "/Users/kim/ionic/ngx-translate-extract"]
-  --patterns, -p  Extract strings from the following file patterns
+  --version, -v               Show version number                      [boolean]
+  --help, -h                  Show help                                [boolean]
+  --input, -i                 Paths you would like to extract strings from. You
+                              can use path expansion, glob patterns and multiple
+                              paths
+                     [array] [default: current working path]
+  --patterns, -p              Extract strings from the following file patterns
                                     [array] [default: ["/**/*.html","/**/*.ts"]]
-  --output, -o    Paths where you would like to save extracted strings. You can
-                  use path expansion, glob patterns and multiple paths
-                                                              [array] [required]
-  --format, -f    Output format
+  --output, -o                Paths where you would like to save extracted
+                              strings. You can use path expansion, glob patterns
+                              and multiple paths              [array] [required]
+  --format, -f                Output format
           [string] [choices: "json", "namespaced-json", "pot"] [default: "json"]
-  --replace, -r   Replace the contents of output file if it exists (Merges by
-                  default)                            [boolean] [default: false]
-  --sort, -s      Sort strings in alphabetical order when saving
+  --format-indentation, --fi  Output format indentation [string] [default: "\t"]
+  --replace, -r               Replace the contents of output file if it exists
+                              (Merges by default)     [boolean] [default: false]
+  --sort, -s                  Sort strings in alphabetical order when saving
                                                       [boolean] [default: false]
-  --clean, -c     Remove obsolete strings when merging[boolean] [default: false]
+  --clean, -c                 Remove obsolete strings when merging
+                                                      [boolean] [default: false]

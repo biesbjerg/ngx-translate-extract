@@ -12,6 +12,8 @@ export class PoCompiler implements CompilerInterface {
 	 */
 	public domain = '';
 
+	public constructor(options?: any) { }
+
 	public compile(collection: TranslationCollection): string {
 		const data = {
 			charset: 'utf-8',

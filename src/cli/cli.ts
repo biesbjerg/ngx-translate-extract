@@ -1,7 +1,10 @@
 import { ExtractTask } from './tasks/extract.task';
+import { ParserInterface } from '../parsers/parser.interface';
 import { PipeParser } from '../parsers/pipe.parser';
 import { DirectiveParser } from '../parsers/directive.parser';
 import { ServiceParser } from '../parsers/service.parser';
+import { CompilerInterface } from '../compilers/compiler.interface';
+import { CompilerFactory } from '../compilers/compiler.factory';
 
 import * as fs from 'fs';
 import * as yargs from 'yargs';
@@ -48,6 +51,12 @@ export const cli = yargs
 		type: 'string',
 		choices: ['json', 'namespaced-json', 'pot']
 	})
+	.option('format-indentation', {
+		alias: 'fi',
+		describe: 'Output format indentation',
+		default: '\t',
+		type: 'string'
+	})
 	.option('replace', {
 		alias: 'r',
 		describe: 'Replace the contents of output file if it exists (Merges by default)',
@@ -69,19 +78,22 @@ export const cli = yargs
 	.exitProcess(true)
 	.parse(process.argv);
 
-const extractTask = new ExtractTask(cli.input, cli.output, {
+const parsers: ParserInterface[] = [
+	new ServiceParser(),
+	new PipeParser(),
+	new DirectiveParser()
+];
+
+const compiler: CompilerInterface = CompilerFactory.create(cli.format, {
+	indentation: cli.formatIndentation
+});
+
+new ExtractTask(cli.input, cli.output, {
 	replace: cli.replace,
 	sort: cli.sort,
 	clean: cli.clean,
 	patterns: cli.patterns
-});
-
-extractTask
-	.setParsers([
-		new ServiceParser(),
-		new PipeParser(),
-		new DirectiveParser()
-	])
-	.setCompiler(cli.format)
-	.execute();
-
+})
+.setParsers(parsers)
+.setCompiler(compiler)
+.execute();

@@ -2,7 +2,6 @@ import { TranslationCollection } from '../../utils/translation.collection';
 import { TaskInterface } from './task.interface';
 import { ParserInterface } from '../../parsers/parser.interface';
 import { CompilerInterface } from '../../compilers/compiler.interface';
-import { CompilerFactory } from '../../compilers/compiler.factory';
 
 import * as chalk from 'chalk';
 import * as glob from 'glob';
@@ -56,13 +55,8 @@ export class ExtractTask implements TaskInterface {
 		return this;
 	}
 
-	public setCompiler(compiler: CompilerInterface | string): this {
-		if (typeof compiler === 'string') {
-			this._compiler = CompilerFactory.create(compiler)
-		} else {
-			this._compiler = compiler;
-		}
-
+	public setCompiler(compiler: CompilerInterface): this {
+		this._compiler = compiler;
 		return this;
 	}
 
@@ -70,10 +64,9 @@ export class ExtractTask implements TaskInterface {
 	 * Extract strings from input dirs using configured parsers
 	 */
 	protected _extract(): TranslationCollection {
-		let collection: TranslationCollection = new TranslationCollection();
-
 		this._out(chalk.bold('Extracting strings...'));
 
+		let collection: TranslationCollection = new TranslationCollection();
 		this._input.forEach(dir => {
 			this._readDir(dir, this._options.patterns).forEach(path => {
 				this._out(chalk.gray('- %s'), path);
@@ -83,6 +76,7 @@ export class ExtractTask implements TaskInterface {
 				});
 			});
 		});
+
 		return collection;
 	}
 

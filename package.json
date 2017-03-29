@@ -1,6 +1,6 @@
 {
   "name": "@biesbjerg/ngx-translate-extract",
-  "version": "2.0.1",
+  "version": "2.1.0",
   "description": "Extract strings from projects using ngx-translate",
   "main": "dist/index.js",
   "typings": "dist/index.d.ts",
@@ -50,17 +50,17 @@
     "@types/chai": "3.4.35",
     "@types/glob": "5.0.30",
     "@types/mocha": "2.2.40",
-    "@types/cheerio": "0.22.0",
+    "@types/cheerio": "0.22.1",
     "@types/chalk": "0.4.31",
     "@types/flat": "0.0.28",
     "@types/yargs": "6.6.0",
     "@types/mkdirp": "0.3.29",
     "chai": "3.5.0",
     "mocha": "3.2.0",
-    "ts-node": "2.1.0",
+    "ts-node": "3.0.2",
     "tslint": "4.5.1",
     "tslint-eslint-rules": "3.5.1",
-    "typescript": "2.2.1"
+    "typescript": "2.2.2"
   },
   "dependencies": {
     "chalk": "1.1.3",

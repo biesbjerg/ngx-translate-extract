@@ -45,4 +45,16 @@ describe('NamespacedJsonCompiler', () => {
 		expect(result).to.equal('{\n\t"option": {\n\t\t"0": "",\n\t\t"1": "",\n\t\t"2": ""\n\t}\n}');
 	});
 
+	it('should use custom indentation chars', () => {
+		const collection = new TranslationCollection({
+			'NAMESPACE.KEY.FIRST_KEY': '',
+			'NAMESPACE.KEY.SECOND_KEY': 'VALUE'
+		});
+		const customCompiler = new NamespacedJsonCompiler({
+			indentation: '  '
+		});
+		const result: string = customCompiler.compile(collection);
+		expect(result).to.equal('{\n  "NAMESPACE": {\n    "KEY": {\n      "FIRST_KEY": "",\n      "SECOND_KEY": "VALUE"\n    }\n  }\n}');
+	});
+
 });
