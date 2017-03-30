@@ -41,11 +41,6 @@ export class ExtractTask implements TaskInterface {
 		}
 
 		const collection = this._extract();
-		if (collection.isEmpty()) {
-			this._out(chalk.yellow('Did not find any extractable strings\n'));
-			return;
-		}
-
 		this._out(chalk.green('Extracted %d strings\n'), collection.count());
 		this._save(collection);
 	}

@@ -3,6 +3,7 @@ import { ParserInterface } from '../parsers/parser.interface';
 import { PipeParser } from '../parsers/pipe.parser';
 import { DirectiveParser } from '../parsers/directive.parser';
 import { ServiceParser } from '../parsers/service.parser';
+import { FunctionParser } from '../parsers/function.parser';
 import { CompilerInterface } from '../compilers/compiler.interface';
 import { CompilerFactory } from '../compilers/compiler.factory';
 
@@ -44,6 +45,12 @@ export const cli = yargs
 		normalize: true,
 		required: true
 	})
+	.option('marker', {
+		alias: 'm',
+		describe: 'Extract strings passed to a marker function',
+		default: false,
+		type: 'string'
+	})
 	.option('format', {
 		alias: 'f',
 		describe: 'Output format',
@@ -78,22 +85,28 @@ export const cli = yargs
 	.exitProcess(true)
 	.parse(process.argv);
 
-const parsers: ParserInterface[] = [
-	new ServiceParser(),
-	new PipeParser(),
-	new DirectiveParser()
-];
-
-const compiler: CompilerInterface = CompilerFactory.create(cli.format, {
-	indentation: cli.formatIndentation
-});
-
-new ExtractTask(cli.input, cli.output, {
+const extract = new ExtractTask(cli.input, cli.output, {
 	replace: cli.replace,
 	sort: cli.sort,
 	clean: cli.clean,
 	patterns: cli.patterns
-})
-.setParsers(parsers)
-.setCompiler(compiler)
-.execute();
+});
+
+const compiler: CompilerInterface = CompilerFactory.create(cli.format, {
+	indentation: cli.formatIndentation
+});
+extract.setCompiler(compiler);
+
+const parsers: ParserInterface[] = [
+	new PipeParser(),
+	new DirectiveParser(),
+	new ServiceParser()
+];
+if (cli.marker) {
+	parsers.push(new FunctionParser({
+		identifier: cli.marker
+	}));
+}
+extract.setParsers(parsers);
+
+extract.execute();

@@ -50,6 +50,18 @@ If you want to use spaces instead, you can do the following:
 
 `ngx-translate-extract -i ./src -o ./src/i18n/en.json --format-indentation '  '`
 
+## Mark strings for extraction using a marker function
+If, for some reason, you want to extract strings not passed directly to TranslateService, you can wrap them in a custom marker function.
+
+```ts
+import { _ } from '@biesbjerg/ngx-translate-extract';
+
+_('Extract me');
+```
+
+Add the `marker` argument when running the extract script:
+
+`ngx-translate-extract ... -m _`
 
 Modify the scripts arguments as required.
 
