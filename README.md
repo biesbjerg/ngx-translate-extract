@@ -82,6 +82,8 @@ Options:
   --output, -o                Paths where you would like to save extracted
                               strings. You can use path expansion, glob patterns
                               and multiple paths              [array] [required]
+  --marker, -m                Extract strings passed to a marker function
+                                                       [string] [default: false]
   --format, -f                Output format
           [string] [choices: "json", "namespaced-json", "pot"] [default: "json"]
   --format-indentation, --fi  Output format indentation [string] [default: "\t"]
