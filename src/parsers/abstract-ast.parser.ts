@@ -48,7 +48,11 @@ export abstract class AbstractAstParser {
 		}, initialValue);
 	}
 
-	protected _printAllChildren(sourceFile: ts.SourceFile, node: ts.Node, depth = 0) {
+	protected _syntaxKindToName(kind: ts.SyntaxKind): string {
+		return ts.SyntaxKind[kind];
+	}
+
+	protected _printAllChildren(sourceFile: ts.SourceFile, node: ts.Node, depth = 0): void {
 		console.log(
 			new Array(depth + 1).join('----'),
 			`[${node.kind}]`,
@@ -60,10 +64,6 @@ export abstract class AbstractAstParser {
 
 		depth++;
 		node.getChildren(sourceFile).forEach(childNode => this._printAllChildren(sourceFile, childNode, depth));
-	}
-
-	protected _syntaxKindToName(kind: ts.SyntaxKind) {
-		return ts.SyntaxKind[kind];
 	}
 
 }
