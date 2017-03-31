@@ -104,7 +104,7 @@ export class ExtractTask implements TaskInterface {
 
 				if (this._options.clean) {
 					const collectionCount = processedCollection.count();
-					processedCollection = processedCollection.intersect(processedCollection);
+					processedCollection = processedCollection.intersect(collection);
 					const removeCount = collectionCount - processedCollection.count();
 					if (removeCount > 0) {
 						this._out(chalk.dim('- removed %d obsolete strings'), removeCount);
