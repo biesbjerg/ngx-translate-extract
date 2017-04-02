@@ -25,7 +25,7 @@ describe('PipeParser', () => {
 	});
 
 	it('should extract strings with escaped quotes', () => {
-		const contents = `Hello {{ 'World\'s largest potato' | translate }}`;
+		const contents = `Hello {{ 'World\\'s largest potato' | translate }}`;
 		const keys = parser.extract(contents, templateFilename).keys();
 		expect(keys).to.deep.equal([`World's largest potato`]);
 	});
