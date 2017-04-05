@@ -18,6 +18,12 @@ describe('PipeParser', () => {
 		expect(keys).to.deep.equal(['SomeKey_NotWorking']);
 	});
 
+	it('should extract string using pipe, but between quotes only', () => {
+		const contents = `<input class="form-control" type="text" placeholder="{{'user.settings.form.phone.placeholder' | translate}}" [formControl]="settingsForm.controls['phone']">`;
+		const keys = parser.extract(contents, templateFilename).keys();
+		expect(keys).to.deep.equal(['user.settings.form.phone.placeholder']);
+	});
+
 	it('should extract interpolated strings using translate pipe', () => {
 		const contents = `Hello {{ 'World' | translate }}`;
 		const keys = parser.extract(contents, templateFilename).keys();
