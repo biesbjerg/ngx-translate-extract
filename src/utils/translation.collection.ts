@@ -1,6 +1,6 @@
 export interface TranslationType {
 	[key: string]: string
-};
+}
 
 export class TranslationCollection {
 
