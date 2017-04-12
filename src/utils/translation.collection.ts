@@ -10,13 +10,13 @@ export class TranslationCollection {
 		this.values = values;
 	}
 
-	public add(key: string, val: string = ''): TranslationCollection {
+	public add(key: string, val: string = null): TranslationCollection {
 		return new TranslationCollection(Object.assign({}, this.values, { [key]: val }));
 	}
 
 	public addKeys(keys: string[]): TranslationCollection {
 		const values = keys.reduce((results, key) => {
-			results[key] = '';
+			results[key] = null;
 			return results;
 		}, <TranslationType> {});
 		return new TranslationCollection(Object.assign({}, this.values, values));
