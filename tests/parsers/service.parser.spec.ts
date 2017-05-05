@@ -151,4 +151,17 @@ describe('ServiceParser', () => {
 		expect(keys).to.deep.equal(['You are expected at {{time}}']);
 	});
 
+	it('should not crash when constructor parameter has no type', () => {
+		const contents = `
+			@Component({ })
+			export class AppComponent {
+				public constructor(protected _translateService) { }
+				public test() {
+					this._translateService.instant('Hello World');
+				}
+		`;
+		const keys = parser.extract(contents, componentFilename).keys();
+		expect(keys).to.deep.equal([]);
+	});
+
 });

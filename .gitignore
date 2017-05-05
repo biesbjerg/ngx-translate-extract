@@ -10,8 +10,8 @@ npm-debug.log*
 dist
 
 # Extracted strings
-template.json
-template.pot
+strings.json
+strings.pot
 
 # Dependency directory
 node_modules

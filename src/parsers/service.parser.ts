@@ -49,6 +49,11 @@ export class ServiceParser extends AbstractAstParser implements ParserInterface 
 				return false;
 			}
 
+			// Parameter has no type
+			if (!parameter.type) {
+				return false;
+			}
+
 			// Make sure className is of the correct type
 			const parameterType: ts.Identifier = (parameter.type as ts.TypeReferenceNode).typeName as ts.Identifier;
 			if (!parameterType) {
