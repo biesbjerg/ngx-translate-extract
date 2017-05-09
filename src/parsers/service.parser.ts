@@ -8,26 +8,25 @@ export class ServiceParser extends AbstractAstParser implements ParserInterface 
 
 	protected _sourceFile: ts.SourceFile;
 
-	protected _instancePropertyName: any;
-	protected _serviceClassName: string = 'TranslateService';
-	protected _serviceMethodNames: string[] = ['get', 'instant'];
-
 	public extract(contents: string, path?: string): TranslationCollection {
-		let collection: TranslationCollection = new TranslationCollection();
-
 		this._sourceFile = this._createSourceFile(path, contents);
 
-		this._instancePropertyName = this._getInstancePropertyName();
-		if (!this._instancePropertyName) {
-			return collection;
-		}
+		let collection: TranslationCollection = new TranslationCollection();
 
-		const callNodes = this._findCallNodes();
-		callNodes.forEach(callNode => {
-			const keys: string[] = this._getCallArgStrings(callNode);
-			if (keys && keys.length) {
-				collection = collection.addKeys(keys);
+		const constructorNodes: ts.ConstructorDeclaration[] = this._findConstructorNodes();
+		constructorNodes.forEach(constructorNode => {
+			const propertyName: string = this._getPropertyName(constructorNode);
+			if (!propertyName) {
+				return;
 			}
+
+			const callNodes = this._findCallNodes(this._sourceFile, propertyName);
+			callNodes.forEach(callNode => {
+				const keys: string[] = this._getCallArgStrings(callNode);
+				if (keys && keys.length) {
+					collection = collection.addKeys(keys);
+				}
+			});
 		});
 
 		return collection;
@@ -37,8 +36,7 @@ export class ServiceParser extends AbstractAstParser implements ParserInterface 
 	 * Detect what the TranslateService instance property
 	 * is called by inspecting constructor params
 	 */
-	protected _getInstancePropertyName(): string {
-		const constructorNode = this._findConstructorNode();
+	protected _getPropertyName(constructorNode: ts.ConstructorDeclaration): string {
 		if (!constructorNode) {
 			return null;
 		}
@@ -60,7 +58,7 @@ export class ServiceParser extends AbstractAstParser implements ParserInterface 
 				return false;
 			}
 			const className: string = parameterType.text;
-			if (className !== this._serviceClassName) {
+			if (className !== 'TranslateService') {
 				return false;
 			}
 
@@ -73,23 +71,19 @@ export class ServiceParser extends AbstractAstParser implements ParserInterface 
 	}
 
 	/**
-	 * Find first constructor
+	 * Find constructor nodes
 	 */
-	protected _findConstructorNode(): ts.ConstructorDeclaration {
+	protected _findConstructorNodes(): ts.ConstructorDeclaration[] {
 		const constructors = this._findNodes(this._sourceFile, ts.SyntaxKind.Constructor, true) as ts.ConstructorDeclaration[];
 		if (constructors.length) {
-			return constructors[0];
+			return constructors;
 		}
 	}
 
 	/**
 	 * Find all calls to TranslateService methods
 	 */
-	protected _findCallNodes(node?: ts.Node): ts.CallExpression[] {
-		if (!node) {
-			node = this._sourceFile;
-		}
-
+	protected _findCallNodes(node: ts.Node, propertyIdentifier: string): ts.CallExpression[] {
 		let callNodes = this._findNodes(node, ts.SyntaxKind.CallExpression) as ts.CallExpression[];
 		callNodes = callNodes
 			.filter(callNode => {
@@ -105,7 +99,7 @@ export class ServiceParser extends AbstractAstParser implements ParserInterface 
 				if (!propAccess.getFirstToken() || propAccess.getFirstToken().kind !== ts.SyntaxKind.ThisKeyword) {
 					return false;
 				}
-				if (propAccess.name.text !== this._instancePropertyName) {
+				if (propAccess.name.text !== propertyIdentifier) {
 					return false;
 				}
 
@@ -113,7 +107,7 @@ export class ServiceParser extends AbstractAstParser implements ParserInterface 
 				if (!methodAccess || methodAccess.kind !== ts.SyntaxKind.PropertyAccessExpression) {
 					return false;
 				}
-				if (!methodAccess.name || this._serviceMethodNames.indexOf(methodAccess.name.text) === -1) {
+				if (!methodAccess.name || (methodAccess.name.text !== 'get' && methodAccess.name.text !== 'instant')) {
 					return false;
 				}
 

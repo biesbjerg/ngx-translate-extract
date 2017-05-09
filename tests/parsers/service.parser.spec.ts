@@ -164,4 +164,25 @@ describe('ServiceParser', () => {
 		expect(keys).to.deep.equal([]);
 	});
 
+	it('should extract strings from all classes in the file', () => {
+		const contents = `
+			import { Injectable } from '@angular/core';
+			import { TranslateService } from '@ngx-translate/core';
+			export class Stuff {
+				thing: string;
+				constructor(thing: string) {
+					this.thing = thing;
+				}
+			}
+			@Injectable()
+			export class AuthService {
+				constructor(public translate: TranslateService) {
+					console.log(this.translate.instant("Hello!"));
+				}
+			}
+		`;
+		const keys = parser.extract(contents, componentFilename).keys();
+		expect(keys).to.deep.equal(['Hello!']);
+	});
+
 });
