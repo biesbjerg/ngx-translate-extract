@@ -35,11 +35,7 @@ export abstract class AbstractAstParser {
 	/**
 	 * Find all child nodes of a kind
 	 */
-	protected _findNodes(node: ts.Node, kind: ts.SyntaxKind, onlyOne: boolean = false): ts.Node[] {
-		if (node.kind === kind && onlyOne) {
-			return [node];
-		}
-
+	protected _findNodes(node: ts.Node, kind: ts.SyntaxKind): ts.Node[] {
 		const childrenNodes: ts.Node[] = node.getChildren(this._sourceFile);
 		const initialValue: ts.Node[] = node.kind === kind ? [node] : [];
 

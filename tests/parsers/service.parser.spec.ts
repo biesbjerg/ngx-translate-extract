@@ -170,19 +170,32 @@ describe('ServiceParser', () => {
 			import { TranslateService } from '@ngx-translate/core';
 			export class Stuff {
 				thing: string;
+				translate: any;
 				constructor(thing: string) {
+					this.translate.get('Not me');
 					this.thing = thing;
+				}
+			}
+			@Injectable()
+			export class MyComponent {
+				constructor(public translate: TranslateService) {
+					this.translate.instant("Extract me!");
+				}
+			}
+			export class OtherClass {
+				constructor(thing: string, _translate: TranslateService) {
+					this._translate.get("Do not extract me");
 				}
 			}
 			@Injectable()
 			export class AuthService {
 				constructor(public translate: TranslateService) {
-					console.log(this.translate.instant("Hello!"));
+					this.translate.instant("Hello!");
 				}
 			}
 		`;
 		const keys = parser.extract(contents, componentFilename).keys();
-		expect(keys).to.deep.equal(['Hello!']);
+		expect(keys).to.deep.equal(['Extract me!', 'Hello!']);
 	});
 
 });

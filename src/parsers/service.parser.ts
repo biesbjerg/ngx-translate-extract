@@ -9,18 +9,22 @@ export class ServiceParser extends AbstractAstParser implements ParserInterface 
 	protected _sourceFile: ts.SourceFile;
 
 	public extract(contents: string, path?: string): TranslationCollection {
-		this._sourceFile = this._createSourceFile(path, contents);
-
 		let collection: TranslationCollection = new TranslationCollection();
 
-		const constructorNodes: ts.ConstructorDeclaration[] = this._findConstructorNodes();
-		constructorNodes.forEach(constructorNode => {
-			const propertyName: string = this._getPropertyName(constructorNode);
+		this._sourceFile = this._createSourceFile(path, contents);
+		const classNodes = this._findClassNodes(this._sourceFile);
+		classNodes.forEach(classNode => {
+			const constructorNode = this._findConstructorNode(classNode);
+			if (!constructorNode) {
+				return;
+			}
+
+			const propertyName: string = this._findTranslateServicePropertyName(constructorNode);
 			if (!propertyName) {
 				return;
 			}
 
-			const callNodes = this._findCallNodes(this._sourceFile, propertyName);
+			const callNodes = this._findCallNodes(classNode, propertyName);
 			callNodes.forEach(callNode => {
 				const keys: string[] = this._getCallArgStrings(callNode);
 				if (keys && keys.length) {
@@ -34,9 +38,9 @@ export class ServiceParser extends AbstractAstParser implements ParserInterface 
 
 	/**
 	 * Detect what the TranslateService instance property
-	 * is called by inspecting constructor params
+	 * is called by inspecting constructor arguments
 	 */
-	protected _getPropertyName(constructorNode: ts.ConstructorDeclaration): string {
+	protected _findTranslateServicePropertyName(constructorNode: ts.ConstructorDeclaration): string {
 		if (!constructorNode) {
 			return null;
 		}
@@ -71,12 +75,19 @@ export class ServiceParser extends AbstractAstParser implements ParserInterface 
 	}
 
 	/**
-	 * Find constructor nodes
+	 * Find class nodes
 	 */
-	protected _findConstructorNodes(): ts.ConstructorDeclaration[] {
-		const constructors = this._findNodes(this._sourceFile, ts.SyntaxKind.Constructor, true) as ts.ConstructorDeclaration[];
-		if (constructors.length) {
-			return constructors;
+	protected _findClassNodes(node: ts.Node): ts.ClassDeclaration[] {
+		return this._findNodes(node, ts.SyntaxKind.ClassDeclaration) as ts.ClassDeclaration[];
+	}
+
+	/**
+	 * Find constructor
+	 */
+	protected _findConstructorNode(node: ts.ClassDeclaration): ts.ConstructorDeclaration {
+		const constructorNodes = this._findNodes(node, ts.SyntaxKind.Constructor) as ts.ConstructorDeclaration[];
+		if (constructorNodes) {
+			return constructorNodes[0];
 		}
 	}
 
