@@ -1,4 +1,20 @@
-export abstract class AbstractTemplateParser {
+import {ParserInterface} from './parser.interface';
+import {TranslationCollection} from '../utils/translation.collection';
+
+export abstract class AbstractTemplateParser implements ParserInterface {
+
+	public extract(contents: string, path?: string): TranslationCollection {
+		if (path && this._isAngularComponent(path)) {
+			contents = this._extractInlineTemplate(contents);
+		}
+
+		return this._parseTemplate(contents);
+	}
+
+	// usually overridden :-)
+	protected _parseTemplate(contents: string) {
+		return new TranslationCollection();
+	}
 
 	/**
 	 * Checks if file is of type javascript or typescript and

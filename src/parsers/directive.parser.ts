@@ -1,18 +1,9 @@
-import { ParserInterface } from './parser.interface';
 import { AbstractTemplateParser } from './abstract-template.parser';
 import { TranslationCollection } from '../utils/translation.collection';
 
 import * as $ from 'cheerio';
 
-export class DirectiveParser extends AbstractTemplateParser implements ParserInterface {
-
-	public extract(contents: string, path?: string): TranslationCollection {
-		if (path && this._isAngularComponent(path)) {
-			contents = this._extractInlineTemplate(contents);
-		}
-
-		return this._parseTemplate(contents);
-	}
+export class DirectiveParser extends AbstractTemplateParser {
 
 	protected _parseTemplate(template: string): TranslationCollection {
 		let collection: TranslationCollection = new TranslationCollection();
