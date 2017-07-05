@@ -60,6 +60,19 @@ describe('ServiceParser', () => {
 		expect(keys).to.deep.equal(['Hello World']);
 	});
 
+	it('should extract strings in TranslateService\'s stream() method', () => {
+		const contents = `
+			@Component({ })
+			export class AppComponent {
+				public constructor(protected _translateService: TranslateService) { }
+				public test() {
+					this._translateService.stream('Hello World');
+				}
+		`;
+		const keys = parser.extract(contents, componentFilename).keys();
+		expect(keys).to.deep.equal(['Hello World']);
+	});
+
 	it('should extract array of strings in TranslateService\'s get() method', () => {
 		const contents = `
 			@Component({ })
@@ -86,7 +99,20 @@ describe('ServiceParser', () => {
 		expect(key).to.deep.equal(['Hello', 'World']);
 	});
 
-	it('should not extract strings in get()/instant() methods of other services', () => {
+	it('should extract array of strings in TranslateService\'s stream() method', () => {
+		const contents = `
+			@Component({ })
+			export class AppComponent {
+				public constructor(protected _translateService: TranslateService) { }
+				public test() {
+					this._translateService.stream(['Hello', 'World']);
+				}
+		`;
+		const key = parser.extract(contents, componentFilename).keys();
+		expect(key).to.deep.equal(['Hello', 'World']);
+	});
+
+	it('should not extract strings in get()/instant()/stream() methods of other services', () => {
 		const contents = `
 			@Component({ })
 			export class AppComponent {
@@ -97,6 +123,7 @@ describe('ServiceParser', () => {
 				public test() {
 					this._otherService.get('Hello World');
 					this._otherService.instant('Hi there');
+					this._otherService.stream('Hi there');
 				}
 		`;
 		const keys = parser.extract(contents, componentFilename).keys();
