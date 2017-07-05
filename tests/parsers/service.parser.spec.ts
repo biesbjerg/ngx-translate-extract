@@ -47,6 +47,19 @@ describe('ServiceParser', () => {
 		expect(keys).to.deep.equal(['Hello World']);
 	});
 
+	it('should extract strings in TranslateService\'s stream() method', () => {
+		const contents = `
+			@Component({ })
+			export class AppComponent {
+				public constructor(protected _translateService: TranslateService) { }
+				public test() {
+					this._translateService.stream('Hello World');
+				}
+		`;
+		const keys = parser.extract(contents, componentFilename).keys();
+		expect(keys).to.deep.equal(['Hello World']);
+	});
+
 	it('should extract strings in TranslateService\'s instant() method', () => {
 		const contents = `
 			@Component({ })
