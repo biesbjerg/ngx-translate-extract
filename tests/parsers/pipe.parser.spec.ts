@@ -36,6 +36,12 @@ describe('PipeParser', () => {
 		expect(keys).to.deep.equal([`World's largest potato`]);
 	});
 
+	it('should extract strings with multiple escaped quotes', () => {
+		const contents = `{{ 'C\\'est ok. C\\'est ok' | translate }}`;
+		const keys = parser.extract(contents, templateFilename).keys();
+		expect(keys).to.deep.equal([`C'est ok. C'est ok`]);
+	});
+
 	it('should extract interpolated strings using translate pipe in attributes', () => {
 		const contents = `<span attr="{{ 'Hello World' | translate }}"></span>`;
 		const keys = parser.extract(contents, templateFilename).keys();
