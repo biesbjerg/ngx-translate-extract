@@ -4,6 +4,7 @@ import { PipeParser } from '../parsers/pipe.parser';
 import { DirectiveParser } from '../parsers/directive.parser';
 import { ServiceParser } from '../parsers/service.parser';
 import { FunctionParser } from '../parsers/function.parser';
+import { TranslatedAttributeParser } from '../parsers/translated-attribute.parser';
 import { CompilerInterface } from '../compilers/compiler.interface';
 import { CompilerFactory } from '../compilers/compiler.factory';
 
@@ -50,6 +51,12 @@ export const cli = yargs
 		describe: 'Extract strings passed to a marker function',
 		default: false,
 		type: 'string'
+	})
+	.option('translated-attributes', {
+		alias: 'ta',
+		describe: 'Extract strings passed to these component attributes',
+		type: 'array',
+		default: null
 	})
 	.option('format', {
 		alias: 'f',
@@ -106,6 +113,9 @@ if (cli.marker) {
 	parsers.push(new FunctionParser({
 		identifier: cli.marker
 	}));
+}
+if (cli.ta) {
+	parsers.push(new TranslatedAttributeParser(cli.ta));
 }
 extract.setParsers(parsers);
 

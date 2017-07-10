@@ -65,6 +65,18 @@ Add the `marker` argument when running the extract script:
 
 Modify the scripts arguments as required.
 
+## Extract strings from translated attributes
+
+You can extract all strings passed to particular component attributes. For instance, for 
+
+`<my-component labelKey="User.name" helpKey="User.name.help">`
+
+the command 
+
+`ngx-translate-extract --translated-attributes labelKey helpKey`
+
+will extract "User.name" and "User.name.help".
+
 ## Commandline arguments
 ```
 Usage:
