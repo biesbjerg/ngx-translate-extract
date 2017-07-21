@@ -118,4 +118,10 @@ describe('DirectiveParser', () => {
 		expect(template).to.equal('<p translate="KEY">Hello World</p>');
 	});
 
+	it('should extract contents from within custom tags', () => {
+		const contents = `<custom-table><tbody><tr><td translate>Hello World</td></tr></tbody></custom-table>`;
+		const keys = parser.extract(contents, templateFilename).keys();
+		expect(keys).to.deep.equal(['Hello World']);
+	});
+
 });
