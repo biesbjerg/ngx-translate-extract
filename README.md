@@ -54,14 +54,14 @@ If you want to use spaces instead, you can do the following:
 If, for some reason, you want to extract strings not passed directly to TranslateService, you can wrap them in a custom marker function.
 
 ```ts
-import { _ } from '@biesbjerg/ngx-translate-extract';
+import { NgxExtractMarker as marker } from '@biesbjerg/ngx-translate-extract';
 
-_('Extract me');
+translateProvider.getInstant( marker('Extract me') );
 ```
 
 Add the `marker` argument when running the extract script:
 
-`ngx-translate-extract ... -m _`
+`ngx-translate-extract ... -m marker`
 
 Modify the scripts arguments as required.
 

@@ -1,3 +1,3 @@
-export function _(key: string | string[]): string | string[] {
+export function NgxExtractMarker(key: string | string[]): string | string[] {
 	return key;
 }
