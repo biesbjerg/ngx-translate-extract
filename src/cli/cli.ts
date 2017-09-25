@@ -82,6 +82,12 @@ export const cli = yargs
 		default: false,
 		type: 'boolean'
 	})
+	.option('verbose', {
+		alias: 'vb',
+		describe: 'Log all output to console',
+		default: true,
+		type: 'boolean'
+	})
 	.exitProcess(true)
 	.parse(process.argv);
 

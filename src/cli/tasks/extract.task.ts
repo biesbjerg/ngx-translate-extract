@@ -14,6 +14,7 @@ export interface ExtractTaskOptionsInterface {
 	sort?: boolean;
 	clean?: boolean;
 	patterns?: string[];
+	verbose?: boolean;
 }
 
 export class ExtractTask implements TaskInterface {
@@ -22,7 +23,8 @@ export class ExtractTask implements TaskInterface {
 		replace: false,
 		sort: false,
 		clean: false,
-		patterns: []
+		patterns: [],
+		verbose: true
 	};
 
 	protected _parsers: ParserInterface[] = [];
@@ -64,7 +66,7 @@ export class ExtractTask implements TaskInterface {
 		let collection: TranslationCollection = new TranslationCollection();
 		this._input.forEach(dir => {
 			this._readDir(dir, this._options.patterns).forEach(path => {
-				this._out(chalk.gray('- %s'), path);
+				this._options.verbose && this._out(chalk.gray('- %s'), path);
 				const contents: string = fs.readFileSync(path, 'utf-8');
 				this._parsers.forEach((parser: ParserInterface) => {
 					collection = collection.union(parser.extract(contents, path));
