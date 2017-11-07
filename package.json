@@ -59,8 +59,7 @@
     "mocha": "3.4.2",
     "ts-node": "3.1.0",
     "tslint": "5.4.3",
-    "tslint-eslint-rules": "4.1.1",
-    "typescript": "2.4.1"
+    "tslint-eslint-rules": "4.1.1"
   },
   "dependencies": {
     "chalk": "2.0.1",
@@ -71,6 +70,7 @@
     "glob": "7.1.2",
     "path": "0.12.7",
     "mkdirp": "0.5.1",
-    "flat": "2.0.1"
+    "flat": "2.0.1",
+    "typescript": "2.4.1"
   }
 }
