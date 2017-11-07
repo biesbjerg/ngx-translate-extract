@@ -93,3 +93,5 @@ Options:
                                                       [boolean] [default: false]
   --clean, -c                 Remove obsolete strings when merging
                                                       [boolean] [default: false]
+  --verbose, -vb              If true, prints all processed file paths to console
+                                                      [boolean] [default: true]
