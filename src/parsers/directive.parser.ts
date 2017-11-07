@@ -2,7 +2,9 @@ import { ParserInterface } from './parser.interface';
 import { AbstractTemplateParser } from './abstract-template.parser';
 import { TranslationCollection } from '../utils/translation.collection';
 
-import * as $ from 'cheerio';
+import * as cheerio from 'cheerio';
+
+const $ = cheerio.load('', {xmlMode: true});
 
 export class DirectiveParser extends AbstractTemplateParser implements ParserInterface {
 
