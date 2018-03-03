@@ -12,7 +12,7 @@ Install the package in your project:
 Add an `extract` script to your project's `package.json`:
 ```
 "scripts": {
-  "extract": "ngx-translate-extract --input ./src --output ./src/assets/i18n/*.json --clean --sort --format namespaced-json"
+  "extract": "ngx-translate-extract --input ./src --output ./src/assets/i18n/ --clean --sort --format namespaced-json"
 }
 ```
 You can now run `npm run extract` to extract strings.
