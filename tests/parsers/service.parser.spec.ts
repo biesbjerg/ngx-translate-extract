@@ -112,6 +112,20 @@ describe('ServiceParser', () => {
 		expect(key).to.deep.equal(['Hello', 'World']);
 	});
 
+	it('should also find TranslateService declared as properties', () => {
+		const contents = `
+			@Component({ })
+			export class AppComponent {
+				protected _translateService: TranslateService;
+				public constructor() { }
+				public test() {
+					this._translateService.get('Hello World');
+				}
+		`;
+		const keys = parser.extract(contents, componentFilename).keys();
+		expect(keys).to.deep.equal(['Hello World']);
+	});
+
 	it('should not extract strings in get()/instant()/stream() methods of other services', () => {
 		const contents = `
 			@Component({ })

@@ -14,12 +14,8 @@ export class ServiceParser extends AbstractAstParser implements ParserInterface 
 		this._sourceFile = this._createSourceFile(path, contents);
 		const classNodes = this._findClassNodes(this._sourceFile);
 		classNodes.forEach(classNode => {
-			const constructorNode = this._findConstructorNode(classNode);
-			if (!constructorNode) {
-				return;
-			}
 
-			const propertyName: string = this._findTranslateServicePropertyName(constructorNode);
+			const propertyName = this._findTranslateServicePropertyName(classNode);
 			if (!propertyName) {
 				return;
 			}
@@ -36,32 +32,48 @@ export class ServiceParser extends AbstractAstParser implements ParserInterface 
 		return collection;
 	}
 
+	protected _findTranslateServicePropertyName(classNode: ts.ClassDeclaration): string {
+		return this._findPropertyNameInConstructor(classNode) || this._findPropertyNameInFields(classNode);
+	}
+
 	/**
-	 * Detect what the TranslateService instance property
-	 * is called by inspecting constructor arguments
+	 * Detect if TranslateService is injected in constructor, and if so retrieves its name
 	 */
-	protected _findTranslateServicePropertyName(constructorNode: ts.ConstructorDeclaration): string {
+	protected _findPropertyNameInConstructor(classNode: ts.ClassDeclaration): string {
+		const constructorNode = this._findConstructorNode(classNode);
 		if (!constructorNode) {
-			return null;
+			return;
 		}
 
-		const result = constructorNode.parameters.find(parameter => {
+		return this._findPropertyNameInDeclarations(constructorNode.parameters);
+	}
+
+	/**
+	 * Detect if TranslateService is in class properties, and if so retrieves its name
+	 */
+	protected _findPropertyNameInFields(classNode: ts.ClassDeclaration): string {
+		const propertyNodes = this._findNodes(classNode, ts.SyntaxKind.PropertyDeclaration) as ts.PropertyDeclaration[];
+		return this._findPropertyNameInDeclarations(propertyNodes);
+	}
+
+	protected _findPropertyNameInDeclarations(declarations: (ts.ParameterDeclaration | ts.PropertyDeclaration)[]): string {
+		const result = declarations.find(declaration => {
 			// Skip if visibility modifier is not present (we want it set as an instance property)
-			if (!parameter.modifiers) {
+			if (!declaration.modifiers) {
 				return false;
 			}
 
 			// Parameter has no type
-			if (!parameter.type) {
+			if (!declaration.type) {
 				return false;
 			}
 
 			// Make sure className is of the correct type
-			const parameterType: ts.Identifier = (parameter.type as ts.TypeReferenceNode).typeName as ts.Identifier;
-			if (!parameterType) {
+			const declarationType: ts.Identifier = (declaration.type as ts.TypeReferenceNode).typeName as ts.Identifier;
+			if (!declarationType) {
 				return false;
 			}
-			const className: string = parameterType.text;
+			const className: string = declarationType.text;
 			if (className !== 'TranslateService') {
 				return false;
 			}
