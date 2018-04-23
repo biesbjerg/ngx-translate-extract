@@ -95,7 +95,8 @@ const extract = new ExtractTask(cli.input, cli.output, {
 	replace: cli.replace,
 	sort: cli.sort,
 	clean: cli.clean,
-	patterns: cli.patterns
+	patterns: cli.patterns,
+	verbose: cli.verbose
 });
 
 const compiler: CompilerInterface = CompilerFactory.create(cli.format, {
