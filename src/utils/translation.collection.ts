@@ -1,5 +1,11 @@
 export interface TranslationType {
-	[key: string]: string
+	[key: string]: any
+}
+
+export interface ValueData {
+	context?: string,
+	comment?: string,
+	reference?: string
 }
 
 export class TranslationCollection {
@@ -10,8 +16,20 @@ export class TranslationCollection {
 		this.values = values;
 	}
 
-	public add(key: string, val: string = ''): TranslationCollection {
-		return new TranslationCollection(Object.assign({}, this.values, { [key]: val }));
+	public add(key: string, val: string = '', additionalValueData?: ValueData): TranslationCollection {
+		if (additionalValueData && additionalValueData.context) {
+			key = `${key}$$context$$${additionalValueData.context}`;
+		}
+		let value: any = {
+			text: val,
+		};
+		if (additionalValueData && additionalValueData.comment) {
+			value.comment = additionalValueData.comment;
+		}
+		if (additionalValueData && additionalValueData.reference) {
+			value.reference = additionalValueData.reference;
+		}
+		return new TranslationCollection(Object.assign({}, this.values, { [key]: value }));
 	}
 
 	public addKeys(keys: string[]): TranslationCollection {
@@ -59,7 +77,7 @@ export class TranslationCollection {
 		return this.values.hasOwnProperty(key);
 	}
 
-	public get(key: string): string {
+	public get(key: string): any {
 		return this.values[key];
 	}
 

@@ -24,9 +24,16 @@ export class PoCompiler implements CompilerInterface {
 			},
 			translations: {
 				[this.domain]: Object.keys(collection.values).reduce((translations, key) => {
+					const keyParts = key.split('$$context$$');
+					const value = collection.get(key);
 					translations[key] = {
-						msgid: key,
-						msgstr: collection.get(key)
+						msgctxt: keyParts.length > 1 ? keyParts[1] : undefined,
+						msgid: keyParts[0],
+						msgstr: value.text,
+						comments: {
+							translator: value.comment,
+							reference: value.reference
+						}
 					};
 					return translations;
 				}, <any> {})

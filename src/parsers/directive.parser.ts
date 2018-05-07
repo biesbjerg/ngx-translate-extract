@@ -13,10 +13,10 @@ export class DirectiveParser extends AbstractTemplateParser implements ParserInt
 			contents = this._extractInlineTemplate(contents);
 		}
 
-		return this._parseTemplate(contents);
+		return this._parseTemplate(contents, path);
 	}
 
-	protected _parseTemplate(template: string): TranslationCollection {
+	protected _parseTemplate(template: string, path?: string): TranslationCollection {
 		let collection: TranslationCollection = new TranslationCollection();
 
 		template = this._normalizeTemplateAttributes(template);
@@ -28,9 +28,12 @@ export class DirectiveParser extends AbstractTemplateParser implements ParserInt
 			.each((i: number, element: CheerioElement) => {
 				const $element = $(element);
 				const attr = $element.attr('translate') || $element.attr('ng2-translate');
+				const context = $element.attr('translate-context');
+				const comment = $element.attr('translate-comment');
+				const reference = path;
 
 				if (attr) {
-					collection = collection.add(attr);
+					collection = collection.add(attr, null, {context, comment, reference});
 				} else {
 					$element
 						.contents()
@@ -38,10 +41,9 @@ export class DirectiveParser extends AbstractTemplateParser implements ParserInt
 						.filter(node => node.type === 'text')
 						.map(node => node.nodeValue.trim())
 						.filter(text => text.length > 0)
-						.forEach(text => collection = collection.add(text));
+						.forEach(text => collection = collection.add(text, null, {context, comment, reference}));
 				}
 			});
-
 		return collection;
 	}
 

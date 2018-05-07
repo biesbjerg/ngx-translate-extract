@@ -39,6 +39,13 @@ describe('DirectiveParser', () => {
 		expect(keys).to.deep.equal(['KEY']);
 	});
 
+	it('should extract context and comment', () => {
+		const contents = '<div translate translate-context="VERB" translate-comment="This is a comment">Title</div>';
+		const value = parser.extract(contents, templateFilename).values;
+		expect(value).to.have.property('Title$$context$$VERB');
+		expect(value['Title$$context$$VERB']).to.have.property('comment');
+	});
+
 	it('should extract direct text nodes when no translate attribute value is provided', () => {
 		const contents = `
 			<div translate>
