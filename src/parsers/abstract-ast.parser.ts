@@ -23,6 +23,7 @@ export abstract class AbstractAstParser {
 				return [(firstArg as ts.StringLiteral).text];
 			case ts.SyntaxKind.ArrayLiteralExpression:
 				return (firstArg as ts.ArrayLiteralExpression).elements
+					.filter((element: ts.Expression) => element.kind !== ts.SyntaxKind.Identifier)
 					.map((element: ts.StringLiteral) => element.text);
 			case ts.SyntaxKind.Identifier:
 				console.log('WARNING: We cannot extract variable values passed to TranslateService (yet)');
