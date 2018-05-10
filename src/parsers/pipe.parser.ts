@@ -9,16 +9,16 @@ export class PipeParser extends AbstractTemplateParser implements ParserInterfac
 			contents = this._extractInlineTemplate(contents);
 		}
 
-		return this._parseTemplate(contents);
+		return this._parseTemplate(contents, path);
 	}
 
-	protected _parseTemplate(template: string): TranslationCollection {
+	protected _parseTemplate(template: string, path?: string): TranslationCollection {
 		let collection: TranslationCollection = new TranslationCollection();
 
 		const regExp: RegExp = /(['"`])((?:(?!\1).|\\\1)+)\1\s*\|\s*translate/g;
 		let matches: RegExpExecArray;
 		while (matches = regExp.exec(template)) {
-			collection = collection.add(matches[2].split('\\\'').join('\''));
+			collection = collection.add(matches[2].split('\\\'').join('\''), null, {reference: path});
 		}
 
 		return collection;

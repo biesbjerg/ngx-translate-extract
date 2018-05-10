@@ -17,12 +17,29 @@ describe('StringCollection', () => {
 
 	it('should add key with value', () => {
 		const newCollection = collection.add('theKey', 'theVal');
-		expect(newCollection.get('theKey')).to.equal('theVal');
+		expect(newCollection.get('theKey').text).to.equal('theVal');
 	});
 
 	it('should add key with default value', () => {
 		collection = collection.add('theKey');
-		expect(collection.get('theKey')).to.equal('');
+		expect(collection.get('theKey').text).to.equal('');
+	});
+
+	it('should add key with context', () => {
+		const newCollection = collection.add('theKey', null, {context: 'VERB'});
+		expect(newCollection.keys()[0]).to.equal('theKey$$context$$VERB');
+	});
+
+	it('should add key with comment', () => {
+		const newCollection = collection.add('theKey', null, {comment: 'This is a new key'});
+		expect(newCollection.get('theKey')).to.have.property('comment');
+		expect(newCollection.get('theKey').comment).to.equal('This is a new key');
+	});
+
+	it('should add key with reference', () => {
+		const newCollection = collection.add('theKey', null, {reference: '/path/file/name'});
+		expect(newCollection.get('theKey')).to.have.property('reference');
+		expect(newCollection.get('theKey').reference).to.equal('/path/file/name');
 	});
 
 	it('should not mutate collection when adding key', () => {
@@ -63,8 +80,8 @@ describe('StringCollection', () => {
 
 	it('should merge with other collection', () => {
 		collection = collection.add('oldKey', 'oldVal');
-		const newCollection = new TranslationCollection({ newKey: 'newVal' });
-		expect(collection.union(newCollection).values).to.deep.equal({ oldKey: 'oldVal', newKey: 'newVal' });
+		const newCollection = new TranslationCollection({ newKey: {text: 'newVal'} });
+		expect(collection.union(newCollection).values).to.deep.equal({ oldKey: {text: 'oldVal'}, newKey: {text: 'newVal'} });
 	});
 
 	it('should intersect with passed collection', () => {
