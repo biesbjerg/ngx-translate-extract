@@ -15,6 +15,8 @@ export interface ExtractTaskOptionsInterface {
 	clean?: boolean;
 	patterns?: string[];
 	verbose?: boolean;
+	includes?: string[];
+	excludes?: string[];
 }
 
 export class ExtractTask implements TaskInterface {
@@ -24,7 +26,9 @@ export class ExtractTask implements TaskInterface {
 		sort: false,
 		clean: false,
 		patterns: [],
-		verbose: true
+		verbose: true,
+		includes: [],
+		excludes: []
 	};
 
 	protected _parsers: ParserInterface[] = [];
@@ -42,8 +46,12 @@ export class ExtractTask implements TaskInterface {
 			throw new Error('No compiler configured');
 		}
 
-		const collection = this._extract();
+		let collection = this._extract();
 		this._out(chalk.green('Extracted %d strings\n'), collection.count());
+
+		collection = this._exclude(collection);
+		collection = this._include(collection);
+
 		this._save(collection);
 	}
 
@@ -144,4 +152,26 @@ export class ExtractTask implements TaskInterface {
 		console.log.apply(this, arguments);
 	}
 
+	protected _include(collection: TranslationCollection): TranslationCollection {
+		if(!this._options.includes || !this._options.includes.length){
+			return collection;
+		}
+		const newColllection = collection.addKeys(this._options.includes);
+		this._out(chalk.blue('Included additional %d strings\n'), newColllection.count() - collection.count());
+
+		return newColllection;
+	}
+	
+	protected _exclude(collection: TranslationCollection): TranslationCollection {
+		if(!this._options.excludes || !this._options.excludes.length){
+			return collection;
+		}
+
+		let regexExcludes: RegExp[] = this._options.excludes.map(excl => new RegExp(excl))
+
+		const newColllection = collection.filter(key => !regexExcludes.some(exclExp => exclExp.test(key)));
+		this._out(chalk.blue('Excluded %d strings\n'), collection.count() - newColllection.count());
+
+		return newColllection;
+	}
 }

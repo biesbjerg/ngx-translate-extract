@@ -88,6 +88,16 @@ export const cli = yargs
 		default: true,
 		type: 'boolean'
 	})
+	.option('includes', {
+		alias: 'incl',
+		describe: 'A list of keys you want to include, even when they aren\'t extracted for the input source.',
+		type: 'array'
+	})
+	.option('excludes', {
+		alias: 'excl',
+		describe: 'A list of regex patterns you want to exclude from the extracted input source.',
+		type: 'array'
+	})
 	.exitProcess(true)
 	.parse(process.argv);
 
@@ -95,7 +105,9 @@ const extract = new ExtractTask(cli.input, cli.output, {
 	replace: cli.replace,
 	sort: cli.sort,
 	clean: cli.clean,
-	patterns: cli.patterns
+	patterns: cli.patterns,
+	includes: cli.includes,
+	excludes: cli.excludes
 });
 
 const compiler: CompilerInterface = CompilerFactory.create(cli.format, {
