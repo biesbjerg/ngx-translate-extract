@@ -50,7 +50,6 @@ export class ExtractTask implements TaskInterface {
 		this._out(chalk.green('Extracted %d strings\n'), collection.count());
 
 		collection = this._exclude(collection);
-		collection = this._include(collection);
 
 		this._save(collection);
 	}
@@ -114,7 +113,17 @@ export class ExtractTask implements TaskInterface {
 
 				if (this._options.clean) {
 					const collectionCount = processedCollection.count();
-					processedCollection = processedCollection.intersect(collection);
+					let includeCollection: TranslationCollection = new TranslationCollection();
+
+					if(this._options.includes && this._options.includes.length){
+						let regexIncludes: RegExp[] = this._options.includes.map(incl => new RegExp(incl))
+						includeCollection = processedCollection.filter(key => regexIncludes.some(includeExp => includeExp.test(key)));
+						if(includeCollection.count() > 0){
+							this._out(chalk.dim('- kept %d obsolete strings'), includeCollection.count());
+						}
+					}
+			
+					processedCollection = processedCollection.intersect(collection.union(includeCollection));
 					const removeCount = collectionCount - processedCollection.count();
 					if (removeCount > 0) {
 						this._out(chalk.dim('- removed %d obsolete strings'), removeCount);
@@ -151,16 +160,6 @@ export class ExtractTask implements TaskInterface {
 	protected _out(...args: any[]): void {
 		console.log.apply(this, arguments);
 	}
-
-	protected _include(collection: TranslationCollection): TranslationCollection {
-		if(!this._options.includes || !this._options.includes.length){
-			return collection;
-		}
-		const newColllection = collection.addKeys(this._options.includes);
-		this._out(chalk.blue('Included additional %d strings\n'), newColllection.count() - collection.count());
-
-		return newColllection;
-	}
 	
 	protected _exclude(collection: TranslationCollection): TranslationCollection {
 		if(!this._options.excludes || !this._options.excludes.length){
@@ -169,9 +168,12 @@ export class ExtractTask implements TaskInterface {
 
 		let regexExcludes: RegExp[] = this._options.excludes.map(excl => new RegExp(excl))
 
-		const newColllection = collection.filter(key => !regexExcludes.some(exclExp => exclExp.test(key)));
-		this._out(chalk.blue('Excluded %d strings\n'), collection.count() - newColllection.count());
+		const excludedCollection = collection.filter(key => !regexExcludes.some(exclExp => exclExp.test(key)));
+		var excludedCount = collection.count() - excludedCollection.count();
+		if(excludedCount > 0) {
+			this._out(chalk.blue('Excluded %d strings\n'), excludedCount);
+		}
 
-		return newColllection;
+		return excludedCollection;
 	}
 }

@@ -90,12 +90,12 @@ export const cli = yargs
 	})
 	.option('includes', {
 		alias: 'incl',
-		describe: 'A list of keys you want to include, even when they aren\'t extracted for the input source.',
+		describe: 'A list of regex patterns for keys that you want to keep when using the clean option.',
 		type: 'array'
 	})
 	.option('excludes', {
 		alias: 'excl',
-		describe: 'A list of regex patterns you want to exclude from the extracted input source.',
+		describe: 'A list of regex patterns for keys that you want to exclude from the extracted input source.',
 		type: 'array'
 	})
 	.exitProcess(true)
