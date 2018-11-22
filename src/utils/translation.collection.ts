@@ -16,7 +16,7 @@ export class TranslationCollection {
 
 	public addKeys(keys: string[]): TranslationCollection {
 		const values = keys.reduce((results, key) => {
-			results[key] = '';
+			results[key] = key;
 			return results;
 		}, <TranslationType> {});
 		return new TranslationCollection(Object.assign({}, this.values, values));
@@ -35,7 +35,7 @@ export class TranslationCollection {
 		let values: TranslationType = {};
 		this.forEach((key: string, val: string) => {
 			if (callback.call(this, key, val)) {
-				values[key] = val;
+				values[key] = key;
 			}
 		});
 		return new TranslationCollection(values);
@@ -49,7 +49,7 @@ export class TranslationCollection {
 		let values: TranslationType = {};
 		this.filter(key => collection.has(key))
 			.forEach((key: string, val: string) => {
-				values[key] = val;
+				values[key] = key;
 			});
 
 		return new TranslationCollection(values);
