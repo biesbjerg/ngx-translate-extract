@@ -13,7 +13,7 @@ var TranslationCollection = (function () {
     };
     TranslationCollection.prototype.addKeys = function (keys) {
         var values = keys.reduce(function (results, key) {
-            results[key] = '';
+            results[key] = key;
             return results;
         }, {});
         return new TranslationCollection(Object.assign({}, this.values, values));
