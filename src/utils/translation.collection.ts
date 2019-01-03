@@ -19,6 +19,7 @@ export class TranslationCollection {
 			results[key] = key;
 			return results;
 		}, <TranslationType> {});
+		values.forEach(value => values[value] = value)
 		return new TranslationCollection(Object.assign({}, this.values, values));
 	}
 
