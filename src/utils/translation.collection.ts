@@ -11,7 +11,11 @@ export class TranslationCollection {
 	}
 
 	public add(key: string, val: string = ''): TranslationCollection {
-		return new TranslationCollection(Object.assign({}, this.values, { [key]: key })); // add key as value TT
+		if (val) {
+			return new TranslationCollection(Object.assign({}, this.values, { [key]: val })); // add key as value TT
+		} else {
+			return new TranslationCollection(Object.assign({}, this.values, { [key]: key })); // add key as value TT
+		}
 	}
 
 	public addKeys(keys: string[]): TranslationCollection {

@@ -32,14 +32,14 @@ var DirectiveParser = (function (_super) {
         var collection = new translation_collection_1.TranslationCollection();
         template = this._normalizeTemplateAttributes(template);
         var selector = '[translate], [ng2-translate]';
-        $(cheerio.load(template, { xmlMode: true }))
+        $(template)
             .find(selector)
             .addBack(selector)
             .each(function (i, element) {
             var $element = $(element);
             var attr = $element.attr('translate') || $element.attr('ng2-translate');
             if (attr) {
-                collection = collection.add(attr);
+                collection = collection.add(attr, $element.text());
             }
             else {
                 $element
