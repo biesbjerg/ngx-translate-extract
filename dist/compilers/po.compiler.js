@@ -8,6 +8,7 @@ var PoCompiler = (function () {
         this.domain = '';
     }
     PoCompiler.prototype.compile = function (collection) {
+        var _a;
         var data = {
             charset: 'utf-8',
             headers: {
@@ -26,7 +27,6 @@ var PoCompiler = (function () {
                 _a)
         };
         return gettext.po.compile(data, 'utf-8');
-        var _a;
     };
     PoCompiler.prototype.parse = function (contents) {
         var _this = this;

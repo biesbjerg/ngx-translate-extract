@@ -1,7 +1,7 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 var translation_collection_1 = require("../../utils/translation.collection");
-var chalk = require("chalk");
+var chalk_1 = require("chalk");
 var glob = require("glob");
 var fs = require("fs");
 var path = require("path");
@@ -28,7 +28,7 @@ var ExtractTask = (function () {
             throw new Error('No compiler configured');
         }
         var collection = this._extract();
-        this._out(chalk.green('Extracted %d strings\n'), collection.count());
+        this._out(chalk_1.default.green('Extracted %d strings\n'), collection.count());
         this._save(collection);
     };
     ExtractTask.prototype.setParsers = function (parsers) {
@@ -41,11 +41,11 @@ var ExtractTask = (function () {
     };
     ExtractTask.prototype._extract = function () {
         var _this = this;
-        this._out(chalk.bold('Extracting strings...'));
+        this._out(chalk_1.default.bold('Extracting strings...'));
         var collection = new translation_collection_1.TranslationCollection();
         this._input.forEach(function (dir) {
             _this._readDir(dir, _this._options.patterns).forEach(function (path) {
-                _this._options.verbose && _this._out(chalk.gray('- %s'), path);
+                _this._options.verbose && _this._out(chalk_1.default.gray('- %s'), path);
                 var contents = fs.readFileSync(path, 'utf-8');
                 _this._parsers.forEach(function (parser) {
                     collection = collection.union(parser.extract(contents, path));
@@ -66,32 +66,32 @@ var ExtractTask = (function () {
             }
             var outputPath = path.join(dir, filename);
             var processedCollection = collection;
-            _this._out(chalk.bold('\nSaving: %s'), outputPath);
+            _this._out(chalk_1.default.bold('\nSaving: %s'), outputPath);
             if (fs.existsSync(outputPath) && !_this._options.replace) {
                 var existingCollection = _this._compiler.parse(fs.readFileSync(outputPath, 'utf-8'));
                 if (!existingCollection.isEmpty()) {
                     processedCollection = processedCollection.union(existingCollection);
-                    _this._out(chalk.dim('- merged with %d existing strings'), existingCollection.count());
+                    _this._out(chalk_1.default.dim('- merged with %d existing strings'), existingCollection.count());
                 }
                 if (_this._options.clean) {
                     var collectionCount = processedCollection.count();
                     processedCollection = processedCollection.intersect(collection);
                     var removeCount = collectionCount - processedCollection.count();
                     if (removeCount > 0) {
-                        _this._out(chalk.dim('- removed %d obsolete strings'), removeCount);
+                        _this._out(chalk_1.default.dim('- removed %d obsolete strings'), removeCount);
                     }
                 }
             }
             if (_this._options.sort) {
                 processedCollection = processedCollection.sort();
-                _this._out(chalk.dim('- sorted strings'));
+                _this._out(chalk_1.default.dim('- sorted strings'));
             }
             if (!fs.existsSync(dir)) {
                 mkdirp.sync(dir);
-                _this._out(chalk.dim('- created dir: %s'), dir);
+                _this._out(chalk_1.default.dim('- created dir: %s'), dir);
             }
             fs.writeFileSync(outputPath, _this._compiler.compile(processedCollection));
-            _this._out(chalk.green('Done!'));
+            _this._out(chalk_1.default.green('Done!'));
         });
     };
     ExtractTask.prototype._readDir = function (dir, patterns) {

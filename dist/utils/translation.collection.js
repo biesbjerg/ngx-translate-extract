@@ -8,8 +8,8 @@ var TranslationCollection = (function () {
     }
     TranslationCollection.prototype.add = function (key, val) {
         if (val === void 0) { val = ''; }
-        return new TranslationCollection(Object.assign({}, this.values, (_a = {}, _a[key] = key, _a)));
         var _a;
+        return new TranslationCollection(Object.assign({}, this.values, (_a = {}, _a[key] = key, _a)));
     };
     TranslationCollection.prototype.addKeys = function (keys) {
         var values = keys.reduce(function (results, key) {
