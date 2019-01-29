@@ -3,7 +3,7 @@ import { TaskInterface } from './task.interface';
 import { ParserInterface } from '../../parsers/parser.interface';
 import { CompilerInterface } from '../../compilers/compiler.interface';
 
-import * as chalk from 'chalk';
+import chalk from 'chalk';
 import * as glob from 'glob';
 import * as fs from 'fs';
 import * as path from 'path';
