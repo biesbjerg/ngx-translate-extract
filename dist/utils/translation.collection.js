@@ -31,7 +31,7 @@ var TranslationCollection = (function () {
         var values = {};
         this.forEach(function (key, val) {
             if (callback.call(_this, key, val)) {
-                values[key] = val;
+                values[key] = key;
             }
         });
         return new TranslationCollection(values);
@@ -43,7 +43,7 @@ var TranslationCollection = (function () {
         var values = {};
         this.filter(function (key) { return collection.has(key); })
             .forEach(function (key, val) {
-            values[key] = val;
+            values[key] = key;
         });
         return new TranslationCollection(values);
     };
