@@ -92,6 +92,8 @@ Options:
   --sort, -s                  Sort strings in alphabetical order when saving
                                                       [boolean] [default: false]
   --clean, -c                 Remove obsolete strings when merging
-                                                      [boolean] [default: false]
-  --verbose, -vb              If true, prints all processed file paths to console
-                                                      [boolean] [default: true]
+                                                      [boolean] [default: false]                                   
+  --keys, -k                  Extract only the keys without their values
+                                                     [booleano] [defecto: false]
+  --verbose, -vb              Log all output to console
+                                                      [booleano] [defecto: true]
