@@ -1,6 +1,6 @@
 {
-  "name": "@biesbjerg/ngx-translate-extract",
-  "version": "2.3.50.1",
+  "name": "@jesusvallez/ngx-translate-extract",
+  "version": "2.3.50.2",
   "description": "Extract strings from projects using ngx-translate",
   "main": "dist/index.js",
   "typings": "dist/index.d.ts",
@@ -20,7 +20,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/biesbjerg/ngx-translate-extract.git"
+    "url": "https://github.com/jesusvallez/ngx-translate-extract"
   },
   "keywords": [
     "angular",
@@ -37,11 +37,11 @@
     "gettext"
   ],
   "author": "Kim Biesbjerg <kim@biesbjerg.com>",
+  "contributors": [
+    "Jesús Vállez"
+  ],
   "license": "MIT",
-  "bugs": {
-    "url": "https://github.com/biesbjerg/ngx-translate-extract/issues"
-  },
-  "homepage": "https://github.com/biesbjerg/ngx-translate-extract",
+  "homepage": "https://github.com/jesusvallez/ngx-translate-extract",
   "engines": {
     "node": ">=4.3.2"
   },
