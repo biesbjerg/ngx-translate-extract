@@ -22,17 +22,17 @@ describe('StringCollection', () => {
 
 	it('should add key with default value', () => {
 		collection = collection.add('theKey');
-		expect(collection.get('theKey')).to.equal('');
+    expect(collection.get('theKey')).to.equal('theKey');
 	});
 
 	it('should not mutate collection when adding key', () => {
-		collection.add('theKey', 'theVal');
+    collection.add('theKey', 'theVal');
 		expect(collection.has('theKey')).to.equal(false);
 	});
 
 	it('should add array of keys with default value', () => {
 		collection = collection.addKeys(['key1', 'key2']);
-		expect(collection.values).to.deep.equal({ key1: '', key2: '' });
+    expect(collection.values).to.deep.equal({ key1: 'key1', key2: 'key2' });
 	});
 
 	it('should return true when collection has key', () => {
@@ -69,14 +69,14 @@ describe('StringCollection', () => {
 
 	it('should intersect with passed collection', () => {
 		collection = collection.addKeys(['red', 'green', 'blue']);
-		const newCollection = new TranslationCollection( { red: '', blue: '' });
-		expect(collection.intersect(newCollection).values).to.deep.equal({ red: '', blue: '' });
+    const newCollection = new TranslationCollection({ red: 'red', blue: 'blue' });
+    expect(collection.intersect(newCollection).values).to.deep.equal({ red: 'red', blue: 'blue' });
 	});
 
 	it('should intersect with passed collection and keep original values', () => {
-		collection = new TranslationCollection({ red: 'rød', green: 'grøn', blue: 'blå' });
-		const newCollection = new TranslationCollection({ red: 'no value', blue: 'also no value' });
-		expect(collection.intersect(newCollection).values).to.deep.equal({ red: 'rød', blue: 'blå' });
+    collection = new TranslationCollection({ cat: 'cøt', dog: 'døg', bird: 'børd' });
+    const newCollection = new TranslationCollection({ cat: 'no value', bird: 'also no value' });
+    expect(collection.intersect(newCollection).values).to.deep.equal({ cat: 'cøt', bird: 'børd' });
 	});
 
 	it('should sort translations in alphabetical order', () => {

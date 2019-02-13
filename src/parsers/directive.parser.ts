@@ -22,7 +22,7 @@ export class DirectiveParser extends AbstractTemplateParser implements ParserInt
 		template = this._normalizeTemplateAttributes(template);
 
 		const selector = '[translate], [ng2-translate]';
-		$(cheerio.load(template, {xmlMode: true}))
+    $(template)
 			.find(selector)
 			.addBack(selector)
 			.each((i: number, element: CheerioElement) => {
@@ -41,7 +41,7 @@ export class DirectiveParser extends AbstractTemplateParser implements ParserInt
             .forEach(text => collection = collection.add(text));
 				}
       });
-      
+
 		return collection;
 	}
 

@@ -35,7 +35,7 @@ export class TranslationCollection {
 		let values: TranslationType = {};
 		this.forEach((key: string, val: string) => {
 			if (callback.call(this, key, val)) {
-				values[key] = key;
+        values[key] = val;
 			}
 		});
 		return new TranslationCollection(values);
@@ -49,7 +49,7 @@ export class TranslationCollection {
 		let values: TranslationType = {};
 		this.filter(key => collection.has(key))
 			.forEach((key: string, val: string) => {
-				values[key] = key;
+        values[key] = val;
 			});
 
 		return new TranslationCollection(values);
