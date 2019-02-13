@@ -94,6 +94,6 @@ Options:
   --clean, -c                 Remove obsolete strings when merging
                                                       [boolean] [default: false]                                   
   --keys, -k                  Extract only the keys without their values
-                                                     [booleano] [defecto: false]
+                                                      [boolean] [default: false]
   --verbose, -vb              Log all output to console
-                                                      [booleano] [defecto: true]
+                                                       [boolean] [default: true]
