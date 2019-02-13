@@ -1,6 +1,7 @@
 # IDE
 .vscode
 .idea
+.npmignore
 
 # Logs and other files
 npm-debug.log*
