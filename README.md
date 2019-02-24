@@ -1,3 +1,11 @@
+
+[![NPM version][npm-version-image]][npm-url] 
+
+
+[npm-url]: https://www.npmjs.com/package/@jesusvallez/ngx-translate-extract
+[npm-version-image]: http://img.shields.io/npm/v/moment.svg?style=flat
+
+
 If you like this project please show your support with a GitHub star. Much appreciated!
 
 # ngx-translate-extract
@@ -54,7 +62,7 @@ If you want to use spaces instead, you can do the following:
 If, for some reason, you want to extract strings not passed directly to TranslateService, you can wrap them in a custom marker function.
 
 ```ts
-import { _ } from '@biesbjerg/ngx-translate-extract';
+import { _ } from '@jesusvallez/ngx-translate-extract';
 
 _('Extract me');
 ```
