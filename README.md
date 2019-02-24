@@ -3,7 +3,7 @@
 
 
 [npm-url]: https://www.npmjs.com/package/@jesusvallez/ngx-translate-extract
-[npm-version-image]: http://img.shields.io/npm/v/moment.svg?style=flat
+[npm-version-image]: https://img.shields.io/npm/v/@jesusvallez/ngx-translate-extract.svg?style=flat
 
 
 If you like this project please show your support with a GitHub star. Much appreciated!
