@@ -17,18 +17,37 @@ export abstract class AbstractAstParser {
 		}
 
 		const firstArg = callNode.arguments[0];
-		switch (firstArg.kind) {
+		return this._getStringsFromExpression(firstArg);
+	}
+
+	/**
+	 * Get strings from an arbitrary JS expression
+	 */
+	protected _getStringsFromExpression(expression: ts.Expression): string[] {
+		switch (expression.kind) {
 			case ts.SyntaxKind.StringLiteral:
 			case ts.SyntaxKind.FirstTemplateToken:
-				return [(firstArg as ts.StringLiteral).text];
+				// Example: __('This is a sentence.')
+				return [(expression as ts.StringLiteral).text];
 			case ts.SyntaxKind.ArrayLiteralExpression:
-				return (firstArg as ts.ArrayLiteralExpression).elements
+				return (expression as ts.ArrayLiteralExpression).elements
 					.map((element: ts.StringLiteral) => element.text);
+			case ts.SyntaxKind.BinaryExpression:
+				// Example: __('str1' + 'str2')
+				const binExp = expression as ts.BinaryExpression;
+				const left = this._getStringsFromExpression(binExp.left)[0],
+				      right = this._getStringsFromExpression(binExp.right)[0];
+				if (binExp.operatorToken.kind === ts.SyntaxKind.PlusToken &&
+					typeof left === 'string' && typeof right === 'string') {
+					return [left + right];
+				}
+				console.log(`SKIP: Unknown BinaryExpression: `, expression);
+				break;
 			case ts.SyntaxKind.Identifier:
 				console.log('WARNING: We cannot extract variable values passed to TranslateService (yet)');
 				break;
 			default:
-				console.log(`SKIP: Unknown argument type: '${this._syntaxKindToName(firstArg.kind)}'`, firstArg);
+				console.log(`SKIP: Unknown argument type: '${this._syntaxKindToName(expression.kind)}'`, expression);
 		}
 	}
 
