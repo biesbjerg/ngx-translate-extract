@@ -18,10 +18,11 @@ describe('FunctionParser', () => {
 			import { _ } from '@biesbjerg/ngx-translate-extract';
 			_('Hello world');
 			_(['I', 'am', 'extracted']);
+			this.translateservice._('Method Call');
 			otherFunction('But I am not');
 		`;
 		const keys = parser.extract(contents, componentFilename).keys();
-		expect(keys).to.deep.equal(['Hello world', 'I', 'am', 'extracted']);
+		expect(keys).to.deep.equal(['Hello world', 'I', 'am', 'extracted', 'Method Call']);
 	});
 
 });

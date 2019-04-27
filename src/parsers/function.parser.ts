@@ -47,6 +47,11 @@ export class FunctionParser extends AbstractAstParser implements ParserInterface
 					return false;
 				}
 
+				// If it is a method call, first child will be a node as well. Call recursively
+				if (callNode.getChildAt(0).kind === 189) {
+					return this._findCallNodes(callNode.getChildAt(0));
+				}
+
 				const identifier = (callNode.getChildAt(0) as ts.Identifier).text;
 				if (identifier !== this._functionIdentifier) {
 					return false;
