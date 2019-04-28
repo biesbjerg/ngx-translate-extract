@@ -48,7 +48,7 @@ export class FunctionParser extends AbstractAstParser implements ParserInterface
 				}
 
 				// If it is a method call, first child will be a node as well. Call recursively
-				if (callNode.getChildAt(0).kind === 189) {
+				if (callNode.getChildAt(0).kind === ts.SyntaxKind.PropertyAccessExpression) {
 					return this._findCallNodes(callNode.getChildAt(0));
 				}
 
