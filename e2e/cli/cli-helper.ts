@@ -30,7 +30,7 @@ export class CliResult {
 	}
 
 	public assertSuccess(): CliResult {
-		expect(this.errorCode).to.eq(0);
+		expect(this.errorCode).to.eq(0, `The exit code of the CliHelper is not 0. ${this.detailedOutput()}`);
 		return this;
 	}
 
@@ -45,6 +45,12 @@ export class CliResult {
 		const contents = fs.readFileSync(this.outputFolder, 'utf8');
 		expect(contents).to.deep.include(text);
 		return this;
+	}
+
+	private detailedOutput(): string {
+		const stdOutput = this.output.join('\n');
+		const errorOutput = this.error.join('\n');
+		return `Stdout:\n${stdOutput}\n\nError:\n${errorOutput}`;
 	}
 }
 
