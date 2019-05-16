@@ -1,3 +1,5 @@
+[![Build Status](https://travis-ci.com/sebastianzillessen/ngx-translate-extract.svg?branch=master)](https://travis-ci.com/sebastianzillessen/ngx-translate-extract)
+
 If you like this project please show your support with a GitHub star. Much appreciated!
 
 # ngx-translate-extract
