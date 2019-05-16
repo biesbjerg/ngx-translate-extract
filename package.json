@@ -16,7 +16,7 @@
 		"watch": "npm run clean && tsc --watch",
 		"clean": "rm -rf ./dist",
 		"lint": "tslint --force './src/**/*.ts'",
-		"test": "npm run unit && npm run e2e",
+		"test": "mocha -r ts-node/register tests/**/*.spec.ts e2e/**/*.spec.ts",
 		"unit": "mocha -r ts-node/register tests/**/*.spec.ts",
 		"e2e": "mocha -r ts-node/register e2e/**/*.spec.ts"
 	},
