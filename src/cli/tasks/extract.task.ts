@@ -100,6 +100,19 @@ export class ExtractTask implements TaskInterface {
 
 			this._out(chalk.bold('\nSaving: %s'), outputPath);
 
+			if (this._options.keys) {
+				processedCollection.forEach(element => {
+					processedCollection.values[element] = '';
+				});
+			}
+
+			if (this._options.prefill && this._options.prefill !== '') {
+				processedCollection.forEach(element => {
+					processedCollection.values[element] = this._options.prefill + processedCollection.values[element];
+				});
+			}
+
+
 			if (fs.existsSync(outputPath) && !this._options.replace) {
 				const existingCollection: TranslationCollection = this._compiler.parse(fs.readFileSync(outputPath, 'utf-8'));
 				if (!existingCollection.isEmpty()) {
@@ -127,21 +140,6 @@ export class ExtractTask implements TaskInterface {
 				this._out(chalk.dim('- created dir: %s'), dir);
 			}
 
-			if (!this._options.keys && this._options.prefill && this._options.prefill !== '') {
-				this._out(chalk.redBright(`You are using '--keys=false' and '--prefill=${this._options.prefill}'`));
-				this._out(chalk.redBright('These options are conflicting each other and prefill will overrule the empty key definition.'));
-			}
-			if (this._options.keys) {
-				processedCollection.forEach(element => {
-					processedCollection.values[element] = '';
-				});
-			}
-
-			if (this._options.prefill && this._options.prefill !== '') {
-				processedCollection.forEach(element => {
-					processedCollection.values[element] = this._options.prefill;
-				});
-			}
 
 			fs.writeFileSync(outputPath, this._compiler.compile(processedCollection));
 

@@ -47,6 +47,13 @@ export class CliResult {
 		return this;
 	}
 
+
+	public assertOutputEquals(content: string) {
+		const contents = fs.readFileSync(this.outputFolder, 'utf8');
+		expect(contents).to.eq(content);
+		return this;
+	}
+
 	private detailedOutput(): string {
 		const stdOutput = this.output.join('\n');
 		const errorOutput = this.error.join('\n');
@@ -61,6 +68,7 @@ interface CliOptions {
 	prefillPattern: string;
 	keys: boolean;
 	verbose: boolean;
+	sort: boolean;
 }
 
 const defaultOptions: CliOptions = {
@@ -70,12 +78,16 @@ const defaultOptions: CliOptions = {
 	prefillPattern: undefined,
 	keys: false,
 	verbose: false,
+	sort: false,
 };
 
 export default {
 	clean: (cliOptions: Partial<CliOptions> = {}) => {
 		cliOptions = {...defaultOptions, ...cliOptions};
 		fs.removeSync(cliOptions.outputFolder);
+	},
+	writeExistingOutputFile: (content: string) => {
+		fs.outputFileSync(defaultOptions.outputFile, content);
 	},
 	execute: (cliOptions: Partial<CliOptions> = {}): Promise<CliResult> => {
 		cliOptions = {...defaultOptions, ...cliOptions};
@@ -87,6 +99,9 @@ export default {
 
 		if (cliOptions.keys === true) {
 			args.push('-k', 'true');
+		}
+		if (cliOptions.sort) {
+			args.push('-s');
 		}
 		if (cliOptions.verbose) {
 			args.push('-vb');
