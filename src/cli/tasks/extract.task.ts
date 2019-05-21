@@ -107,9 +107,11 @@ export class ExtractTask implements TaskInterface {
 			}
 
 			if (this._options.prefill && this._options.prefill !== '') {
-				processedCollection.forEach(element => {
-					processedCollection.values[element] = this._options.prefill + processedCollection.values[element];
-				});
+				processedCollection
+					.filter(key => !processedCollection.values[key].startsWith(this._options.prefill))
+					.forEach(element => {
+						processedCollection.values[element] = this._options.prefill + processedCollection.values[element];
+					});
 			}
 
 
