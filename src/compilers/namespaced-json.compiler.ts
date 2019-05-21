@@ -2,6 +2,8 @@ import { CompilerInterface } from './compiler.interface';
 import { TranslationCollection } from '../utils/translation.collection';
 
 import * as flat from 'flat';
+import sortObject from '../utils/deepObject.sort';
+import { ExtractTaskOptionsInterface } from '../cli/tasks/extract.task';
 
 export class NamespacedJsonCompiler implements CompilerInterface {
 
@@ -15,10 +17,14 @@ export class NamespacedJsonCompiler implements CompilerInterface {
 		}
 	}
 
-	public compile(collection: TranslationCollection): string {
-		const values: {} = flat.unflatten(collection.values, {
+	public compile(collection: TranslationCollection, options: ExtractTaskOptionsInterface): string {
+		let values: {} = flat.unflatten(collection.values, {
 			object: true,
 		});
+		if (options.sort) {
+			values = sortObject(values);
+		}
+
 		return JSON.stringify(values, null, this.indentation);
 	}
 

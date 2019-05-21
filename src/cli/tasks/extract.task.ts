@@ -114,7 +114,7 @@ export class ExtractTask implements TaskInterface {
 
 
 			if (fs.existsSync(outputPath) && !this._options.replace) {
-				const existingCollection: TranslationCollection = this._compiler.parse(fs.readFileSync(outputPath, 'utf-8'));
+				const existingCollection: TranslationCollection = this._compiler.parse(fs.readFileSync(outputPath, 'utf-8'), this._options);
 				if (!existingCollection.isEmpty()) {
 					processedCollection = processedCollection.union(existingCollection);
 					this._out(chalk.dim('- merged with %d existing strings'), existingCollection.count());
@@ -141,7 +141,7 @@ export class ExtractTask implements TaskInterface {
 			}
 
 
-			fs.writeFileSync(outputPath, this._compiler.compile(processedCollection));
+			fs.writeFileSync(outputPath, this._compiler.compile(processedCollection, this._options));
 
 			this._out(chalk.green('Done!'));
 		});

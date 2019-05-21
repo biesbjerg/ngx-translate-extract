@@ -110,4 +110,35 @@ describe('Cli Test (E2E)', () => {
 				'\t"welcome.title": "[???]Welcome to [title]!"\n' +
 				'}');
 	});
+
+	it('for namespaced-json format should merge existing strings successfully with sorting enabled and writing keys deactive and pattern active', async () => {
+		cliHelper.writeExistingOutputFile('{\n' +
+			'\t"Here are some links to help you start:": "Already translated",\n' +
+			'\t"welcome.links.tour": "Tour Link Already Translated"\n' +
+			'}');
+		const cliResult = await cliHelper.execute({sort: true, keys: false, prefillPattern: '[???]', format: 'namespaced-json'});
+		// language=JSON
+		cliResult.assertSuccess()
+			.assertNoErrors()
+			.assertOutputFileExists()
+			.assertOutputEquals('{\n\t"Here are some links to help you start:": "Already translated",\n\t"welcome": {\n\t\t"bottom": "[???]Bottom Text",\n\t\t"links": {\n\t\t\t"blog": "[???]Angular blog",\n\t\t\t"cli": "[???]CLI Documentation",\n\t\t\t"tour": "Tour Link Already Translated"\n\t\t},\n\t\t"title": "[???]Welcome to [title]!"\n\t}\n}');
+	});
+
+	it('for namespaced-json format should sort successfully ', async () => {
+		const cliResult = await cliHelper.execute({sort: true, format: 'namespaced-json'});
+		// language=JSON
+		cliResult.assertSuccess()
+			.assertNoErrors()
+			.assertOutputFileExists()
+			.assertOutputEquals('{\n\t"Here are some links to help you start:": "Here are some links to help you start:",\n\t"welcome": {\n\t\t"bottom": "Bottom Text",\n\t\t"links": {\n\t\t\t"blog": "Angular blog",\n\t\t\t"cli": "CLI Documentation",\n\t\t\t"tour": "Tour of Heroes"\n\t\t},\n\t\t"title": "Welcome to [title]!"\n\t}\n}');
+	});
+
+	it('for namespaced-json format should be successful (but not sorted)', async () => {
+		const cliResult = await cliHelper.execute({format: 'namespaced-json'});
+		// language=JSON
+		cliResult.assertSuccess()
+			.assertNoErrors()
+			.assertOutputFileExists()
+			.assertOutputEquals('{\n\t"welcome": {\n\t\t"title": "Welcome to [title]!",\n\t\t"bottom": "Bottom Text",\n\t\t"links": {\n\t\t\t"cli": "CLI Documentation",\n\t\t\t"tour": "Tour of Heroes",\n\t\t\t"blog": "Angular blog"\n\t\t}\n\t},\n\t"Here are some links to help you start:": "Here are some links to help you start:"\n}');
+	});
 });

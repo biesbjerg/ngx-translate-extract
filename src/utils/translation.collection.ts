@@ -11,7 +11,7 @@ export class TranslationCollection {
 	}
 
 	public add(key: string, val: string = ''): TranslationCollection {
-		return new TranslationCollection(Object.assign({}, this.values, { [key]: (val) ? val : key })); // add key as value TT
+		return new TranslationCollection(Object.assign({}, this.values, {[key]: (val) ? val : key})); // add key as value TT
 	}
 
 	public addKeys(keys: string[]): TranslationCollection {
@@ -35,7 +35,7 @@ export class TranslationCollection {
 		let values: TranslationType = {};
 		this.forEach((key: string, val: string) => {
 			if (callback.call(this, key, val)) {
-        values[key] = val;
+				values[key] = val;
 			}
 		});
 		return new TranslationCollection(values);
@@ -49,7 +49,7 @@ export class TranslationCollection {
 		let values: TranslationType = {};
 		this.filter(key => collection.has(key))
 			.forEach((key: string, val: string) => {
-        values[key] = val;
+				values[key] = val;
 			});
 
 		return new TranslationCollection(values);

@@ -69,6 +69,7 @@ interface CliOptions {
 	keys: boolean;
 	verbose: boolean;
 	sort: boolean;
+	format?: string;
 }
 
 const defaultOptions: CliOptions = {
@@ -79,6 +80,7 @@ const defaultOptions: CliOptions = {
 	keys: false,
 	verbose: false,
 	sort: false,
+	format: undefined,
 };
 
 export default {
@@ -105,6 +107,9 @@ export default {
 		}
 		if (cliOptions.verbose) {
 			args.push('-vb');
+		}
+		if (cliOptions.format) {
+			args.push('-f', cliOptions.format);
 		}
 
 		let cli = spawn('node', args, {cwd: '.'});
