@@ -14,7 +14,7 @@ function sortObject(object: any): any {
 		return 0;
 	});
 
-	for (let index in keys) {
+	for (const index in keys) {
 		const key = keys[index];
 		if (typeof object[key] == 'object' && !(object[key] instanceof Array)) {
 			sortedObj[key] = sortObject(object[key]);

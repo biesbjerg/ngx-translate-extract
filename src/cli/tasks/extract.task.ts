@@ -89,7 +89,7 @@ export class ExtractTask implements TaskInterface {
 			const normalizedOutput: string = path.resolve(output);
 
 			let dir: string = normalizedOutput;
-			let filename: string = `strings.${this._compiler.extension}`;
+			let filename = `strings.${this._compiler.extension}`;
 			if (!fs.existsSync(normalizedOutput) || !fs.statSync(normalizedOutput).isDirectory()) {
 				dir = path.dirname(normalizedOutput);
 				filename = path.basename(normalizedOutput);
