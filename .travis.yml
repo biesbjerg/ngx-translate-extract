@@ -9,3 +9,11 @@ node_js:
 cache: npm
 before_script:
 - npm run build
+deploy:
+  provider: npm
+  email: npm@zillessen.info
+  api_key:
+    secure: UiHCgGGYsc+raG1Mb19A0/mFKhkwcuYBV3PMpDOL8jtrsvpHDh5vJRWin+Om+wbZLhifo7jXOtNqtx6wlNkLI7Miv5froxwa/jC661xSiUXn9xZLtfDMt2qxbF/3vnzEEeyHIe8sgf7VRdmgfc2Vw84vsNISzEzXNBbIvLTBLSmL36Hvhbe9G1/8hOtSJjtSlMrws1MJzX+brQU7M1PPXce58uNNdap1wXjk1B1vZFitDb2NS+QI+h/mZTZju9RseFqQ/P6sNzpSdkt0Rzvy8EBtJdcT/8ENv24rST/JnAZxCoWGYBaw4qd4l2HLg9cO6Jexi2gbk4XocvRFQVb8H5l4rgL5fGGtAaqfjFLDqeAlo8Q4A9Ldzgg6l6ODAjyOLs8yRPkrccU5PK6ep5Qek9Te6IZpMCY3sGaVeCngGFlJzSXr+5Ek1yrmNXxH7VRxaR1h5x3eGNC6ZaB3So4tH4FaqGPpzaWA9qLgbP+jaMHTxdd9uofPBO1jAo3Pqd1IdotJet32C5bwqQ5YRSxtFSwLN7BnOoqGo1ZjjYOkhXDlpS7C96z/U9n7u/qXxXlPmTQY+BW8hZX0IjNPi5R1H0nI4mGnmd4jAv+a2tkCugVkeONe9f4TfUGrEt3jkPjR9DfkwIByNX7834FQQKwzMJuFphcQ0ZUUAqXTnnIEz2M=
+  on:
+    tags: true
+    repo: sebastianzillessen/ngx-translate-extract
