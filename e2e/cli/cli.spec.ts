@@ -6,7 +6,7 @@ describe('Cli Test (E2E)', () => {
 		cliResult.assertSuccess()
 			.assertNoErrors()
 			.assertOutputFileExists()
-			.assertOutputContainsKeys('"Here are some links to help you start:": "",')
-			.assertOutputContainsKeys('"welcome.title": ""');
+			.assertOutputContainsKeys('"Here are some links to help you start:": "Here are some links to help you start:",')
+			.assertOutputContainsKeys('"welcome.title": "Welcome to [title]!"');
 	});
 });

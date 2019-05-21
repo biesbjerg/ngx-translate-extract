@@ -3,7 +3,6 @@
 		"node_modules/tslint-eslint-rules/dist/rules"
 	],
 	"rules": {
-		"indent": [true, "tabs"],
 		"semicolon": [true, "always", "ignore-interfaces"],
 		"quotemark": [true, "single", "avoid-escape"],
 		"only-arrow-functions": false,

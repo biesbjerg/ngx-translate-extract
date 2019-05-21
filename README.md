@@ -1,5 +1,13 @@
 [![Build Status](https://travis-ci.com/sebastianzillessen/ngx-translate-extract.svg?branch=master)](https://travis-ci.com/sebastianzillessen/ngx-translate-extract)
 
+
+[![NPM version][npm-version-image]][npm-url] 
+
+
+[npm-url]: https://www.npmjs.com/package/@sebastianzillessen/ngx-translate-extract
+[npm-version-image]: https://img.shields.io/npm/v/@sebastianzillessen/ngx-translate-extract.svg?style=flat
+
+
 If you like this project please show your support with a GitHub star. Much appreciated!
 
 # ngx-translate-extract
@@ -9,12 +17,12 @@ Merges with existing strings if the output file already exists.
 ## Usage
 Install the package in your project:
 
-`npm install @biesbjerg/ngx-translate-extract --save-dev`
+`npm install @sebastianzillessen/ngx-translate-extract --save-dev`
 
 Add an `extract` script to your project's `package.json`:
 ```
 "scripts": {
-  "extract": "ngx-translate-extract --input ./src --output ./src/assets/i18n/ --clean --sort --format namespaced-json"
+  "extract": "ngx-translate-extract --input ./src --output ./src/assets/i18n/ --sort --format namespaced-json"
 }
 ```
 You can now run `npm run extract` to extract strings.
@@ -56,7 +64,7 @@ If you want to use spaces instead, you can do the following:
 If, for some reason, you want to extract strings not passed directly to TranslateService, you can wrap them in a custom marker function.
 
 ```ts
-import { _ } from '@biesbjerg/ngx-translate-extract';
+import { _ } from '@sebastianzillessen/ngx-translate-extract';
 
 _('Extract me');
 ```
@@ -94,6 +102,8 @@ Options:
   --sort, -s                  Sort strings in alphabetical order when saving
                                                       [boolean] [default: false]
   --clean, -c                 Remove obsolete strings when merging
+                                                      [boolean] [default: false]                                   
+  --keys, -k                  Extract only the keys without their values
                                                       [boolean] [default: false]
-  --verbose, -vb              If true, prints all processed file paths to console
-                                                      [boolean] [default: true]
+  --verbose, -vb              Log all output to console
+                                                       [boolean] [default: true]
