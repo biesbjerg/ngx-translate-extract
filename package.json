@@ -1,6 +1,6 @@
 {
   "name": "@sebastianzillessen/ngx-translate-extract",
-  "version": "2.4.2",
+  "version": "2.5.0",
   "description": "Extract strings from projects using ngx-translate",
   "main": "dist/index.js",
   "typings": "dist/index.d.ts",
@@ -46,12 +46,12 @@
   "license": "MIT",
   "homepage": "https://github.com/sebastianzillessen/ngx-translate-extract",
   "engines": {
-    "node": ">=4.3.2"
+	"node": ">=7.0.0",
+	"npm": ">=5.x.x"
   },
   "config": {},
   "devDependencies": {
     "@types/chai": "4.0.1",
-    "@types/chalk": "0.4.31",
     "@types/cheerio": "0.22.1",
     "@types/flat": "0.0.28",
     "@types/glob": "5.0.30",
