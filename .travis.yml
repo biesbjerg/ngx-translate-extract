@@ -10,7 +10,6 @@ before_script:
 - npm run build
 - npm run lint
 deploy:
-  tag: next
   provider: npm
   email: npm@zillessen.info
   api_key:
