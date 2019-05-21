@@ -3,8 +3,16 @@
 		"node_modules/tslint-eslint-rules/dist/rules"
 	],
 	"rules": {
-		"semicolon": [true, "always", "ignore-interfaces"],
-		"quotemark": [true, "single", "avoid-escape"],
+		"semicolon": [
+			true,
+			"always",
+			"ignore-interfaces"
+		],
+		"quotemark": [
+			true,
+			"single",
+			"avoid-escape"
+		],
 		"only-arrow-functions": false,
 		"no-duplicate-variable": true,
 		"member-access": true,
@@ -34,7 +42,7 @@
 		"trailing-comma": [
 			true,
 			{
-				"multiline": "never",
+				"multiline": "always",
 				"singleline": "never"
 			}
 		],

@@ -16,6 +16,7 @@
     "watch": "npm run clean && tsc --watch",
     "clean": "rm -rf ./dist",
     "lint": "tslint --force './src/**/*.ts'",
+    "lint:fix": "tslint --fix --force './src/**/*.ts'",
     "test": "mocha -r ts-node/register tests/**/*.spec.ts e2e/**/*.spec.ts",
     "unit": "mocha -r ts-node/register tests/**/*.spec.ts",
     "e2e": "mocha -r ts-node/register e2e/**/*.spec.ts"
@@ -46,19 +47,21 @@
   "license": "MIT",
   "homepage": "https://github.com/sebastianzillessen/ngx-translate-extract",
   "engines": {
-	"node": ">=7.0.0",
-	"npm": ">=5.x.x"
+    "node": ">=7.0.0",
+    "npm": ">=5.x.x"
   },
   "config": {},
   "devDependencies": {
     "@types/chai": "4.0.1",
     "@types/cheerio": "0.22.1",
     "@types/flat": "0.0.28",
+    "@types/fs-extra": "^7.0.0",
     "@types/glob": "5.0.30",
     "@types/mkdirp": "0.3.29",
     "@types/mocha": "2.2.41",
     "@types/yargs": "8.0.0",
     "chai": "4.0.2",
+    "fs-extra": "^8.0.1",
     "mocha": "^5.2.0",
     "ts-node": "3.1.0",
     "tslint": "5.4.3",
@@ -68,7 +71,6 @@
     "chalk": "2.4.2",
     "yargs": "8.0.2",
     "cheerio": "1.0.0-rc.2",
-    "fs": "0.0.1-security",
     "gettext-parser": "3.1.0",
     "glob": "7.1.3",
     "path": "0.12.7",

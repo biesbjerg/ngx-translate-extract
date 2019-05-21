@@ -20,17 +20,17 @@ export class PoCompiler implements CompilerInterface {
 			headers: {
 				'mime-version': '1.0',
 				'content-type': 'text/plain; charset=utf-8',
-				'content-transfer-encoding': '8bit'
+				'content-transfer-encoding': '8bit',
 			},
 			translations: {
 				[this.domain]: Object.keys(collection.values).reduce((translations, key) => {
 					translations[key] = {
 						msgid: key,
-						msgstr: collection.get(key)
+						msgstr: collection.get(key),
 					};
 					return translations;
-				}, <any> {})
-			}
+				}, <any> {}),
+			},
 		};
 
 		return gettext.po.compile(data, 'utf-8');

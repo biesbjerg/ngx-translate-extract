@@ -21,7 +21,7 @@ export const cli = yargs
 		describe: 'Paths you would like to extract strings from. You can use path expansion, glob patterns and multiple paths',
 		default: process.env.PWD,
 		type: 'array',
-		normalize: true
+		normalize: true,
 	})
 	.check(options => {
 		options.input.forEach((dir: string) => {
@@ -36,63 +36,70 @@ export const cli = yargs
 		alias: 'p',
 		describe: 'Extract strings from the following file patterns',
 		type: 'array',
-		default: ['/**/*.html', '/**/*.ts']
+		default: ['/**/*.html', '/**/*.ts'],
 	})
 	.option('output', {
 		alias: 'o',
 		describe: 'Paths where you would like to save extracted strings. You can use path expansion, glob patterns and multiple paths',
 		type: 'array',
 		normalize: true,
-		required: true
+		required: true,
 	})
 	.option('marker', {
 		alias: 'm',
 		describe: 'Extract strings passed to a marker function',
 		default: false,
-		type: 'string'
+		type: 'string',
 	})
 	.option('format', {
 		alias: 'f',
 		describe: 'Output format',
 		default: 'json',
 		type: 'string',
-		choices: ['json', 'namespaced-json', 'pot']
+		choices: ['json', 'namespaced-json', 'pot'],
 	})
 	.option('format-indentation', {
 		alias: 'fi',
 		describe: 'Output format indentation',
 		default: '\t',
-		type: 'string'
+		type: 'string',
 	})
 	.option('replace', {
 		alias: 'r',
 		describe: 'Replace the contents of output file if it exists (Merges by default)',
 		default: false,
-		type: 'boolean'
+		type: 'boolean',
 	})
 	.option('sort', {
 		alias: 's',
 		describe: 'Sort strings in alphabetical order when saving',
 		default: false,
-		type: 'boolean'
+		type: 'boolean',
 	})
 	.option('clean', {
 		alias: 'c',
 		describe: 'Remove obsolete strings when merging',
 		default: false,
-		type: 'boolean'
+		type: 'boolean',
 	})
 	.option('keys', {
 		alias: 'k',
-		describe: 'Extract only the keys without their values',
+		describe: 'Extract only the keys without their values (otherwise it prefills it with the existing text)',
 		default: false,
-		type: 'boolean'
+		type: 'boolean',
+	})
+	.option('prefill', {
+		alias: 'pp',
+		describe: 'Fills extracted translation keys with this pattern instead of empty string',
+		default: '',
+		type: 'string',
+		normalize: true,
 	})
 	.option('verbose', {
 		alias: 'vb',
 		describe: 'Log all output to console',
 		default: true,
-		type: 'boolean'
+		type: 'boolean',
 	})
 	.exitProcess(true)
 	.parse(process.argv);
@@ -102,22 +109,23 @@ const extract = new ExtractTask(cli.input, cli.output, {
 	sort: cli.sort,
 	clean: cli.clean,
 	patterns: cli.patterns,
-	keys: cli.keys
+	keys: cli.keys,
+	prefill: cli.prefill,
 });
 
 const compiler: CompilerInterface = CompilerFactory.create(cli.format, {
-	indentation: cli.formatIndentation
+	indentation: cli.formatIndentation,
 });
 extract.setCompiler(compiler);
 
 const parsers: ParserInterface[] = [
 	new PipeParser(),
 	new DirectiveParser(),
-	new ServiceParser()
+	new ServiceParser(),
 ];
 if (cli.marker) {
 	parsers.push(new FunctionParser({
-		identifier: cli.marker
+		identifier: cli.marker,
 	}));
 }
 extract.setParsers(parsers);
