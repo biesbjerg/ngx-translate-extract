@@ -89,7 +89,7 @@ export class ExtractTask implements TaskInterface {
 			const normalizedOutput: string = path.resolve(output);
 
 			let dir: string = normalizedOutput;
-			let filename: string = `strings.${this._compiler.extension}`;
+			let filename = `strings.${this._compiler.extension}`;
 			if (!fs.existsSync(normalizedOutput) || !fs.statSync(normalizedOutput).isDirectory()) {
 				dir = path.dirname(normalizedOutput);
 				filename = path.basename(normalizedOutput);
@@ -107,9 +107,11 @@ export class ExtractTask implements TaskInterface {
 			}
 
 			if (this._options.prefill && this._options.prefill !== '') {
-				processedCollection.forEach(element => {
-					processedCollection.values[element] = this._options.prefill + processedCollection.values[element];
-				});
+				processedCollection
+					.filter(key => !processedCollection.values[key].startsWith(this._options.prefill))
+					.forEach(element => {
+						processedCollection.values[element] = this._options.prefill + processedCollection.values[element];
+					});
 			}
 
 

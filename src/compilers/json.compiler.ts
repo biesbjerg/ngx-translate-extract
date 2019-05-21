@@ -5,7 +5,7 @@ import * as flat from 'flat';
 
 export class JsonCompiler implements CompilerInterface {
 
-	public indentation: string = '\t';
+	public indentation = '\t';
 
 	public extension = 'json';
 

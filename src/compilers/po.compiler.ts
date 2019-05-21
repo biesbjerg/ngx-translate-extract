@@ -29,7 +29,7 @@ export class PoCompiler implements CompilerInterface {
 						msgstr: collection.get(key),
 					};
 					return translations;
-				}, <any> {}),
+				}, {} as any),
 			},
 		};
 
@@ -49,7 +49,7 @@ export class PoCompiler implements CompilerInterface {
 			.reduce((values, key) => {
 				values[key] = po.translations[this.domain][key].msgstr.pop();
 				return values;
-			}, <TranslationType> {});
+			}, {} as TranslationType);
 
 		return new TranslationCollection(values);
 	}

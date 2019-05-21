@@ -6,7 +6,7 @@ import * as ts from 'typescript';
 
 export class FunctionParser extends AbstractAstParser implements ParserInterface {
 
-	protected _functionIdentifier: string = '_';
+	protected _functionIdentifier = '_';
 
 	public constructor(options?: any) {
 		super();

@@ -70,6 +70,7 @@ interface CliOptions {
 	verbose: boolean;
 	sort: boolean;
 	format?: string;
+	clean: boolean;
 }
 
 const defaultOptions: CliOptions = {
@@ -81,6 +82,7 @@ const defaultOptions: CliOptions = {
 	verbose: false,
 	sort: false,
 	format: undefined,
+	clean: false,
 };
 
 export default {
@@ -104,6 +106,9 @@ export default {
 		}
 		if (cliOptions.sort) {
 			args.push('-s');
+		}
+		if (cliOptions.clean) {
+			args.push('-c');
 		}
 		if (cliOptions.verbose) {
 			args.push('-vb');
@@ -131,5 +136,5 @@ export default {
 
 		return prom;
 
-	}
+	},
 };

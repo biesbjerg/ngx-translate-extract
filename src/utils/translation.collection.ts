@@ -1,5 +1,5 @@
 export interface TranslationType {
-	[key: string]: string
+	[key: string]: string;
 }
 
 export class TranslationCollection {
@@ -18,7 +18,7 @@ export class TranslationCollection {
 		const values = keys.reduce((results, key) => {
 			results[key] = key;
 			return results;
-		}, <TranslationType> {});
+		}, {} as TranslationType);
 		return new TranslationCollection(Object.assign({}, this.values, values));
 	}
 
@@ -32,7 +32,7 @@ export class TranslationCollection {
 	}
 
 	public filter(callback: (key?: string, val?: string) => boolean): TranslationCollection {
-		let values: TranslationType = {};
+		const values: TranslationType = {};
 		this.forEach((key: string, val: string) => {
 			if (callback.call(this, key, val)) {
 				values[key] = val;
@@ -46,7 +46,7 @@ export class TranslationCollection {
 	}
 
 	public intersect(collection: TranslationCollection): TranslationCollection {
-		let values: TranslationType = {};
+		const values: TranslationType = {};
 		this.filter(key => collection.has(key))
 			.forEach((key: string, val: string) => {
 				values[key] = val;
@@ -76,7 +76,7 @@ export class TranslationCollection {
 	}
 
 	public sort(compareFn?: (a: string, b: string) => number): TranslationCollection {
-		let values: TranslationType = {};
+		const values: TranslationType = {};
 		this.keys().sort(compareFn).forEach((key) => {
 			values[key] = this.get(key);
 		});

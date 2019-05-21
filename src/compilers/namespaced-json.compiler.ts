@@ -3,11 +3,11 @@ import { TranslationCollection } from '../utils/translation.collection';
 
 import * as flat from 'flat';
 import sortObject from '../utils/deepObject.sort';
-import { ExtractTaskOptionsInterface } from '../cli/tasks/extract.task';
+import { ExtractTaskOptionsInterface } from '..';
 
 export class NamespacedJsonCompiler implements CompilerInterface {
 
-	public indentation: string = '\t';
+	public indentation = '\t';
 
 	public extension = 'json';
 
