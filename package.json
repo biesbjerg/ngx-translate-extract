@@ -68,7 +68,7 @@
   },
   "dependencies": {
     "chalk": "2.4.2",
-    "yargs": "12.0.5",
+    "yargs": "8.0.2",
     "cheerio": "1.0.0-rc.2",
     "fs": "0.0.1-security",
     "gettext-parser": "3.1.0",
