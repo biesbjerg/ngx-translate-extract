@@ -1,28 +1,26 @@
 language: node_js
 node_js:
-  - "6"
-  - "7"
-  - "8"
-  - "9"
-  - "10"
+- '6'
+- '7'
+- '8'
+- '9'
+- '10'
 cache: npm
 before_script:
-  - npm run build
-  - npm run lint
-
+- npm run build
+- npm run lint
 jobs:
   include:
-    - stage: npm release
-      if: tag IS present
-      node_js: "8"
-      script: echo "Deploying to npm ..."
-      deploy:
-        provider: npm
-        skip_cleanup: true
-        email: npm@zillessen.info
-        api_key:
-          secure: UiHCgGGYsc+raG1Mb19A0/mFKhkwcuYBV3PMpDOL8jtrsvpHDh5vJRWin+Om+wbZLhifo7jXOtNqtx6wlNkLI7Miv5froxwa/jC661xSiUXn9xZLtfDMt2qxbF/3vnzEEeyHIe8sgf7VRdmgfc2Vw84vsNISzEzXNBbIvLTBLSmL36Hvhbe9G1/8hOtSJjtSlMrws1MJzX+brQU7M1PPXce58uNNdap1wXjk1B1vZFitDb2NS+QI+h/mZTZju9RseFqQ/P6sNzpSdkt0Rzvy8EBtJdcT/8ENv24rST/JnAZxCoWGYBaw4qd4l2HLg9cO6Jexi2gbk4XocvRFQVb8H5l4rgL5fGGtAaqfjFLDqeAlo8Q4A9Ldzgg6l6ODAjyOLs8yRPkrccU5PK6ep5Qek9Te6IZpMCY3sGaVeCngGFlJzSXr+5Ek1yrmNXxH7VRxaR1h5x3eGNC6ZaB3So4tH4FaqGPpzaWA9qLgbP+jaMHTxdd9uofPBO1jAo3Pqd1IdotJet32C5bwqQ5YRSxtFSwLN7BnOoqGo1ZjjYOkhXDlpS7C96z/U9n7u/qXxXlPmTQY+BW8hZX0IjNPi5R1H0nI4mGnmd4jAv+a2tkCugVkeONe9f4TfUGrEt3jkPjR9DfkwIByNX7834FQQKwzMJuFphcQ0ZUUAqXTnnIEz2M=
-        on:
-          tags: true
-          repo: sebastianzillessen/ngx-translate-extract
-
+  - stage: npm release
+    if: tag IS present
+    node_js: '8'
+    script: echo "Deploying to npm ..."
+    deploy:
+      provider: npm
+      skip_cleanup: true
+      email: npm@zillessen.info
+      api_key:
+        secure: leIt74KiSwhlBo90wkWvHXPdBty+QQfqTLO3jjanHTV14FEe1kVXFQRg28V0m/BYPPxxwvPmtY8YikBnzXm9+6lqiXtT/dc7s8l/kvpV6eSfxO8wCM7O0GZLy3ynPazbbXI0EHihBCLWR+XRYyxxmOEsV5zKmTltTtm3eovulUQP54BFOhzr70jwlTL3w3OIb/FKvdfOWgNZQsXYozbWn+n0VJvu5YuwFLzN7Br8BGRCeo7n75ya+9LIgUh90vTHSQjGBAPuZmXiQnNFNuwFlavqSEBxKqKhSSfdpoDbnhU4L6SmgAtbbTlfpbl/sGGrLIj3thAtYL+2vxbVAw+LX5msT5vFbrQsUeMmLhE2hL5ySZlU6tNLKCCOjWLxNgntU2iaIfTPn3Ap4lN0BLXCycp3+NERonT3pM52JDPM0GVA4EAVlnC7LJIFSSBBKHvPjxQx+gQeIvzLid9XF97Zb/hKZNwhkTL2R57P/c1KIiFy4xDCoeZ9YHD1OlMLPBsNePv1GmPc7GQHx6qR7Df8SZFQfjrg2d3uN/njLw87rhrRd1fMm4oYLG57qOuVeHBNNMqRI4+Qx0DC0We0cgJZP79Fi2pv30nhlKRbf4oM9aueaYYAxrB9pVbs6dWOPLOZHi9DuvEGy2iacNLN1ylvadYUeXGXDsTSvFMaIDQhUeU=
+      on:
+        tags: true
+        repo: sebastianzillessen/ngx-translate-extract
