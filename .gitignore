@@ -19,3 +19,4 @@ node_modules
 
 # Source maps for JS builds
 *.js.map
+/example/i18n/

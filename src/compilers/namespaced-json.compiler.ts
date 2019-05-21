@@ -17,7 +17,7 @@ export class NamespacedJsonCompiler implements CompilerInterface {
 
 	public compile(collection: TranslationCollection): string {
 		const values: {} = flat.unflatten(collection.values, {
-			object: true
+			object: true,
 		});
 		return JSON.stringify(values, null, this.indentation);
 	}

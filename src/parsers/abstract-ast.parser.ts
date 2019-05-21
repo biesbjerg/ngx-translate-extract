@@ -55,7 +55,7 @@ export abstract class AbstractAstParser {
 			this._syntaxKindToName(node.kind),
 			`[pos: ${node.pos}-${node.end}]`,
 			':\t\t\t',
-			node.getFullText(sourceFile).trim()
+			node.getFullText(sourceFile).trim(),
 		);
 
 		depth++;

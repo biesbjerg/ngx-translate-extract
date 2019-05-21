@@ -2,7 +2,7 @@ import { spawn } from 'child_process';
 import { expect } from 'chai';
 import { fail } from 'assert';
 
-const fs = require('fs');
+const fs = require('fs-extra');
 
 export class CliResult {
 	private error: string[] = [];
@@ -41,7 +41,7 @@ export class CliResult {
 		return this;
 	}
 
-	assertOutputContainsKeys(text: string): CliResult {
+	public assertOutputContainsKeys(text: string): CliResult {
 		const contents = fs.readFileSync(this.outputFolder, 'utf8');
 		expect(contents).to.deep.include(text);
 		return this;
@@ -54,10 +54,46 @@ export class CliResult {
 	}
 }
 
+interface CliOptions {
+	outputFile: string;
+	outputFolder: string;
+	inputFolder: string;
+	prefillPattern: string;
+	keys: boolean;
+	verbose: boolean;
+}
+
+const defaultOptions: CliOptions = {
+	inputFolder: './example/demo-app/src',
+	outputFile: './example/i18n/test.json',
+	outputFolder: './example/i18n/',
+	prefillPattern: undefined,
+	keys: false,
+	verbose: false,
+};
+
 export default {
-	execute: (inputFolder = './example/demo-app/src', outputFolder = './example/i18n/test.json'): Promise<CliResult> => {
-		let cli = spawn('node', ['./dist/index.js', '-i', inputFolder, '-o', outputFolder], {cwd: '.'});
-		const result = new CliResult(outputFolder);
+	clean: (cliOptions: Partial<CliOptions> = {}) => {
+		cliOptions = {...defaultOptions, ...cliOptions};
+		fs.removeSync(cliOptions.outputFolder);
+	},
+	execute: (cliOptions: Partial<CliOptions> = {}): Promise<CliResult> => {
+		cliOptions = {...defaultOptions, ...cliOptions};
+		const args = ['./dist/index.js', '-i', cliOptions.inputFolder, '-o', cliOptions.outputFile];
+
+		if (cliOptions.prefillPattern) {
+			args.push('--pp', cliOptions.prefillPattern);
+		}
+
+		if (cliOptions.keys === true) {
+			args.push('-k', 'true');
+		}
+		if (cliOptions.verbose) {
+			args.push('-vb');
+		}
+
+		let cli = spawn('node', args, {cwd: '.'});
+		const result = new CliResult(cliOptions.outputFile);
 		const prom = new Promise<CliResult>(((resolve, reject) => {
 			cli.stdout.on('data', (data: string) => {
 				result.addStdOut(data);

@@ -86,7 +86,7 @@ Options:
   --input, -i                 Paths you would like to extract strings from. You
                               can use path expansion, glob patterns and multiple
                               paths
-                     [array] [default: current working path]
+              [array] [default: "/home/vagrant/workspace/ngx-translate-extract"]
   --patterns, -p              Extract strings from the following file patterns
                                     [array] [default: ["/**/*.html","/**/*.ts"]]
   --output, -o                Paths where you would like to save extracted
@@ -102,8 +102,10 @@ Options:
   --sort, -s                  Sort strings in alphabetical order when saving
                                                       [boolean] [default: false]
   --clean, -c                 Remove obsolete strings when merging
-                                                      [boolean] [default: false]                                   
-  --keys, -k                  Extract only the keys without their values
                                                       [boolean] [default: false]
-  --verbose, -vb              Log all output to console
-                                                       [boolean] [default: true]
+  --keys, -k                  Extract only the keys without their values
+                              (otherwise it prefills it with the existing text)
+                                                      [boolean] [default: false]
+  --prefill, --pp             Fills extracted translation keys with this pattern
+                              instead of empty string     [string] [default: ""]
+  --verbose, --vb             Log all output to console[boolean] [default: true]
