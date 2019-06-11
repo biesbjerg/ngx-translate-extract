@@ -11,7 +11,7 @@ export class TranslationCollection {
 	}
 
 	public add(key: string, val: string = ''): TranslationCollection {
-		return new TranslationCollection(Object.assign({}, this.values, { [key]: val }));
+		return new TranslationCollection({ ...this.values, [key]: val });
 	}
 
 	public addKeys(keys: string[]): TranslationCollection {
@@ -19,7 +19,7 @@ export class TranslationCollection {
 			results[key] = '';
 			return results;
 		}, <TranslationType> {});
-		return new TranslationCollection(Object.assign({}, this.values, values));
+		return new TranslationCollection({ ...this.values, ...values });
 	}
 
 	public remove(key: string): TranslationCollection {
@@ -42,7 +42,7 @@ export class TranslationCollection {
 	}
 
 	public union(collection: TranslationCollection): TranslationCollection {
-		return new TranslationCollection(Object.assign({}, this.values, collection.values));
+		return new TranslationCollection({ ...this.values, ...collection.values });
 	}
 
 	public intersect(collection: TranslationCollection): TranslationCollection {

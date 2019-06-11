@@ -31,7 +31,7 @@ export class ExtractTask implements TaskInterface {
 	protected _compiler: CompilerInterface;
 
 	public constructor(protected _input: string[], protected _output: string[], options?: ExtractTaskOptionsInterface) {
-		this._options = Object.assign({}, this._options, options);
+		this._options = { ...this._options, ...options };
 	}
 
 	public execute(): void {
