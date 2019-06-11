@@ -69,7 +69,7 @@ describe('StringCollection', () => {
 
 	it('should intersect with passed collection', () => {
 		collection = collection.addKeys(['red', 'green', 'blue']);
-		const newCollection = new TranslationCollection( { red: '', blue: '' });
+		const newCollection = new TranslationCollection( { red: '', blue: '' });
 		expect(collection.intersect(newCollection).values).to.deep.equal({ red: '', blue: '' });
 	});
 
@@ -79,10 +79,16 @@ describe('StringCollection', () => {
 		expect(collection.intersect(newCollection).values).to.deep.equal({ red: 'rød', blue: 'blå' });
 	});
 
-	it('should sort translations in alphabetical order', () => {
+	it('should sort keys alphabetically', () => {
 		collection = new TranslationCollection({ red: 'rød', green: 'grøn', blue: 'blå' });
 		collection = collection.sort();
 		expect(collection.keys()).deep.equal(['blue', 'green', 'red']);
+	});
+
+	it('should map values', () => {
+		collection = new TranslationCollection({ red: 'rød', green: 'grøn', blue: 'blå' });
+		collection = collection.map((key, val) => 'mapped value');
+		expect(collection.values).to.deep.equal({ red: 'mapped value', green: 'mapped value', blue: 'mapped value' });
 	});
 
 });

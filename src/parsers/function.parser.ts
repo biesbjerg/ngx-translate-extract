@@ -6,23 +6,23 @@ import * as ts from 'typescript';
 
 export class FunctionParser extends AbstractAstParser implements ParserInterface {
 
-	protected _functionIdentifier: string = '_';
+	protected functionIdentifier: string = '_';
 
 	public constructor(options?: any) {
 		super();
 		if (options && typeof options.identifier !== 'undefined') {
-			this._functionIdentifier = options.identifier;
+			this.functionIdentifier = options.identifier;
 		}
 	}
 
 	public extract(contents: string, path?: string): TranslationCollection {
 		let collection: TranslationCollection = new TranslationCollection();
 
-		this._sourceFile = this._createSourceFile(path, contents);
+		this.sourceFile = this.createSourceFile(path, contents);
 
-		const callNodes = this._findCallNodes();
+		const callNodes = this.findCallNodes();
 		callNodes.forEach(callNode => {
-			const keys: string[] = this._getCallArgStrings(callNode);
+			const keys: string[] = this.getCallArgStrings(callNode);
 			if (keys && keys.length) {
 				collection = collection.addKeys(keys);
 			}
@@ -34,12 +34,12 @@ export class FunctionParser extends AbstractAstParser implements ParserInterface
 	/**
 	 * Find all calls to marker function
 	 */
-	protected _findCallNodes(node?: ts.Node): ts.CallExpression[] {
+	protected findCallNodes(node?: ts.Node): ts.CallExpression[] {
 		if (!node) {
-			node = this._sourceFile;
+			node = this.sourceFile;
 		}
 
-		let callNodes = this._findNodes(node, ts.SyntaxKind.CallExpression) as ts.CallExpression[];
+		let callNodes = this.findNodes(node, ts.SyntaxKind.CallExpression) as ts.CallExpression[];
 		callNodes = callNodes
 			.filter(callNode => {
 				// Only call expressions with arguments
@@ -48,7 +48,7 @@ export class FunctionParser extends AbstractAstParser implements ParserInterface
 				}
 
 				const identifier = (callNode.getChildAt(0) as ts.Identifier).text;
-				if (identifier !== this._functionIdentifier) {
+				if (identifier !== this.functionIdentifier) {
 					return false;
 				}
 

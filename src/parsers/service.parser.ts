@@ -6,27 +6,27 @@ import * as ts from 'typescript';
 
 export class ServiceParser extends AbstractAstParser implements ParserInterface {
 
-	protected _sourceFile: ts.SourceFile;
+	protected sourceFile: ts.SourceFile;
 
 	public extract(contents: string, path?: string): TranslationCollection {
 		let collection: TranslationCollection = new TranslationCollection();
 
-		this._sourceFile = this._createSourceFile(path, contents);
-		const classNodes = this._findClassNodes(this._sourceFile);
+		this.sourceFile = this.createSourceFile(path, contents);
+		const classNodes = this.findClassNodes(this.sourceFile);
 		classNodes.forEach(classNode => {
-			const constructorNode = this._findConstructorNode(classNode);
+			const constructorNode = this.findConstructorNode(classNode);
 			if (!constructorNode) {
 				return;
 			}
 
-			const propertyName: string = this._findTranslateServicePropertyName(constructorNode);
+			const propertyName: string = this.findTranslateServicePropertyName(constructorNode);
 			if (!propertyName) {
 				return;
 			}
 
-			const callNodes = this._findCallNodes(classNode, propertyName);
+			const callNodes = this.findCallNodes(classNode, propertyName);
 			callNodes.forEach(callNode => {
-				const keys: string[] = this._getCallArgStrings(callNode);
+				const keys: string[] = this.getCallArgStrings(callNode);
 				if (keys && keys.length) {
 					collection = collection.addKeys(keys);
 				}
@@ -40,7 +40,7 @@ export class ServiceParser extends AbstractAstParser implements ParserInterface 
 	 * Detect what the TranslateService instance property
 	 * is called by inspecting constructor arguments
 	 */
-	protected _findTranslateServicePropertyName(constructorNode: ts.ConstructorDeclaration): string {
+	protected findTranslateServicePropertyName(constructorNode: ts.ConstructorDeclaration): string {
 		if (!constructorNode) {
 			return null;
 		}
@@ -77,15 +77,15 @@ export class ServiceParser extends AbstractAstParser implements ParserInterface 
 	/**
 	 * Find class nodes
 	 */
-	protected _findClassNodes(node: ts.Node): ts.ClassDeclaration[] {
-		return this._findNodes(node, ts.SyntaxKind.ClassDeclaration) as ts.ClassDeclaration[];
+	protected findClassNodes(node: ts.Node): ts.ClassDeclaration[] {
+		return this.findNodes(node, ts.SyntaxKind.ClassDeclaration) as ts.ClassDeclaration[];
 	}
 
 	/**
 	 * Find constructor
 	 */
-	protected _findConstructorNode(node: ts.ClassDeclaration): ts.ConstructorDeclaration {
-		const constructorNodes = this._findNodes(node, ts.SyntaxKind.Constructor) as ts.ConstructorDeclaration[];
+	protected findConstructorNode(node: ts.ClassDeclaration): ts.ConstructorDeclaration {
+		const constructorNodes = this.findNodes(node, ts.SyntaxKind.Constructor) as ts.ConstructorDeclaration[];
 		if (constructorNodes) {
 			return constructorNodes[0];
 		}
@@ -94,8 +94,8 @@ export class ServiceParser extends AbstractAstParser implements ParserInterface 
 	/**
 	 * Find all calls to TranslateService methods
 	 */
-	protected _findCallNodes(node: ts.Node, propertyIdentifier: string): ts.CallExpression[] {
-		let callNodes = this._findNodes(node, ts.SyntaxKind.CallExpression) as ts.CallExpression[];
+	protected findCallNodes(node: ts.Node, propertyIdentifier: string): ts.CallExpression[] {
+		let callNodes = this.findNodes(node, ts.SyntaxKind.CallExpression) as ts.CallExpression[];
 		callNodes = callNodes
 			.filter(callNode => {
 				// Only call expressions with arguments

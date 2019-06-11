@@ -4,6 +4,10 @@ import { PipeParser } from '../parsers/pipe.parser';
 import { DirectiveParser } from '../parsers/directive.parser';
 import { ServiceParser } from '../parsers/service.parser';
 import { FunctionParser } from '../parsers/function.parser';
+import { PostProcessorInterface } from '../post-processors/post-processor.interface';
+import { SortByKeyPostProcessor } from '../post-processors/sort-by-key.post-processor';
+import { KeyAsDefaultValuePostProcessor } from '../post-processors/key-as-default-value.post-processor';
+import { PurgeObsoleteKeysPostProcessor } from '../post-processors/purge-obsolete-keys.post-processor';
 import { CompilerInterface } from '../compilers/compiler.interface';
 import { CompilerFactory } from '../compilers/compiler.factory';
 
@@ -82,28 +86,21 @@ export const cli = yargs
 		default: false,
 		type: 'boolean'
 	})
-	.option('verbose', {
-		alias: 'vb',
-		describe: 'Log all output to console',
+	.option('key-as-default-value', {
+		alias: 'k',
+		describe: 'Use key as default value for translations',
 		default: false,
 		type: 'boolean'
 	})
 	.exitProcess(true)
 	.parse(process.argv);
 
-const extract = new ExtractTask(cli.input, cli.output, {
+const extractTask = new ExtractTask(cli.input, cli.output, {
 	replace: cli.replace,
-	sort: cli.sort,
-	clean: cli.clean,
-	patterns: cli.patterns,
-	verbose: cli.verbose
+	patterns: cli.patterns
 });
 
-const compiler: CompilerInterface = CompilerFactory.create(cli.format, {
-	indentation: cli.formatIndentation
-});
-extract.setCompiler(compiler);
-
+// Parsers
 const parsers: ParserInterface[] = [
 	new PipeParser(),
 	new DirectiveParser(),
@@ -114,6 +111,25 @@ if (cli.marker) {
 		identifier: cli.marker
 	}));
 }
-extract.setParsers(parsers);
+extractTask.setParsers(parsers);
 
-extract.execute();
+// Processors
+const processors: PostProcessorInterface[] = [];
+if (cli.clean) {
+	processors.push(new PurgeObsoleteKeysPostProcessor());
+}
+if (cli.keyAsDefaultValue) {
+	processors.push(new KeyAsDefaultValuePostProcessor());
+}
+if (cli.sort) {
+	processors.push(new SortByKeyPostProcessor());
+}
+extractTask.setProcessors(processors);
+
+// Compiler
+const compiler: CompilerInterface = CompilerFactory.create(cli.format, {
+	indentation: cli.formatIndentation
+});
+extractTask.setCompiler(compiler);
+
+extractTask.execute();

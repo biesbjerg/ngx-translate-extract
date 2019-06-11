@@ -5,11 +5,11 @@ import { AbstractTemplateParser } from '../../src/parsers/abstract-template.pars
 class TestTemplateParser extends AbstractTemplateParser {
 
 	public isAngularComponent(filePath: string): boolean {
-		return this._isAngularComponent(filePath);
+		return super.isAngularComponent(filePath);
 	}
 
 	public extractInlineTemplate(contents: string): string {
-		return this._extractInlineTemplate(contents);
+		return super.extractInlineTemplate(contents);
 	}
 
 }

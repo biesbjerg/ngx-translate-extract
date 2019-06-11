@@ -5,7 +5,7 @@ import { DirectiveParser } from '../../src/parsers/directive.parser';
 class TestDirectiveParser extends DirectiveParser {
 
 	public normalizeTemplateAttributes(template: string): string {
-		return this._normalizeTemplateAttributes(template);
+		return super.normalizeTemplateAttributes(template);
 	}
 
 }

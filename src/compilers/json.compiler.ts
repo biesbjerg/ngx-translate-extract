@@ -21,13 +21,13 @@ export class JsonCompiler implements CompilerInterface {
 
 	public parse(contents: string): TranslationCollection {
 		let values: any = JSON.parse(contents);
-		if (this._isNamespacedJsonFormat(values)) {
+		if (this.isNamespacedJsonFormat(values)) {
 			values = flat.flatten(values);
 		}
 		return new TranslationCollection(values);
 	}
 
-	protected _isNamespacedJsonFormat(values: any): boolean {
+	protected isNamespacedJsonFormat(values: any): boolean {
 		return Object.keys(values).some(key => typeof values[key] === 'object');
 	}
 

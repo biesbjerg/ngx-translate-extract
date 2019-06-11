@@ -9,17 +9,17 @@ const $ = cheerio.load('', {xmlMode: true});
 export class DirectiveParser extends AbstractTemplateParser implements ParserInterface {
 
 	public extract(contents: string, path?: string): TranslationCollection {
-		if (path && this._isAngularComponent(path)) {
-			contents = this._extractInlineTemplate(contents);
+		if (path && this.isAngularComponent(path)) {
+			contents = this.extractInlineTemplate(contents);
 		}
 
-		return this._parseTemplate(contents);
+		return this.parseTemplate(contents);
 	}
 
-	protected _parseTemplate(template: string): TranslationCollection {
+	protected parseTemplate(template: string): TranslationCollection {
 		let collection: TranslationCollection = new TranslationCollection();
 
-		template = this._normalizeTemplateAttributes(template);
+		template = this.normalizeTemplateAttributes(template);
 
 		const selector = '[translate], [ng2-translate]';
 		$(template)
@@ -50,7 +50,7 @@ export class DirectiveParser extends AbstractTemplateParser implements ParserInt
 	 * so it can't be parsed by standard HTML parsers.
 	 * This method replaces `[attr]="'val'""` with `attr="val"`
 	 */
-	protected _normalizeTemplateAttributes(template: string): string {
+	protected normalizeTemplateAttributes(template: string): string {
 		return template.replace(/\[([^\]]+)\]="'([^']*)'"/g, '$1="$2"');
 	}
 

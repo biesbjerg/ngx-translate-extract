@@ -1,9 +1,10 @@
 import { TranslationCollection } from '../../utils/translation.collection';
 import { TaskInterface } from './task.interface';
 import { ParserInterface } from '../../parsers/parser.interface';
+import { PostProcessorInterface } from '../../post-processors/post-processor.interface';
 import { CompilerInterface } from '../../compilers/compiler.interface';
 
-import { green, bold, gray, dim } from 'colorette';
+import { green, bold, gray, dim, cyan } from 'colorette';
 import * as glob from 'glob';
 import * as fs from 'fs';
 import * as path from 'path';
@@ -11,128 +12,133 @@ import * as mkdirp from 'mkdirp';
 
 export interface ExtractTaskOptionsInterface {
 	replace?: boolean;
-	sort?: boolean;
-	clean?: boolean;
 	patterns?: string[];
-	verbose?: boolean;
 }
 
 export class ExtractTask implements TaskInterface {
 
-	protected _options: ExtractTaskOptionsInterface = {
+	protected options: ExtractTaskOptionsInterface = {
 		replace: false,
-		sort: false,
-		clean: false,
-		patterns: [],
-		verbose: false
+		patterns: []
 	};
 
-	protected _parsers: ParserInterface[] = [];
-	protected _compiler: CompilerInterface;
+	protected parsers: ParserInterface[] = [];
+	protected processors: PostProcessorInterface[] = [];
+	protected compiler: CompilerInterface;
 
-	public constructor(protected _input: string[], protected _output: string[], options?: ExtractTaskOptionsInterface) {
-		this._options = { ...this._options, ...options };
+	public constructor(protected inputs: string[], protected outputs: string[], options?: ExtractTaskOptionsInterface) {
+		this.inputs = inputs.map(input => path.resolve(input));
+		this.outputs = outputs.map(output => path.resolve(output));
+		this.options = { ...this.options, ...options };
 	}
 
 	public execute(): void {
-		if (!this._parsers) {
+		if (!this.parsers.length) {
 			throw new Error('No parsers configured');
 		}
-		if (!this._compiler) {
+		if (!this.compiler) {
 			throw new Error('No compiler configured');
 		}
 
-		const collection = this._extract();
-		this._out(green('Extracted %d strings\n'), collection.count());
-		this._save(collection);
+		this.out(bold('Extracting:'));
+		const extracted = this.extract();
+		this.out(green(`\nFound %d strings.\n`), extracted.count());
+
+		if (this.processors.length) {
+			this.out(cyan('Enabled post processors:'));
+			this.out(cyan(dim(this.processors.map(processor => `- ${processor.name}`).join('\n'))));
+			this.out();
+		}
+
+		this.outputs.forEach(output => {
+			let dir: string = output;
+			let filename: string = `strings.${this.compiler.extension}`;
+			if (!fs.existsSync(output) || !fs.statSync(output).isDirectory()) {
+				dir = path.dirname(output);
+				filename = path.basename(output);
+			}
+
+			const outputPath: string = path.join(dir, filename);
+
+			this.out(`${bold('Saving:')} ${dim(outputPath)}`);
+
+			let existing: TranslationCollection = new TranslationCollection();
+			if (!this.options.replace && fs.existsSync(outputPath)) {
+				this.out(dim(`- destination exists, merging existing translations`));
+				existing = this.compiler.parse(fs.readFileSync(outputPath, 'utf-8'));
+			}
+
+			const working = extracted.union(existing);
+
+			// Run collection through processors
+			this.out(dim('- applying post processors'));
+			const final = this.process(working, extracted, existing);
+
+			// Save to file
+			this.save(outputPath, final);
+			this.out(green('\nOK.\n'));
+		});
 	}
 
 	public setParsers(parsers: ParserInterface[]): this {
-		this._parsers = parsers;
+		this.parsers = parsers;
+		return this;
+	}
+
+	public setProcessors(processors: PostProcessorInterface[]): this {
+		this.processors = processors;
 		return this;
 	}
 
 	public setCompiler(compiler: CompilerInterface): this {
-		this._compiler = compiler;
+		this.compiler = compiler;
 		return this;
 	}
 
 	/**
-	 * Extract strings from input dirs using configured parsers
+	 * Extract strings from specified input dirs using configured parsers
 	 */
-	protected _extract(): TranslationCollection {
-		this._out(bold('Extracting strings...'));
-
-		let collection: TranslationCollection = new TranslationCollection();
-		this._input.forEach(dir => {
-			this._readDir(dir, this._options.patterns).forEach(path => {
-				this._options.verbose && this._out(gray('- %s'), path);
+	protected extract(): TranslationCollection {
+		let extracted: TranslationCollection = new TranslationCollection();
+		this.inputs.forEach(dir => {
+			this.readDir(dir, this.options.patterns).forEach(path => {
+				this.out(gray('- %s'), path);
 				const contents: string = fs.readFileSync(path, 'utf-8');
-				this._parsers.forEach((parser: ParserInterface) => {
-					collection = collection.union(parser.extract(contents, path));
+				this.parsers.forEach(parser => {
+					extracted = extracted.union(parser.extract(contents, path));
 				});
 			});
 		});
-
-		return collection;
+		return extracted;
 	}
 
 	/**
-	 * Process collection according to options (merge, clean, sort), compile and save
+	 * Run strings through configured processors
+	 */
+	protected process(working: TranslationCollection, extracted: TranslationCollection, existing: TranslationCollection): TranslationCollection {
+		this.processors.forEach(processor => {
+			working = processor.process(working, extracted, existing);
+		});
+		return working;
+	}
+
+	/**
+	 * Compile and save translations
 	 * @param collection
 	 */
-	protected _save(collection: TranslationCollection): void {
-		this._output.forEach(output => {
-			const normalizedOutput: string = path.resolve(output);
-
-			let dir: string = normalizedOutput;
-			let filename: string = `strings.${this._compiler.extension}`;
-			if (!fs.existsSync(normalizedOutput) || !fs.statSync(normalizedOutput).isDirectory()) {
-				dir = path.dirname(normalizedOutput);
-				filename = path.basename(normalizedOutput);
-			}
-
-			const outputPath: string = path.join(dir, filename);
-			let processedCollection: TranslationCollection = collection;
-
-			this._out(bold('\nSaving: %s'), outputPath);
-
-			if (fs.existsSync(outputPath) && !this._options.replace) {
-				const existingCollection: TranslationCollection = this._compiler.parse(fs.readFileSync(outputPath, 'utf-8'));
-				if (!existingCollection.isEmpty()) {
-					processedCollection = processedCollection.union(existingCollection);
-					this._out(dim('- merged with %d existing strings'), existingCollection.count());
-				}
-
-				if (this._options.clean) {
-					const collectionCount = processedCollection.count();
-					processedCollection = processedCollection.intersect(collection);
-					const removeCount = collectionCount - processedCollection.count();
-					if (removeCount > 0) {
-						this._out(dim('- removed %d obsolete strings'), removeCount);
-					}
-				}
-			}
-
-			if (this._options.sort) {
-				processedCollection = processedCollection.sort();
-				this._out(dim('- sorted strings'));
-			}
-
-			if (!fs.existsSync(dir)) {
-				mkdirp.sync(dir);
-				this._out(dim('- created dir: %s'), dir);
-			}
-			fs.writeFileSync(outputPath, this._compiler.compile(processedCollection));
-
-			this._out(green('Done!'));
-		});
+	protected save(output: string, collection: TranslationCollection): void {
+		const dir = path.dirname(output);
+		if (!fs.existsSync(dir)) {
+			mkdirp.sync(dir);
+			this.out(dim('- created dir: %s'), dir);
+		}
+		fs.writeFileSync(output, this.compiler.compile(collection));
 	}
 
 	/**
 	 * Get all files in dir matching patterns
 	 */
-	protected _readDir(dir: string, patterns: string[]): string[] {
+	protected readDir(dir: string, patterns: string[]): string[] {
 		return patterns.reduce((results, pattern) => {
 			return glob.sync(dir + pattern)
 				.filter(path => fs.statSync(path).isFile())
@@ -140,7 +146,7 @@ export class ExtractTask implements TaskInterface {
 		}, []);
 	}
 
-	protected _out(...args: any[]): void {
+	protected out(...args: any[]): void {
 		console.log.apply(this, arguments);
 	}
 

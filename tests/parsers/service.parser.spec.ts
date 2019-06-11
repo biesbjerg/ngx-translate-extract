@@ -4,10 +4,6 @@ import { ServiceParser } from '../../src/parsers/service.parser';
 
 class TestServiceParser extends ServiceParser {
 
-	/*public getInstancePropertyName(): string {
-		return this._getInstancePropertyName();
-	}*/
-
 }
 
 describe('ServiceParser', () => {
@@ -19,20 +15,6 @@ describe('ServiceParser', () => {
 	beforeEach(() => {
 		parser = new TestServiceParser();
 	});
-
-	/*it('should extract variable used for TranslateService', () => {
-		const contents = `
-			@Component({ })
-			export class AppComponent {
-				public constructor(
-					_serviceA: ServiceA,
-					public _serviceB: ServiceB,
-					protected _translateService: TranslateService
-			) { }
-		`;
-		const name = parser.getInstancePropertyName();
-		expect(name).to.equal('_translateService');
-	});*/
 
 	it('should extract strings in TranslateService\'s get() method', () => {
 		const contents = `

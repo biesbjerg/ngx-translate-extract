@@ -1,17 +1,18 @@
 import * as ts from 'typescript';
+import { yellow } from 'colorette';
 
 export abstract class AbstractAstParser {
 
-	protected _sourceFile: ts.SourceFile;
+	protected sourceFile: ts.SourceFile;
 
-	protected _createSourceFile(path: string, contents: string): ts.SourceFile {
+	protected createSourceFile(path: string, contents: string): ts.SourceFile {
 		return ts.createSourceFile(path, contents, null, /*setParentNodes */ false);
 	}
 
 	/**
 	 * Get strings from function call's first argument
 	 */
-	protected _getCallArgStrings(callNode: ts.CallExpression): string[] {
+	protected getCallArgStrings(callNode: ts.CallExpression): string[] {
 		if (!callNode.arguments.length) {
 			return;
 		}
@@ -25,41 +26,51 @@ export abstract class AbstractAstParser {
 				return (firstArg as ts.ArrayLiteralExpression).elements
 					.map((element: ts.StringLiteral) => element.text);
 			case ts.SyntaxKind.Identifier:
-				console.log('WARNING: We cannot extract variable values passed to TranslateService (yet)');
+				// TODO
+				console.log(yellow('[Line: %d] We do not support values passed to TranslateService'), this.getLine(firstArg));
+				break;
+			case ts.SyntaxKind.BinaryExpression:
+				// TODO
+				console.log(yellow('[Line: %d] We do not support binary expressions (yet)'), this.getLine(firstArg));
 				break;
 			default:
-				console.log(`SKIP: Unknown argument type: '${this._syntaxKindToName(firstArg.kind)}'`, firstArg);
+				console.log(yellow(`[Line: %d] Unknown argument type: %s`), this.getLine(firstArg), this.syntaxKindToName(firstArg.kind), firstArg);
 		}
 	}
 
 	/**
 	 * Find all child nodes of a kind
 	 */
-	protected _findNodes(node: ts.Node, kind: ts.SyntaxKind): ts.Node[] {
-		const childrenNodes: ts.Node[] = node.getChildren(this._sourceFile);
+	protected findNodes(node: ts.Node, kind: ts.SyntaxKind): ts.Node[] {
+		const childrenNodes: ts.Node[] = node.getChildren(this.sourceFile);
 		const initialValue: ts.Node[] = node.kind === kind ? [node] : [];
 
 		return childrenNodes.reduce((result: ts.Node[], childNode: ts.Node) => {
-			return result.concat(this._findNodes(childNode, kind));
+			return result.concat(this.findNodes(childNode, kind));
 		}, initialValue);
 	}
 
-	protected _syntaxKindToName(kind: ts.SyntaxKind): string {
+	protected getLine(node: ts.Node): number {
+		const { line } = this.sourceFile.getLineAndCharacterOfPosition(node.pos);
+		return line + 1;
+	}
+
+	protected syntaxKindToName(kind: ts.SyntaxKind): string {
 		return ts.SyntaxKind[kind];
 	}
 
-	protected _printAllChildren(sourceFile: ts.SourceFile, node: ts.Node, depth = 0): void {
+	protected printAllChildren(sourceFile: ts.SourceFile, node: ts.Node, depth = 0): void {
 		console.log(
 			new Array(depth + 1).join('----'),
 			`[${node.kind}]`,
-			this._syntaxKindToName(node.kind),
+			this.syntaxKindToName(node.kind),
 			`[pos: ${node.pos}-${node.end}]`,
 			':\t\t\t',
 			node.getFullText(sourceFile).trim()
 		);
 
 		depth++;
-		node.getChildren(sourceFile).forEach(childNode => this._printAllChildren(sourceFile, childNode, depth));
+		node.getChildren(sourceFile).forEach(childNode => this.printAllChildren(sourceFile, childNode, depth));
 	}
 
 }

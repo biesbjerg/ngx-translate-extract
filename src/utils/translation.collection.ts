@@ -41,6 +41,14 @@ export class TranslationCollection {
 		return new TranslationCollection(values);
 	}
 
+	public map(callback: (key?: string, val?: string) => string): TranslationCollection {
+		let values: TranslationType = {};
+		this.forEach((key: string, val: string) => {
+			values[key] = callback.call(this, key, val);
+		});
+		return new TranslationCollection(values);
+	}
+
 	public union(collection: TranslationCollection): TranslationCollection {
 		return new TranslationCollection({ ...this.values, ...collection.values });
 	}
