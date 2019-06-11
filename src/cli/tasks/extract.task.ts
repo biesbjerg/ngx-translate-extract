@@ -24,7 +24,7 @@ export class ExtractTask implements TaskInterface {
 		sort: false,
 		clean: false,
 		patterns: [],
-		verbose: true
+		verbose: false
 	};
 
 	protected _parsers: ParserInterface[] = [];
