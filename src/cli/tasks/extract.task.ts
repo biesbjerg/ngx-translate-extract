@@ -3,7 +3,7 @@ import { TaskInterface } from './task.interface';
 import { ParserInterface } from '../../parsers/parser.interface';
 import { CompilerInterface } from '../../compilers/compiler.interface';
 
-import * as chalk from 'chalk';
+import { green, bold, gray, dim } from 'colorette';
 import * as glob from 'glob';
 import * as fs from 'fs';
 import * as path from 'path';
@@ -43,7 +43,7 @@ export class ExtractTask implements TaskInterface {
 		}
 
 		const collection = this._extract();
-		this._out(chalk.green('Extracted %d strings\n'), collection.count());
+		this._out(green('Extracted %d strings\n'), collection.count());
 		this._save(collection);
 	}
 
@@ -61,12 +61,12 @@ export class ExtractTask implements TaskInterface {
 	 * Extract strings from input dirs using configured parsers
 	 */
 	protected _extract(): TranslationCollection {
-		this._out(chalk.bold('Extracting strings...'));
+		this._out(bold('Extracting strings...'));
 
 		let collection: TranslationCollection = new TranslationCollection();
 		this._input.forEach(dir => {
 			this._readDir(dir, this._options.patterns).forEach(path => {
-				this._options.verbose && this._out(chalk.gray('- %s'), path);
+				this._options.verbose && this._out(gray('- %s'), path);
 				const contents: string = fs.readFileSync(path, 'utf-8');
 				this._parsers.forEach((parser: ParserInterface) => {
 					collection = collection.union(parser.extract(contents, path));
@@ -95,13 +95,13 @@ export class ExtractTask implements TaskInterface {
 			const outputPath: string = path.join(dir, filename);
 			let processedCollection: TranslationCollection = collection;
 
-			this._out(chalk.bold('\nSaving: %s'), outputPath);
+			this._out(bold('\nSaving: %s'), outputPath);
 
 			if (fs.existsSync(outputPath) && !this._options.replace) {
 				const existingCollection: TranslationCollection = this._compiler.parse(fs.readFileSync(outputPath, 'utf-8'));
 				if (!existingCollection.isEmpty()) {
 					processedCollection = processedCollection.union(existingCollection);
-					this._out(chalk.dim('- merged with %d existing strings'), existingCollection.count());
+					this._out(dim('- merged with %d existing strings'), existingCollection.count());
 				}
 
 				if (this._options.clean) {
@@ -109,23 +109,23 @@ export class ExtractTask implements TaskInterface {
 					processedCollection = processedCollection.intersect(collection);
 					const removeCount = collectionCount - processedCollection.count();
 					if (removeCount > 0) {
-						this._out(chalk.dim('- removed %d obsolete strings'), removeCount);
+						this._out(dim('- removed %d obsolete strings'), removeCount);
 					}
 				}
 			}
 
 			if (this._options.sort) {
 				processedCollection = processedCollection.sort();
-				this._out(chalk.dim('- sorted strings'));
+				this._out(dim('- sorted strings'));
 			}
 
 			if (!fs.existsSync(dir)) {
 				mkdirp.sync(dir);
-				this._out(chalk.dim('- created dir: %s'), dir);
+				this._out(dim('- created dir: %s'), dir);
 			}
 			fs.writeFileSync(outputPath, this._compiler.compile(processedCollection));
 
-			this._out(chalk.green('Done!'));
+			this._out(green('Done!'));
 		});
 	}
 
