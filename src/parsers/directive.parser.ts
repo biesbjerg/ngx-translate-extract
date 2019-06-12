@@ -1,6 +1,6 @@
 import { ParserInterface } from './parser.interface';
 import { TranslationCollection } from '../utils/translation.collection';
-import { isPathAngularComponent, extractComponentInlineTemplate } from '../../src/utils/utils';
+import { isPathAngularComponent, extractComponentInlineTemplate } from '../utils/utils';
 
 import * as cheerio from 'cheerio';
 
