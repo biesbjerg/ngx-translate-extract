@@ -37,9 +37,9 @@ describe('NamespacedJsonCompiler', () => {
 
 	it('should preserve numeric values on compile', () => {
 		const collection = new TranslationCollection({
-			"option.0": '',
-			"option.1": '',
-			"option.2": ''
+			'option.0': '',
+			'option.1': '',
+			'option.2': ''
 		});
 		const result: string = compiler.compile(collection);
 		expect(result).to.equal('{\n\t"option": {\n\t\t"0": "",\n\t\t"1": "",\n\t\t"2": ""\n\t}\n}');

@@ -1,39 +1,21 @@
 import { expect } from 'chai';
 
-import { AbstractTemplateParser } from '../../src/parsers/abstract-template.parser';
+import { isPathAngularComponent, extractComponentInlineTemplate } from '../../src/utils/utils';
 
-class TestTemplateParser extends AbstractTemplateParser {
-
-	public isAngularComponent(filePath: string): boolean {
-		return super.isAngularComponent(filePath);
-	}
-
-	public extractInlineTemplate(contents: string): string {
-		return super.extractInlineTemplate(contents);
-	}
-
-}
-
-describe('AbstractTemplateParser', () => {
-
-	let parser: TestTemplateParser;
-
-	beforeEach(() => {
-		parser = new TestTemplateParser();
-	});
+describe('Utils', () => {
 
 	it('should recognize js extension as angular component', () => {
-		const result = parser.isAngularComponent('test.js');
+		const result = isPathAngularComponent('test.js');
 		expect(result).to.equal(true);
 	});
 
 	it('should recognize ts extension as angular component', () => {
-		const result = parser.isAngularComponent('test.ts');
+		const result = isPathAngularComponent('test.ts');
 		expect(result).to.equal(true);
 	});
 
 	it('should not recognize html extension as angular component', () => {
-		const result = parser.isAngularComponent('test.html');
+		const result = isPathAngularComponent('test.html');
 		expect(result).to.equal(false);
 	});
 
@@ -45,7 +27,7 @@ describe('AbstractTemplateParser', () => {
 			})
 			export class TestComponent { }
 		`;
-		const template = parser.extractInlineTemplate(contents);
+		const template = extractComponentInlineTemplate(contents);
 		expect(template).to.equal('<p translate>Hello World</p>');
 	});
 
@@ -66,7 +48,7 @@ describe('AbstractTemplateParser', () => {
 			})
 			export class TestComponent { }
 		`;
-		const template = parser.extractInlineTemplate(contents);
+		const template = extractComponentInlineTemplate(contents);
 		expect(template).to.equal('\n\t\t\t\t\t<p>\n\t\t\t\t\t\tHello World\n\t\t\t\t\t</p>\n\t\t\t\t');
 	});
 

@@ -1,12 +1,12 @@
 import { ParserInterface } from './parser.interface';
-import { AbstractTemplateParser } from './abstract-template.parser';
 import { TranslationCollection } from '../utils/translation.collection';
+import { isPathAngularComponent, extractComponentInlineTemplate } from '../../src/utils/utils';
 
-export class PipeParser extends AbstractTemplateParser implements ParserInterface {
+export class PipeParser implements ParserInterface {
 
 	public extract(contents: string, path?: string): TranslationCollection {
-		if (path && this.isAngularComponent(path)) {
-			contents = this.extractInlineTemplate(contents);
+		if (path && isPathAngularComponent(path)) {
+			contents = extractComponentInlineTemplate(contents);
 		}
 
 		return this.parseTemplate(contents);

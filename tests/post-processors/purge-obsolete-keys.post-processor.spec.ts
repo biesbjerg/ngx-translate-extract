@@ -4,7 +4,7 @@ import { PostProcessorInterface } from '../../src/post-processors/post-processor
 import { PurgeObsoleteKeysPostProcessor } from '../../src/post-processors/purge-obsolete-keys.post-processor';
 import { TranslationCollection } from '../../src/utils/translation.collection';
 
-describe('KeyAsDefaultValuePostProcessor', () => {
+describe('PurgeObsoleteKeysPostProcessor', () => {
 
 	let processor: PostProcessorInterface;
 
