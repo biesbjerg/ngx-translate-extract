@@ -6,7 +6,6 @@ export * from './cli/tasks/task.interface';
 export * from './cli/tasks/extract.task';
 
 export * from './parsers/parser.interface';
-export * from './parsers/abstract-template.parser';
 export * from './parsers/abstract-ast.parser';
 export * from './parsers/directive.parser';
 export * from './parsers/pipe.parser';
@@ -18,3 +17,8 @@ export * from './compilers/compiler.factory';
 export * from './compilers/json.compiler';
 export * from './compilers/namespaced-json.compiler';
 export * from './compilers/po.compiler';
+
+export * from './post-processors/post-processor.interface';
+export * from './post-processors/key-as-default-value.post-processor';
+export * from './post-processors/purge-obsolete-keys.post-processor';
+export * from './post-processors/sort-by-key.post-processor';
