@@ -1,12 +1,22 @@
+import {
+	SourceFile,
+	Node,
+	ConstructorDeclaration,
+	Identifier,
+	TypeReferenceNode,
+	ClassDeclaration,
+	SyntaxKind,
+	CallExpression,
+	PropertyAccessExpression
+} from 'typescript';
+
 import { ParserInterface } from './parser.interface';
 import { AbstractAstParser } from './abstract-ast.parser';
 import { TranslationCollection } from '../utils/translation.collection';
 
-import * as ts from 'typescript';
-
 export class ServiceParser extends AbstractAstParser implements ParserInterface {
 
-	protected sourceFile: ts.SourceFile;
+	protected sourceFile: SourceFile;
 
 	public extract(contents: string, path?: string): TranslationCollection {
 		let collection: TranslationCollection = new TranslationCollection();
@@ -26,7 +36,7 @@ export class ServiceParser extends AbstractAstParser implements ParserInterface 
 
 			const callNodes = this.findCallNodes(classNode, propertyName);
 			callNodes.forEach(callNode => {
-				const keys: string[] = this.getCallArgStrings(callNode);
+				const keys: string[] = this.getStringLiterals(callNode);
 				if (keys && keys.length) {
 					collection = collection.addKeys(keys);
 				}
@@ -40,7 +50,7 @@ export class ServiceParser extends AbstractAstParser implements ParserInterface 
 	 * Detect what the TranslateService instance property
 	 * is called by inspecting constructor arguments
 	 */
-	protected findTranslateServicePropertyName(constructorNode: ts.ConstructorDeclaration): string {
+	protected findTranslateServicePropertyName(constructorNode: ConstructorDeclaration): string {
 		if (!constructorNode) {
 			return null;
 		}
@@ -57,7 +67,7 @@ export class ServiceParser extends AbstractAstParser implements ParserInterface 
 			}
 
 			// Make sure className is of the correct type
-			const parameterType: ts.Identifier = (parameter.type as ts.TypeReferenceNode).typeName as ts.Identifier;
+			const parameterType: Identifier = (parameter.type as TypeReferenceNode).typeName as Identifier;
 			if (!parameterType) {
 				return false;
 			}
@@ -70,22 +80,22 @@ export class ServiceParser extends AbstractAstParser implements ParserInterface 
 		});
 
 		if (result) {
-			return (result.name as ts.Identifier).text;
+			return (result.name as Identifier).text;
 		}
 	}
 
 	/**
 	 * Find class nodes
 	 */
-	protected findClassNodes(node: ts.Node): ts.ClassDeclaration[] {
-		return this.findNodes(node, ts.SyntaxKind.ClassDeclaration) as ts.ClassDeclaration[];
+	protected findClassNodes(node: Node): ClassDeclaration[] {
+		return this.findNodes(node, SyntaxKind.ClassDeclaration) as ClassDeclaration[];
 	}
 
 	/**
 	 * Find constructor
 	 */
-	protected findConstructorNode(node: ts.ClassDeclaration): ts.ConstructorDeclaration {
-		const constructorNodes = this.findNodes(node, ts.SyntaxKind.Constructor) as ts.ConstructorDeclaration[];
+	protected findConstructorNode(node: ClassDeclaration): ConstructorDeclaration {
+		const constructorNodes = this.findNodes(node, SyntaxKind.Constructor) as ConstructorDeclaration[];
 		if (constructorNodes) {
 			return constructorNodes[0];
 		}
@@ -94,8 +104,8 @@ export class ServiceParser extends AbstractAstParser implements ParserInterface 
 	/**
 	 * Find all calls to TranslateService methods
 	 */
-	protected findCallNodes(node: ts.Node, propertyIdentifier: string): ts.CallExpression[] {
-		let callNodes = this.findNodes(node, ts.SyntaxKind.CallExpression) as ts.CallExpression[];
+	protected findCallNodes(node: Node, propertyIdentifier: string): CallExpression[] {
+		let callNodes = this.findNodes(node, SyntaxKind.CallExpression) as CallExpression[];
 		callNodes = callNodes
 			.filter(callNode => {
 				// Only call expressions with arguments
@@ -103,19 +113,19 @@ export class ServiceParser extends AbstractAstParser implements ParserInterface 
 					return false;
 				}
 
-				const propAccess = callNode.getChildAt(0).getChildAt(0) as ts.PropertyAccessExpression;
-				if (!propAccess || propAccess.kind !== ts.SyntaxKind.PropertyAccessExpression) {
+				const propAccess = callNode.getChildAt(0).getChildAt(0) as PropertyAccessExpression;
+				if (!propAccess || propAccess.kind !== SyntaxKind.PropertyAccessExpression) {
 					return false;
 				}
-				if (!propAccess.getFirstToken() || propAccess.getFirstToken().kind !== ts.SyntaxKind.ThisKeyword) {
+				if (!propAccess.getFirstToken() || propAccess.getFirstToken().kind !== SyntaxKind.ThisKeyword) {
 					return false;
 				}
 				if (propAccess.name.text !== propertyIdentifier) {
 					return false;
 				}
 
-				const methodAccess = callNode.getChildAt(0) as ts.PropertyAccessExpression;
-				if (!methodAccess || methodAccess.kind !== ts.SyntaxKind.PropertyAccessExpression) {
+				const methodAccess = callNode.getChildAt(0) as PropertyAccessExpression;
+				if (!methodAccess || methodAccess.kind !== SyntaxKind.PropertyAccessExpression) {
 					return false;
 				}
 				if (!methodAccess.name || (methodAccess.name.text !== 'get' && methodAccess.name.text !== 'instant' && methodAccess.name.text !== 'stream')) {

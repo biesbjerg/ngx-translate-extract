@@ -16,6 +16,34 @@ describe('ServiceParser', () => {
 		parser = new TestServiceParser();
 	});
 
+	it('should support extracting binary expressions', () => {
+		const contents = `
+			@Component({ })
+			export class AppComponent {
+				public constructor(protected _translateService: TranslateService) { }
+				public test() {
+					const message = 'The Message';
+					this._translateService.get(message || 'Fallback message');
+				}
+		`;
+		const keys = parser.extract(contents, componentFilename).keys();
+		expect(keys).to.deep.equal(['Fallback message']);
+	});
+
+	it('should support conditional operator', () => {
+		const contents = `
+			@Component({ })
+			export class AppComponent {
+				public constructor(protected _translateService: TranslateService) { }
+				public test() {
+					const message = 'The Message';
+					this._translateService.get(message ? message : 'Fallback message');
+				}
+		`;
+		const keys = parser.extract(contents, componentFilename).keys();
+		expect(keys).to.deep.equal(['Fallback message']);
+	});
+
 	it('should extract strings in TranslateService\'s get() method', () => {
 		const contents = `
 			@Component({ })

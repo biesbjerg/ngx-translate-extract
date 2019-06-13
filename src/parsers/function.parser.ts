@@ -1,8 +1,8 @@
+import { Node, CallExpression, SyntaxKind, Identifier } from 'typescript';
+
 import { ParserInterface } from './parser.interface';
 import { AbstractAstParser } from './abstract-ast.parser';
 import { TranslationCollection } from '../utils/translation.collection';
-
-import * as ts from 'typescript';
 
 export class FunctionParser extends AbstractAstParser implements ParserInterface {
 
@@ -22,24 +22,23 @@ export class FunctionParser extends AbstractAstParser implements ParserInterface
 
 		const callNodes = this.findCallNodes();
 		callNodes.forEach(callNode => {
-			const keys: string[] = this.getCallArgStrings(callNode);
+			const keys: string[] = this.getStringLiterals(callNode);
 			if (keys && keys.length) {
 				collection = collection.addKeys(keys);
 			}
 		});
-
 		return collection;
 	}
 
 	/**
 	 * Find all calls to marker function
 	 */
-	protected findCallNodes(node?: ts.Node): ts.CallExpression[] {
+	protected findCallNodes(node?: Node): CallExpression[] {
 		if (!node) {
 			node = this.sourceFile;
 		}
 
-		let callNodes = this.findNodes(node, ts.SyntaxKind.CallExpression) as ts.CallExpression[];
+		let callNodes = this.findNodes(node, SyntaxKind.CallExpression) as CallExpression[];
 		callNodes = callNodes
 			.filter(callNode => {
 				// Only call expressions with arguments
@@ -47,7 +46,7 @@ export class FunctionParser extends AbstractAstParser implements ParserInterface
 					return false;
 				}
 
-				const identifier = (callNode.getChildAt(0) as ts.Identifier).text;
+				const identifier = (callNode.getChildAt(0) as Identifier).text;
 				if (identifier !== this.functionIdentifier) {
 					return false;
 				}
