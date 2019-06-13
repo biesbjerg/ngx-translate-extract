@@ -124,4 +124,18 @@ describe('DirectiveParser', () => {
 		expect(keys).to.deep.equal(['Hello World']);
 	});
 
+	it('should not cause error when no html is present in template', () => {
+		const contents = `
+			import { Component } from '@angular/core';
+			@Component({
+				template: '{{ variable }}'
+			})
+			export class MyComponent {
+				variable: string
+			}
+		`;
+		const keys = parser.extract(contents, componentFilename).keys();
+		expect(keys).to.deep.equal([]);
+	});
+
 });

@@ -4,7 +4,7 @@ import { isPathAngularComponent, extractComponentInlineTemplate } from '../utils
 
 import * as cheerio from 'cheerio';
 
-const $ = cheerio.load('', {xmlMode: true});
+const $ = cheerio.load('', { xmlMode: true });
 
 export class DirectiveParser implements ParserInterface {
 
@@ -19,9 +19,9 @@ export class DirectiveParser implements ParserInterface {
 	protected parseTemplate(template: string): TranslationCollection {
 		let collection: TranslationCollection = new TranslationCollection();
 
-		template = this.normalizeTemplateAttributes(template);
-
 		const selector = '[translate], [ng2-translate]';
+
+		template = this.prepareTemplate(template);
 		$(template)
 			.find(selector)
 			.addBack(selector)
@@ -45,6 +45,12 @@ export class DirectiveParser implements ParserInterface {
 		return collection;
 	}
 
+	protected prepareTemplate(template: string): string {
+		return this.wrapTemplate(
+			this.normalizeTemplateAttributes(template)
+		);
+	}
+
 	/**
 	 * Angular's `[attr]="'val'"` syntax is not valid HTML,
 	 * so it can't be parsed by standard HTML parsers.
@@ -52,6 +58,13 @@ export class DirectiveParser implements ParserInterface {
 	 */
 	protected normalizeTemplateAttributes(template: string): string {
 		return template.replace(/\[([^\]]+)\]="'([^']*)'"/g, '$1="$2"');
+	}
+
+	/**
+	 * Wraps template in tag
+	 */
+	protected wrapTemplate(template: string, tag: string = 'div'): string {
+		return `<${tag}>${template}</${tag}>`;
 	}
 
 }
