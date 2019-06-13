@@ -21,9 +21,10 @@ describe('FunctionParser', () => {
 			otherFunction('But I am not');
 			_(message || 'binary expression');
 			_(message ? message : 'conditional operator');
+			_('FOO.bar');
 		`;
 		const keys = parser.extract(contents, componentFilename).keys();
-		expect(keys).to.deep.equal(['Hello world', 'I', 'am', 'extracted', 'binary expression', 'conditional operator']);
+		expect(keys).to.deep.equal(['Hello world', 'I', 'am', 'extracted', 'binary expression', 'conditional operator', 'FOO.bar']);
 	});
 
 });
