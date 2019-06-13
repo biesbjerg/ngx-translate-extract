@@ -1,7 +1,3 @@
-export function _(key: string | string[]): string | string[] {
-	return key;
-}
-
 /**
  * Assumes file is an Angular component if type is javascript/typescript
  */
