@@ -1,5 +1,5 @@
 export interface TranslationType {
-	[key: string]: string
+	[key: string]: string;
 }
 
 export class TranslationCollection {
@@ -18,7 +18,7 @@ export class TranslationCollection {
 		const values = keys.reduce((results, key) => {
 			results[key] = '';
 			return results;
-		}, <TranslationType> {});
+		}, {} as TranslationType);
 		return new TranslationCollection({ ...this.values, ...values });
 	}
 

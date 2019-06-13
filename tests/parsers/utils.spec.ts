@@ -31,6 +31,18 @@ describe('Utils', () => {
 		expect(template).to.equal('<p translate>Hello World</p>');
 	});
 
+	it('should extract inline template without html', () => {
+		const contents = `
+			@Component({
+				selector: 'test',
+				template: 'Hello World'
+			})
+			export class TestComponent { }
+		`;
+		const template = extractComponentInlineTemplate(contents);
+		expect(template).to.equal('Hello World');
+	});
+
 	it('should extract inline template spanning multiple lines', () => {
 		const contents = `
 			@Component({

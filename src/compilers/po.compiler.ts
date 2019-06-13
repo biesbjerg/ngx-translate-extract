@@ -29,7 +29,7 @@ export class PoCompiler implements CompilerInterface {
 						msgstr: collection.get(key)
 					};
 					return translations;
-				}, <any> {})
+				}, {} as any)
 			}
 		};
 
