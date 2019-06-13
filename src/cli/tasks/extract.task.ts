@@ -85,7 +85,7 @@ export class ExtractTask implements TaskInterface {
 		return this;
 	}
 
-	public setProcessors(processors: PostProcessorInterface[]): this {
+	public setPostProcessors(processors: PostProcessorInterface[]): this {
 		this.processors = processors;
 		return this;
 	}

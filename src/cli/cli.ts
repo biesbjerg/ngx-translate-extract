@@ -113,18 +113,18 @@ if (cli.marker) {
 }
 extractTask.setParsers(parsers);
 
-// Processors
-const processors: PostProcessorInterface[] = [];
+// Post processors
+const postProcessors: PostProcessorInterface[] = [];
 if (cli.clean) {
-	processors.push(new PurgeObsoleteKeysPostProcessor());
+	postProcessors.push(new PurgeObsoleteKeysPostProcessor());
 }
 if (cli.keyAsDefaultValue) {
-	processors.push(new KeyAsDefaultValuePostProcessor());
+	postProcessors.push(new KeyAsDefaultValuePostProcessor());
 }
 if (cli.sort) {
-	processors.push(new SortByKeyPostProcessor());
+	postProcessors.push(new SortByKeyPostProcessor());
 }
-extractTask.setProcessors(processors);
+extractTask.setPostProcessors(postProcessors);
 
 // Compiler
 const compiler: CompilerInterface = CompilerFactory.create(cli.format, {
