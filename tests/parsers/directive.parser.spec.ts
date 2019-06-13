@@ -124,4 +124,10 @@ describe('DirectiveParser', () => {
 		expect(keys).to.deep.equal(['Hello World']);
 	});
 
+	it('should not extract variables', () => {
+		const contents = '<p>{{ message | translate }}</p>';
+		const keys = parser.extract(contents, templateFilename).keys();
+		expect(keys).to.deep.equal([]);
+	});
+
 });
