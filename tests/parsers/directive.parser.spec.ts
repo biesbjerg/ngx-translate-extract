@@ -107,7 +107,7 @@ describe('DirectiveParser', () => {
 	});
 
 	it('should not extract translate pipe in html tag', () => {
-		const contents = `<p>{{ 'Audiobooks for personal development' | translate }}</p>`;
+		const contents = `<p>{{ 'Audiobooks for personal development' | translate }}</p>`;
 		const collection = parser.extract(contents, templateFilename);
 		expect(collection.values).to.deep.equal({});
 	});
@@ -122,12 +122,6 @@ describe('DirectiveParser', () => {
 		const contents = `<custom-table><tbody><tr><td translate>Hello World</td></tr></tbody></custom-table>`;
 		const keys = parser.extract(contents, templateFilename).keys();
 		expect(keys).to.deep.equal(['Hello World']);
-	});
-
-	it('should not extract variables', () => {
-		const contents = '<p>{{ message | translate }}</p>';
-		const keys = parser.extract(contents, templateFilename).keys();
-		expect(keys).to.deep.equal([]);
 	});
 
 });

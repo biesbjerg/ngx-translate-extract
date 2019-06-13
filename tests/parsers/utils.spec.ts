@@ -35,12 +35,12 @@ describe('Utils', () => {
 		const contents = `
 			@Component({
 				selector: 'test',
-				template: 'Hello World'
+				template: '{{ "Hello World" | translate }}'
 			})
 			export class TestComponent { }
 		`;
 		const template = extractComponentInlineTemplate(contents);
-		expect(template).to.equal('Hello World');
+		expect(template).to.equal('{{ "Hello World" | translate }}');
 	});
 
 	it('should extract inline template spanning multiple lines', () => {

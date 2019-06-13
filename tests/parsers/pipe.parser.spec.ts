@@ -43,13 +43,13 @@ describe('PipeParser', () => {
 	});
 
 	it('should extract interpolated strings using translate pipe in attributes', () => {
-		const contents = `<span attr="{{ 'Hello World' | translate }}"></span>`;
+		const contents = `<span attr="{{ 'Hello World' | translate }}"></span>`;
 		const keys = parser.extract(contents, templateFilename).keys();
 		expect(keys).to.deep.equal(['Hello World']);
 	});
 
 	it('should extract bound strings using translate pipe in attributes', () => {
-		const contents = `<span [attr]="'Hello World' | translate"></span>`;
+		const contents = `<span [attr]="'Hello World' | translate"></span>`;
 		const keys = parser.extract(contents, templateFilename).keys();
 		expect(keys).to.deep.equal(['Hello World']);
 	});
@@ -58,14 +58,14 @@ describe('PipeParser', () => {
 		const contents = `
 			<ion-header>
 				<ion-navbar color="brand">
-					<ion-title>{{ 'Info' | translate }}</ion-title>
+					<ion-title>{{ 'Info' | translate }}</ion-title>
 				</ion-navbar>
 			</ion-header>
 
 			<ion-content>
 
 				<content-loading *ngIf="isLoading">
-					{{ 'Loading...' | translate }}
+					{{ 'Loading...' | translate }}
 				</content-loading>
 
 			</ion-content>
@@ -75,7 +75,7 @@ describe('PipeParser', () => {
 	});
 
 	it('should extract strings on same line', () => {
-		const contents = `<span [attr]="'Hello' | translate"></span><span [attr]="'World' | translate"></span>`;
+		const contents = `<span [attr]="'Hello' | translate"></span><span [attr]="'World' | translate"></span>`;
 		const keys = parser.extract(contents, templateFilename).keys();
 		expect(keys).to.deep.equal(['Hello', 'World']);
 	});
@@ -85,7 +85,7 @@ describe('PipeParser', () => {
 			<ion-list inset>
 				<ion-item>
 					<ion-icon item-left name="person" color="dark"></ion-icon>
-					<ion-input formControlName="name" type="text" [placeholder]="'Name' | translate"></ion-input>
+					<ion-input formControlName="name" type="text" [placeholder]="'Name' | translate"></ion-input>
 				</ion-item>
 				<ion-item>
 					<p color="danger" danger *ngFor="let error of form.get('name').getError('remote')">
@@ -94,11 +94,23 @@ describe('PipeParser', () => {
 				</ion-item>
 			</ion-list>
 			<div class="form-actions">
-				<button ion-button (click)="onSubmit()" color="secondary" block>{{ 'Create account' | translate }}</button>
+				<button ion-button (click)="onSubmit()" color="secondary" block>{{ 'Create account' | translate }}</button>
 			</div>
 		`;
 		const keys = parser.extract(contents, templateFilename).keys();
 		expect(keys).to.deep.equal(['Name', 'Create account']);
+	});
+
+	it('should not extract variables', () => {
+		const contents = '<p>{{ message | translate }}</p>';
+		const keys = parser.extract(contents, templateFilename).keys();
+		expect(keys).to.deep.equal([]);
+	});
+
+	it('should be able to extract without html', () => {
+		const contents = `{{ 'message' | translate }}`;
+		const keys = parser.extract(contents, templateFilename).keys();
+		expect(keys).to.deep.equal(['message']);
 	});
 
 });
