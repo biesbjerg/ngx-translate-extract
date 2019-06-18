@@ -15,10 +15,10 @@ export class FunctionParser extends AbstractAstParser implements ParserInterface
 		}
 	}
 
-	public extract(contents: string, path?: string): TranslationCollection {
+	public extract(template: string, path: string): TranslationCollection {
 		let collection: TranslationCollection = new TranslationCollection();
 
-		this.sourceFile = this.createSourceFile(path, contents);
+		this.sourceFile = this.createSourceFile(path, template);
 
 		const callNodes = this.findCallNodes();
 		callNodes.forEach(callNode => {

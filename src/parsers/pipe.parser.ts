@@ -4,12 +4,12 @@ import { isPathAngularComponent, extractComponentInlineTemplate } from '../utils
 
 export class PipeParser implements ParserInterface {
 
-	public extract(contents: string, path?: string): TranslationCollection {
+	public extract(template: string, path: string): TranslationCollection {
 		if (path && isPathAngularComponent(path)) {
-			contents = extractComponentInlineTemplate(contents);
+			template = extractComponentInlineTemplate(template);
 		}
 
-		return this.parseTemplate(contents);
+		return this.parseTemplate(template);
 	}
 
 	protected parseTemplate(template: string): TranslationCollection {
@@ -20,6 +20,8 @@ export class PipeParser implements ParserInterface {
 		while (matches = regExp.exec(template)) {
 			collection = collection.add(matches[2].split('\\\'').join('\''));
 		}
+
+		console.log(collection);
 
 		return collection;
 	}

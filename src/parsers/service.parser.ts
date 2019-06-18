@@ -18,10 +18,10 @@ export class ServiceParser extends AbstractAstParser implements ParserInterface 
 
 	protected sourceFile: SourceFile;
 
-	public extract(contents: string, path?: string): TranslationCollection {
+	public extract(template: string, path: string): TranslationCollection {
 		let collection: TranslationCollection = new TranslationCollection();
 
-		this.sourceFile = this.createSourceFile(path, contents);
+		this.sourceFile = this.createSourceFile(path, template);
 		const classNodes = this.findClassNodes(this.sourceFile);
 		classNodes.forEach(classNode => {
 			const constructorNode = this.findConstructorNode(classNode);

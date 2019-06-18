@@ -45,7 +45,6 @@
   "config": {},
   "devDependencies": {
     "@types/chai": "4.1.7",
-    "@types/cheerio": "0.22.11",
     "@types/flat": "0.0.28",
     "@types/glob": "7.1.1",
     "@types/mkdirp": "0.5.2",
@@ -58,7 +57,7 @@
     "tslint-eslint-rules": "5.4.0"
   },
   "dependencies": {
-    "cheerio": "1.0.0-rc.3",
+    "@angular/compiler": "^8.0.0",
     "colorette": "^1.0.8",
     "flat": "4.1.0",
     "fs": "0.0.1-security",

@@ -4,7 +4,7 @@ import { isPathAngularComponent, extractComponentInlineTemplate } from '../utils
 
 import { parseTemplate, TmplAstNode, TmplAstElement, TmplAstTextAttribute } from '@angular/compiler';
 
-export class DirectiveParser implements ParserInterface {
+export class DirectiveAstParser implements ParserInterface {
 
 	public extract(template: string, path: string): TranslationCollection {
 		if (path && isPathAngularComponent(path)) {
@@ -12,12 +12,14 @@ export class DirectiveParser implements ParserInterface {
 		}
 
 		let collection: TranslationCollection = new TranslationCollection();
+throw new Error('noåpe');
 		const nodes: TmplAstNode[] = this.parseTemplate(template, path);
 		this.getTranslatableElements(nodes).forEach(element => {
-			const translateAttr = this.getTranslateAttribute(element);
-			const key = translateAttr.value || this.getContents(element);
+			const key = this.getElementTranslateAttrValue(element) || this.getElementContents(element);
 			collection = collection.add(key);
 		});
+
+		console.log(collection);
 
 		return collection;
 	}
@@ -28,18 +30,17 @@ export class DirectiveParser implements ParserInterface {
 			.reduce((result: TmplAstElement[], element: TmplAstElement) => {
 				return result.concat(this.findChildrenElements(element));
 			}, [])
-			.filter(element => this.hasTranslateAttribute(element));
+			.filter(element => this.isTranslatable(element));
 	}
 
 	protected findChildrenElements(node: TmplAstNode): TmplAstElement[] {
-		// Safe guard, since only elements have children
 		if (!this.isElement(node)) {
 			return [];
 		}
 
-		// If element has translate attribute it means all of its contents
-		// is translatable, so we don't need to go any deeper
-		if (this.hasTranslateAttribute(node)) {
+		// If element has translate attribute all its contents is translatable
+		// so we don't need to traverse any deeper
+		if (this.isTranslatable(node)) {
 			return [node];
 		}
 
@@ -62,18 +63,23 @@ export class DirectiveParser implements ParserInterface {
 			&& node.children !== undefined;
 	}
 
-	protected getContents(element: TmplAstElement): string {
+	protected isTranslatable(node: TmplAstNode): boolean {
+		if (this.isElement(node) && node.attributes.some(attribute => attribute.name === 'translate')) {
+			return true;
+		}
+		return false;
+	}
+
+	protected getElementTranslateAttrValue(element: TmplAstElement): string {
+		const attr: TmplAstTextAttribute = element.attributes.find(attribute => attribute.name === 'translate');
+		return attr && attr.value || '';
+	}
+
+	protected getElementContents(element: TmplAstElement): string {
+		const contents = element.sourceSpan.start.file.content;
 		const start = element.startSourceSpan.end.offset;
 		const end = element.endSourceSpan.start.offset;
-		return element.sourceSpan.start.file.content.substring(start, end).trim();
-	}
-
-	protected hasTranslateAttribute(element: TmplAstElement): boolean {
-		return !!this.getTranslateAttribute(element);
-	}
-
-	protected getTranslateAttribute(element: TmplAstElement): TmplAstTextAttribute {
-		return element.attributes.find(attribute => attribute.name === 'translate');
+		return contents.substring(start, end).trim();
 	}
 
 }
