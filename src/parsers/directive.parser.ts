@@ -44,11 +44,10 @@ export class DirectiveParser implements ParserInterface {
 		}
 
 		return node.children.reduce((result: TmplAstElement[], childNode: TmplAstNode) => {
-			if (this.isElement(childNode)) {
-				const children = this.findChildrenElements(childNode);
-				return result.concat(children);
+			if (!this.isElement(childNode)) {
+				return result;
 			}
-			return result;
+			return result.concat(this.findChildrenElements(childNode));
 		}, [node]);
 	}
 
@@ -56,10 +55,8 @@ export class DirectiveParser implements ParserInterface {
 		return parseTemplate(template, path).nodes;
 	}
 
-	protected isElement(node: any): node is TmplAstElement {
-		return node
-			&& node.attributes !== undefined
-			&& node.children !== undefined;
+	protected isElement(node: TmplAstNode): node is TmplAstElement {
+		return node instanceof TmplAstElement;
 	}
 
 	protected getContents(element: TmplAstElement): string {
