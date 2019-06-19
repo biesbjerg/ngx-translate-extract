@@ -4,7 +4,7 @@ import { ParserInterface } from '../../parsers/parser.interface';
 import { PostProcessorInterface } from '../../post-processors/post-processor.interface';
 import { CompilerInterface } from '../../compilers/compiler.interface';
 
-import { green, bold, gray, dim, cyan } from 'colorette';
+import { cyan, green, bold, dim } from 'colorette';
 import * as glob from 'glob';
 import * as fs from 'fs';
 import * as path from 'path';
@@ -103,7 +103,7 @@ export class ExtractTask implements TaskInterface {
 		let extracted: TranslationCollection = new TranslationCollection();
 		this.inputs.forEach(dir => {
 			this.readDir(dir, this.options.patterns).forEach(path => {
-				this.out(gray('- %s'), path);
+				this.out(dim('- %s'), path);
 				const contents: string = fs.readFileSync(path, 'utf-8');
 				this.parsers.forEach(parser => {
 					extracted = extracted.union(parser.extract(contents, path));
