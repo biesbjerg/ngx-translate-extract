@@ -23,7 +23,7 @@ export class ExtractTask implements TaskInterface {
 	};
 
 	protected parsers: ParserInterface[] = [];
-	protected processors: PostProcessorInterface[] = [];
+	protected postProcessors: PostProcessorInterface[] = [];
 	protected compiler: CompilerInterface;
 
 	public constructor(protected inputs: string[], protected outputs: string[], options?: ExtractTaskOptionsInterface) {
@@ -33,22 +33,19 @@ export class ExtractTask implements TaskInterface {
 	}
 
 	public execute(): void {
-		if (!this.parsers.length) {
-			throw new Error('No parsers configured');
-		}
 		if (!this.compiler) {
 			throw new Error('No compiler configured');
 		}
+
+		this.printEnabledParsers();
+		this.printEnabledPostProcessors();
+		this.printEnabledCompiler();
 
 		this.out(bold('Extracting:'));
 		const extracted = this.extract();
 		this.out(green(`\nFound %d strings.\n`), extracted.count());
 
-		if (this.processors.length) {
-			this.out(cyan('Enabled post processors:'));
-			this.out(cyan(dim(this.processors.map(processor => `- ${processor.name}`).join('\n'))));
-			this.out();
-		}
+		this.out(bold('Saving:'));
 
 		this.outputs.forEach(output => {
 			let dir: string = output;
@@ -60,24 +57,28 @@ export class ExtractTask implements TaskInterface {
 
 			const outputPath: string = path.join(dir, filename);
 
-			this.out(`${bold('Saving:')} ${dim(outputPath)}`);
-
 			let existing: TranslationCollection = new TranslationCollection();
 			if (!this.options.replace && fs.existsSync(outputPath)) {
-				this.out(dim(`- destination exists, merging existing translations`));
 				existing = this.compiler.parse(fs.readFileSync(outputPath, 'utf-8'));
 			}
 
+			// merge extracted strings with existing
 			const working = extracted.union(existing);
 
-			// Run collection through processors
-			this.out(dim('- applying post processors'));
+			if (existing.isEmpty()) {
+				this.out(dim(`- ${outputPath}`));
+			} else {
+				this.out(dim(`- ${outputPath} (merged)`));
+			}
+
+			// Run collection through post processors
 			const final = this.process(working, extracted, existing);
 
 			// Save to file
 			this.save(outputPath, final);
-			this.out(green('\nOK.\n'));
 		});
+
+		this.out(green('\nDone.\n'));
 	}
 
 	public setParsers(parsers: ParserInterface[]): this {
@@ -85,8 +86,8 @@ export class ExtractTask implements TaskInterface {
 		return this;
 	}
 
-	public setPostProcessors(processors: PostProcessorInterface[]): this {
-		this.processors = processors;
+	public setPostProcessors(postProcessors: PostProcessorInterface[]): this {
+		this.postProcessors = postProcessors;
 		return this;
 	}
 
@@ -113,11 +114,11 @@ export class ExtractTask implements TaskInterface {
 	}
 
 	/**
-	 * Run strings through configured processors
+	 * Run strings through configured post processors
 	 */
 	protected process(working: TranslationCollection, extracted: TranslationCollection, existing: TranslationCollection): TranslationCollection {
-		this.processors.forEach(processor => {
-			working = processor.process(working, extracted, existing);
+		this.postProcessors.forEach(postProcessor => {
+			working = postProcessor.process(working, extracted, existing);
 		});
 		return working;
 	}
@@ -148,6 +149,32 @@ export class ExtractTask implements TaskInterface {
 
 	protected out(...args: any[]): void {
 		console.log.apply(this, arguments);
+	}
+
+	protected printEnabledParsers(): void {
+		this.out(cyan('Enabled parsers:'));
+		if (this.parsers.length) {
+			this.out(cyan(dim(this.parsers.map(parser => `- ${parser.constructor.name}`).join('\n'))));
+		} else {
+			this.out(cyan(dim('(none)')));
+		}
+		this.out();
+	}
+
+	protected printEnabledPostProcessors(): void {
+		this.out(cyan('Enabled post processors:'));
+		if (this.postProcessors.length) {
+			this.out(cyan(dim(this.postProcessors.map(postProcessor => `- ${postProcessor.constructor.name}`).join('\n'))));
+		} else {
+			this.out(cyan(dim('(none)')));
+		}
+		this.out();
+	}
+
+	protected printEnabledCompiler(): void {
+		this.out(cyan('Compiler:'));
+		this.out(cyan(dim(`- ${this.compiler.constructor.name}`)));
+		this.out();
 	}
 
 }
