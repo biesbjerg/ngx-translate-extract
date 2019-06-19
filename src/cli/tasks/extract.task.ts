@@ -131,7 +131,6 @@ export class ExtractTask implements TaskInterface {
 		const dir = path.dirname(output);
 		if (!fs.existsSync(dir)) {
 			mkdirp.sync(dir);
-			this.out(dim('- created dir: %s'), dir);
 		}
 		fs.writeFileSync(output, this.compiler.compile(collection));
 	}
