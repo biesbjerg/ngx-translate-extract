@@ -7,7 +7,7 @@ export class JsonCompiler implements CompilerInterface {
 
 	public indentation: string = '\t';
 
-	public extension = 'json';
+	public extension: string = 'json';
 
 	public constructor(options?: any) {
 		if (options && typeof options.indentation !== 'undefined') {

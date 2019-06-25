@@ -5,14 +5,14 @@ import * as gettext from 'gettext-parser';
 
 export class PoCompiler implements CompilerInterface {
 
-	public extension = 'po';
+	public extension: string = 'po';
 
 	/**
 	 * Translation domain
 	 */
-	public domain = '';
+	public domain: string = '';
 
-	public constructor(options?: any) { }
+	public constructor(options?: any) {}
 
 	public compile(collection: TranslationCollection): string {
 		const data = {
