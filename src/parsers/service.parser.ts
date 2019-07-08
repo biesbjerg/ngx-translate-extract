@@ -7,7 +7,8 @@ import {
 	ClassDeclaration,
 	SyntaxKind,
 	CallExpression,
-	PropertyAccessExpression
+	PropertyAccessExpression,
+	isPropertyAccessExpression
 } from 'typescript';
 
 import { ParserInterface } from './parser.interface';
@@ -114,7 +115,7 @@ export class ServiceParser extends AbstractAstParser implements ParserInterface 
 				}
 
 				const propAccess = callNode.getChildAt(0).getChildAt(0) as PropertyAccessExpression;
-				if (!propAccess || propAccess.kind !== SyntaxKind.PropertyAccessExpression) {
+				if (!propAccess || !isPropertyAccessExpression(propAccess)) {
 					return false;
 				}
 				if (!propAccess.getFirstToken() || propAccess.getFirstToken().kind !== SyntaxKind.ThisKeyword) {
