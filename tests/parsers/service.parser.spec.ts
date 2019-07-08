@@ -201,6 +201,21 @@ describe('ServiceParser', () => {
 		expect(keys).to.deep.equal([]);
 	});
 
+	it('should not extract variables', () => {
+		const contents = `
+			@Component({ })
+			export class AppComponent {
+				public constructor(protected translateService: TranslateService) { }
+				public test() {
+					this.translateService.get(["yes", variable ]).then(translations => {
+						console.log(translations[variable]);
+					});
+				}
+		`;
+		const keys = parser.extract(contents, componentFilename).keys();
+		expect(keys).to.deep.equal(['yes']);
+	});
+
 	it('should extract strings from all classes in the file', () => {
 		const contents = `
 			import { Injectable } from '@angular/core';
