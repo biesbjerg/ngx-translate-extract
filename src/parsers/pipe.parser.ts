@@ -21,8 +21,6 @@ export class PipeParser implements ParserInterface {
 			collection = collection.add(matches[2].split('\\\'').join('\''));
 		}
 
-		console.log(collection);
-
 		return collection;
 	}
 
