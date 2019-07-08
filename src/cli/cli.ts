@@ -103,7 +103,7 @@ const extractTask = new ExtractTask(cli.input, cli.output, {
 // Parsers
 const parsers: ParserInterface[] = [
 	new PipeParser(),
-	new DirectiveParser()
+	new DirectiveParser(),
 	new ServiceParser()
 ];
 if (cli.marker) {

@@ -16,3 +16,7 @@ export function extractComponentInlineTemplate(contents: string): string {
 	}
 	return '';
 }
+
+export function stripBOM(contents: string): string {
+	return contents.trim();
+}
