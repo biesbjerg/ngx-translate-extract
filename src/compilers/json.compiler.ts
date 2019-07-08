@@ -1,7 +1,8 @@
 import { CompilerInterface } from './compiler.interface';
 import { TranslationCollection } from '../utils/translation.collection';
+import { stripBOM } from '../utils/utils';
 
-import * as flat from 'flat';
+import { flatten } from 'flat';
 
 export class JsonCompiler implements CompilerInterface {
 
@@ -20,9 +21,9 @@ export class JsonCompiler implements CompilerInterface {
 	}
 
 	public parse(contents: string): TranslationCollection {
-		let values: any = JSON.parse(contents);
+		let values: any = JSON.parse(stripBOM(contents));
 		if (this.isNamespacedJsonFormat(values)) {
-			values = flat.flatten(values);
+			values = flatten(values);
 		}
 		return new TranslationCollection(values);
 	}

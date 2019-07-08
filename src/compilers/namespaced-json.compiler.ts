@@ -1,7 +1,8 @@
 import { CompilerInterface } from './compiler.interface';
 import { TranslationCollection } from '../utils/translation.collection';
+import { stripBOM } from '../utils/utils';
 
-import * as flat from 'flat';
+import { flatten, unflatten } from 'flat';
 
 export class NamespacedJsonCompiler implements CompilerInterface {
 
@@ -16,14 +17,14 @@ export class NamespacedJsonCompiler implements CompilerInterface {
 	}
 
 	public compile(collection: TranslationCollection): string {
-		const values: {} = flat.unflatten(collection.values, {
+		const values: {} = unflatten(collection.values, {
 			object: true
 		});
 		return JSON.stringify(values, null, this.indentation);
 	}
 
 	public parse(contents: string): TranslationCollection {
-		const values: {} = flat.flatten(JSON.parse(contents));
+		const values: {} = flatten(JSON.parse(stripBOM(contents)));
 		return new TranslationCollection(values);
 	}
 
