@@ -33,13 +33,13 @@ export class PoCompiler implements CompilerInterface {
 			}
 		};
 
-		return gettext.po.compile(data, 'utf-8');
+		return gettext.po.compile(data);
 	}
 
 	public parse(contents: string): TranslationCollection {
 		const collection = new TranslationCollection();
 
-		const po = gettext.po.parse(contents, 'utf-8');
+		const po = gettext.po.parse(contents, 'utf8');
 		if (!po.translations.hasOwnProperty(this.domain)) {
 			return collection;
 		}
@@ -49,7 +49,7 @@ export class PoCompiler implements CompilerInterface {
 			.reduce((values, key) => {
 				values[key] = po.translations[this.domain][key].msgstr.pop();
 				return values;
-			}, <TranslationType> {});
+			}, {} as TranslationType);
 
 		return new TranslationCollection(values);
 	}
