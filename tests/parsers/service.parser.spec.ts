@@ -207,7 +207,7 @@ describe('ServiceParser', () => {
 			export class AppComponent {
 				public constructor(protected translateService: TranslateService) { }
 				public test() {
-					this.translateService.get(["yes", variable ]).then(translations => {
+					this.translateService.get(["yes", variable]).then(translations => {
 						console.log(translations[variable]);
 					});
 				}
