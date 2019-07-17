@@ -5,8 +5,8 @@ export class PurgeObsoleteKeysPostProcessor implements PostProcessorInterface {
 
 	public name: string = 'PurgeObsoleteKeys';
 
-	public process(working: TranslationCollection, extracted: TranslationCollection, existing: TranslationCollection): TranslationCollection {
-		return working.intersect(extracted);
+	public process(draft: TranslationCollection, extracted: TranslationCollection, existing: TranslationCollection): TranslationCollection {
+		return draft.intersect(extracted);
 	}
 
 }

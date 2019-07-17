@@ -63,7 +63,7 @@ export class ExtractTask implements TaskInterface {
 			}
 
 			// merge extracted strings with existing
-			const working = extracted.union(existing);
+			const draft = extracted.union(existing);
 
 			if (existing.isEmpty()) {
 				this.out(dim(`- ${outputPath}`));
@@ -72,7 +72,7 @@ export class ExtractTask implements TaskInterface {
 			}
 
 			// Run collection through post processors
-			const final = this.process(working, extracted, existing);
+			const final = this.process(draft, extracted, existing);
 
 			// Save to file
 			this.save(outputPath, final);
@@ -116,11 +116,11 @@ export class ExtractTask implements TaskInterface {
 	/**
 	 * Run strings through configured post processors
 	 */
-	protected process(working: TranslationCollection, extracted: TranslationCollection, existing: TranslationCollection): TranslationCollection {
+	protected process(draft: TranslationCollection, extracted: TranslationCollection, existing: TranslationCollection): TranslationCollection {
 		this.postProcessors.forEach(postProcessor => {
-			working = postProcessor.process(working, extracted, existing);
+			draft = postProcessor.process(draft, extracted, existing);
 		});
-		return working;
+		return draft;
 	}
 
 	/**

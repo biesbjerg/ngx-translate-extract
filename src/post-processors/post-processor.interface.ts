@@ -4,6 +4,6 @@ export interface PostProcessorInterface {
 
 	name: string;
 
-	process(working: TranslationCollection, extracted: TranslationCollection, existing: TranslationCollection): TranslationCollection;
+	process(draft: TranslationCollection, extracted: TranslationCollection, existing: TranslationCollection): TranslationCollection;
 
 }

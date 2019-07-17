@@ -5,8 +5,8 @@ export class SortByKeyPostProcessor implements PostProcessorInterface {
 
 	public name: string = 'SortByKey';
 
-	public process(working: TranslationCollection, extracted: TranslationCollection, existing: TranslationCollection): TranslationCollection {
-		return working.sort();
+	public process(draft: TranslationCollection, extracted: TranslationCollection, existing: TranslationCollection): TranslationCollection {
+		return draft.sort();
 	}
 
 }
