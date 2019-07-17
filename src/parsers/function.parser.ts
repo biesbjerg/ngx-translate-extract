@@ -6,7 +6,7 @@ import { TranslationCollection } from '../utils/translation.collection';
 
 export class FunctionParser extends AbstractAstParser implements ParserInterface {
 
-	protected functionIdentifier: string = '_';
+	protected functionIdentifier: string = 'marker';
 
 	public constructor(options?: any) {
 		super();
