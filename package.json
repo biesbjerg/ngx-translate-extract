@@ -16,7 +16,8 @@
     "watch": "npm run clean && tsc --watch",
     "clean": "rm -rf ./dist",
     "lint": "tslint --force './src/**/*.ts'",
-    "test": "mocha -r ts-node/register tests/**/*.spec.ts"
+    "test": "mocha -r ts-node/register tests/**/*.spec.ts",
+    "postinstall": "opencollective-postinstall || true"
   },
   "repository": {
     "type": "git",
@@ -63,14 +64,19 @@
   },
   "dependencies": {
     "chalk": "2.0.1",
-    "yargs": "8.0.2",
     "cheerio": "1.0.0-rc.2",
+    "flat": "2.0.1",
     "fs": "0.0.1-security",
     "gettext-parser": "1.2.2",
     "glob": "7.1.2",
-    "path": "0.12.7",
     "mkdirp": "0.5.1",
-    "flat": "2.0.1",
-    "typescript": "2.4.1"
+    "opencollective-postinstall": "^2.0.2",
+    "path": "0.12.7",
+    "typescript": "2.4.1",
+    "yargs": "8.0.2"
+  },
+  "collective": {
+    "type": "opencollective",
+    "url": "https://opencollective.com/ngx-translate-extract"
   }
 }
