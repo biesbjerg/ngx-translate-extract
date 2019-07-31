@@ -1,3 +1,7 @@
+If this tool saves you time, please consider making a donation towards the continued maintainence and development: https://donate.biesbjerg.com
+
+[![Donate](images/donate-badge.png)](https://donate.biesbjerg.com)
+
 # Usage
 
 ## ngx-translate-extract
@@ -74,7 +78,7 @@ _('Extract me');
 `ngx-translate-extract ... -m _`
 
 ## Commandline arguments
-```
+```shell
 Usage:
 ngx-translate-extract [options]
 

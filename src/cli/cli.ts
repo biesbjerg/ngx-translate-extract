@@ -1,3 +1,6 @@
+import * as fs from 'fs';
+import * as yargs from 'yargs';
+
 import { ExtractTask } from './tasks/extract.task';
 import { ParserInterface } from '../parsers/parser.interface';
 import { PipeParser } from '../parsers/pipe.parser';
@@ -10,9 +13,7 @@ import { KeyAsDefaultValuePostProcessor } from '../post-processors/key-as-defaul
 import { PurgeObsoleteKeysPostProcessor } from '../post-processors/purge-obsolete-keys.post-processor';
 import { CompilerInterface } from '../compilers/compiler.interface';
 import { CompilerFactory } from '../compilers/compiler.factory';
-
-import * as fs from 'fs';
-import * as yargs from 'yargs';
+import { donateMessage } from '../utils/donate';
 
 export const cli = yargs
 	.usage('Extract strings from files for translation.\nUsage: $0 [options]')
@@ -133,3 +134,5 @@ const compiler: CompilerInterface = CompilerFactory.create(cli.format, {
 extractTask.setCompiler(compiler);
 
 extractTask.execute();
+
+console.log(donateMessage);
