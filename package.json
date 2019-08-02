@@ -60,7 +60,7 @@
     "@angular/compiler": "^8.1.3",
     "boxen": "^4.1.0",
     "colorette": "^1.1.0",
-    "flat": "^4.1.0",
+    "flat": "git://github.com/lenchvolodymyr/flat.git#ffe77ef",
     "gettext-parser": "^4.0.1",
     "glob": "^7.1.4",
     "mkdirp": "^0.5.1",

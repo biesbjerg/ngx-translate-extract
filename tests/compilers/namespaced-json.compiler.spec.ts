@@ -57,4 +57,13 @@ describe('NamespacedJsonCompiler', () => {
 		expect(result).to.equal('{\n  "NAMESPACE": {\n    "KEY": {\n      "FIRST_KEY": "",\n      "SECOND_KEY": "VALUE"\n    }\n  }\n}');
 	});
 
+	it('should not reorder keys when compiled', () => {
+		const collection = new TranslationCollection({
+			'BROWSE': '',
+			'LOGIN': ''
+		});
+		const result: string = compiler.compile(collection);
+		expect(result).to.equal('{\n\t"BROWSE": "",\n\t"LOGIN": ""\n}');
+	});
+
 });
