@@ -6,7 +6,8 @@ let reflectMetadata = require('reflect-metadata');
 //IoC configuration: imported here to allow redefintion for usage as library
 let inversifyConfig = require('../dist/ioc/inversify.config');
 
+
 let cli = require('../dist/cli/cli');
 
-cli.getExtractTask().execute();
+cli.extractTask.execute();
 
