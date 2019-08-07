@@ -7,12 +7,12 @@
         "declaration": true,
         "experimentalDecorators": true,
         "emitDecoratorMetadata": true,
+        "typeRoots" : ["./node_modules/@types", "./typings"],
         "target": "es6",
         "lib": [
             "dom",
             "es2015"
         ],
-        "types": ["reflect-metadata","mocha"],
         "module": "commonjs",
         "outDir": "./dist/",
         "sourceMap": true
