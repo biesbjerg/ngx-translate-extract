@@ -2,6 +2,7 @@ export * from './utils/translation.collection';
 export * from './utils/utils';
 
 export * from './ioc/types';
+export * from './ioc/inversify.config';
 
 export * from './cli/cli';
 export * from './cli/tasks/task.interface';
@@ -14,6 +15,7 @@ export * from './parsers/pipe.parser';
 export * from './parsers/service.parser';
 export * from './parsers/function.parser';
 
+export * from './compilers/abstract-compiler';
 export * from './compilers/compiler.interface';
 export * from './compilers/compiler.factory';
 export * from './compilers/json.compiler';

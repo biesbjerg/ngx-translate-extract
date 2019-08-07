@@ -1,5 +1,5 @@
 import { Container, interfaces } from 'inversify';
-import TYPES from './types';
+import { TYPES } from './types';
 import { ParserInterface, ParserInterfaceWithConfig } from '../parsers/parser.interface';
 import { ServiceParser } from '../parsers/service.parser';
 import { DirectiveParser } from '../parsers/directive.parser';
@@ -12,7 +12,7 @@ import { NamespacedJsonCompiler } from '../compilers/namespaced-json.compiler';
 import { CustomCompiler } from '../compilers/custom.compiler';
 
 
-const container = new Container();
+const _container = new Container();
 
 export interface IoCParserConfig  {
 	parsers: {type: symbol, obj: interfaces.Newable<ParserInterface>}[];
@@ -39,16 +39,16 @@ export const setupParsers = (container: Container, parserConfig: IoCParserConfig
 };
 
 export const configFactories = (container: Container) => {
-	container.bind<interfaces.Factory<ParserInterfaceWithConfig>>(TYPES.ParserWithConfigFactory).toFactory<ParserInterfaceWithConfig>( (context: interfaces.Context) => {
+	container.bind<interfaces.Factory<ParserInterfaceWithConfig>>(TYPES.PARSER_WITH_CONFIG_FACTORY).toFactory<ParserInterfaceWithConfig>( (context: interfaces.Context) => {
 		return (config: any) => {
-			let parserInterfaceWithConfig = context.container.get<ParserInterfaceWithConfig>(TYPES.FunctionParser);
+			let parserInterfaceWithConfig = context.container.get<ParserInterfaceWithConfig>(TYPES.FUNCTION_PARSER);
 			parserInterfaceWithConfig.config = config;
 			return parserInterfaceWithConfig;
 		};
 	});
-	container.bind<interfaces.Factory<CompilerInterface>>(TYPES.CompilerFactory).toFactory<CompilerInterface>( (context: interfaces.Context) => {
+	container.bind<interfaces.Factory<CompilerInterface>>(TYPES.COMPILER_FACTORY).toFactory<CompilerInterface>( (context: interfaces.Context) => {
 		return (format: string, config: any) => {
-			let compiler = context.container.getNamed<CompilerInterface>(TYPES.Compiler, format);
+			let compiler = context.container.getNamed<CompilerInterface>(TYPES.COMPILER, format);
 			compiler.config = config;
 			return compiler;
 		};
@@ -59,21 +59,21 @@ export const setupCompilers = (container: Container, compilersConfig?: IoCCompil
 	// container.unbind for named is not implemented yet
 	// as workaround unbind all classes and rebind compilerConfig first then add default compilers if not
 	// already binded
-	if (container.isBound(TYPES.Compiler)) {
-		container.unbind(TYPES.Compiler);
+	if (container.isBound(TYPES.COMPILER)) {
+		container.unbind(TYPES.COMPILER);
 	}
 
 	if (compilersConfig !== undefined) {
 		compilersConfig.compilers.forEach( (compiler) => {
 			let selector: string = new compiler().selector;
-			container.bind<CompilerInterface>(TYPES.Compiler).to(compiler).whenTargetNamed(selector);
+			container.bind<CompilerInterface>(TYPES.COMPILER).to(compiler).whenTargetNamed(selector);
 		});
 	}
 
 	defaultCompilersConfig.compilers.forEach( (compiler) => {
 		let selector: string = new compiler().selector;
-		if (!container.isBoundNamed(TYPES.Compiler,selector)) {
-			container.bind<CompilerInterface>(TYPES.Compiler).to(compiler).whenTargetNamed(selector);
+		if (!container.isBoundNamed(TYPES.COMPILER,selector)) {
+			container.bind<CompilerInterface>(TYPES.COMPILER).to(compiler).whenTargetNamed(selector);
 		}
 	});
 };
@@ -83,15 +83,15 @@ const defaultCompilersConfig: IoCCompilerConfig = {
 };
 
 const parsersConfig: IoCParserConfig = {
-	parsers: [{type: TYPES.ServiceParser, obj: ServiceParser},
-			{type: TYPES.DirectiveParser, obj: DirectiveParser},
-			{type: TYPES.PipeParser, obj: PipeParser}
+	parsers: [{type: TYPES.SERVICE_PARSER, obj: ServiceParser},
+			{type: TYPES.DIRECTIVE_PARSER, obj: DirectiveParser},
+			{type: TYPES.PIPE_PARSER, obj: PipeParser}
 	],
-	parsersWithConfig: [{type: TYPES.FunctionParser, obj: FunctionParser}]
+	parsersWithConfig: [{type: TYPES.FUNCTION_PARSER, obj: FunctionParser}]
 };
 
-setupParsers(container, parsersConfig);
-setupCompilers(container);
-configFactories(container);
+setupParsers(_container, parsersConfig);
+setupCompilers(_container);
+configFactories(_container);
 
-export default container;
+export const container = _container;

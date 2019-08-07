@@ -1,11 +1,11 @@
-let TYPES = {
-	DirectiveParser: Symbol('ParserInterface'),
-	ServiceParser: Symbol('ParserInterface'),
-	PipeParser: Symbol('ParserInterface'),
-	FunctionParser: Symbol('ParserInterface'),
-	Compiler: Symbol('CompilerInterface'),
-	ParserWithConfigFactory: Symbol('Factory<ParserInterfaceWithConfig>'),
-	CompilerFactory: Symbol('Factory<CompilerFactory>')
+const types = {
+	DIRECTIVE_PARSER: Symbol('ParserInterface'),
+	SERVICE_PARSER: Symbol('ParserInterface'),
+	PIPE_PARSER: Symbol('ParserInterface'),
+	FUNCTION_PARSER: Symbol('ParserInterface'),
+	COMPILER: Symbol('CompilerInterface'),
+	PARSER_WITH_CONFIG_FACTORY: Symbol('Factory<ParserInterfaceWithConfig>'),
+	COMPILER_FACTORY: Symbol('Factory<CompilerFactory>')
 };
 
-export default TYPES;
+export const TYPES = types;

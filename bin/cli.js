@@ -8,5 +8,5 @@ let inversifyConfig = require('../dist/ioc/inversify.config');
 
 let cli = require('../dist/cli/cli');
 
-cli.extractTask.execute();
+cli.getExtractTask().execute();
 
