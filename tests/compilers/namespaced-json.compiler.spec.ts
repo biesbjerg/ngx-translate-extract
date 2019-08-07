@@ -53,9 +53,10 @@ describe('NamespacedJsonCompiler', () => {
 			'NAMESPACE.KEY.FIRST_KEY': '',
 			'NAMESPACE.KEY.SECOND_KEY': 'VALUE'
 		});
-		const customCompiler = new NamespacedJsonCompiler({
+		const customCompiler = new NamespacedJsonCompiler();
+		customCompiler.config = {
 			indentation: '  '
-		});
+		};
 		const result: string = customCompiler.compile(collection);
 		expect(result).to.equal('{\n  "NAMESPACE": {\n    "KEY": {\n      "FIRST_KEY": "",\n      "SECOND_KEY": "VALUE"\n    }\n  }\n}');
 	});
