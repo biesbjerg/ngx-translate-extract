@@ -1,18 +1,25 @@
 import { Node, CallExpression, SyntaxKind, Identifier } from 'typescript';
 
-import { ParserInterface } from './parser.interface';
+import { KeysPreprocessContextInterface, ParserInterfaceWithConfig } from './parser.interface';
 import { AbstractAstParser } from './abstract-ast.parser';
 import { TranslationCollection } from '../utils/translation.collection';
+import { injectable } from 'inversify';
 
-export class FunctionParser extends AbstractAstParser implements ParserInterface {
+@injectable()
+export class FunctionParser extends AbstractAstParser implements ParserInterfaceWithConfig {
 
 	protected functionIdentifier: string = 'marker';
 
-	public constructor(options?: any) {
-		super();
-		if (options && typeof options.identifier !== 'undefined') {
-			this.functionIdentifier = options.identifier;
+	set config (opt: any) {
+		if (opt && typeof opt.identifier !== 'undefined') {
+			this.functionIdentifier = opt.identifier;
 		}
+	}
+
+	get config() {
+		return {
+			identfier: this.functionIdentifier
+		};
 	}
 
 	public extract(template: string, path: string): TranslationCollection {
@@ -24,7 +31,14 @@ export class FunctionParser extends AbstractAstParser implements ParserInterface
 		callNodes.forEach(callNode => {
 			const keys: string[] = this.getStringLiterals(callNode);
 			if (keys && keys.length) {
-				collection = collection.addKeys(keys);
+				let preprocessCtx: KeysPreprocessContextInterface = {
+					template: template,
+					path: path,
+					ctxObj: {
+						callExpression: callNode
+					}
+				};
+				collection = collection.addKeys(this.preprocessKeys(keys, preprocessCtx));
 			}
 		});
 		return collection;

@@ -1,3 +1,6 @@
+import 'reflect-metadata';
+import '../../src/ioc/inversify.config';
+
 import { expect } from 'chai';
 
 import { TranslationCollection } from '../../src/utils/translation.collection';

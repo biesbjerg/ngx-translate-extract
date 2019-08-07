@@ -2,11 +2,8 @@ import * as fs from 'fs';
 import * as yargs from 'yargs';
 
 import { ExtractTask } from './tasks/extract.task';
-import { ParserInterface } from '../parsers/parser.interface';
-import { PipeParser } from '../parsers/pipe.parser';
-import { DirectiveParser } from '../parsers/directive.parser';
-import { ServiceParser } from '../parsers/service.parser';
-import { FunctionParser } from '../parsers/function.parser';
+import { ParserInterface, ParserInterfaceWithConfig } from '../parsers/parser.interface';
+
 import { PostProcessorInterface } from '../post-processors/post-processor.interface';
 import { SortByKeyPostProcessor } from '../post-processors/sort-by-key.post-processor';
 import { KeyAsDefaultValuePostProcessor } from '../post-processors/key-as-default-value.post-processor';
@@ -14,6 +11,10 @@ import { PurgeObsoleteKeysPostProcessor } from '../post-processors/purge-obsolet
 import { CompilerInterface } from '../compilers/compiler.interface';
 import { CompilerFactory } from '../compilers/compiler.factory';
 import { donateMessage } from '../utils/donate';
+
+import { interfaces } from 'inversify';
+import TYPES from '../ioc/types';
+import container from '../ioc/inversify.config';
 
 export const cli = yargs
 	.usage('Extract strings from files for translation.\nUsage: $0 [options]')
@@ -61,7 +62,7 @@ export const cli = yargs
 		describe: 'Output format',
 		default: 'json',
 		type: 'string',
-		choices: ['json', 'namespaced-json', 'pot']
+		choices: ['json', 'namespaced-json', 'pot', 'custom']
 	})
 	.option('format-indentation', {
 		alias: 'fi',
@@ -96,21 +97,23 @@ export const cli = yargs
 	.exitProcess(true)
 	.parse(process.argv);
 
-const extractTask = new ExtractTask(cli.input, cli.output, {
+export const extractTask = new ExtractTask(cli.input, cli.output, {
 	replace: cli.replace,
 	patterns: cli.patterns
 });
 
 // Parsers
-const parsers: ParserInterface[] = [
-	new PipeParser(),
-	new DirectiveParser(),
-	new ServiceParser()
-];
+const parsers: ParserInterface[] = [container.get<ParserInterface>(TYPES.ServiceParser),
+	container.get<ParserInterface>(TYPES.DirectiveParser),
+	container.get<ParserInterface>(TYPES.PipeParser)];
+
+
 if (cli.marker) {
-	parsers.push(new FunctionParser({
+	let functionParserFactory = container.get<interfaces.Factory<ParserInterfaceWithConfig>>(TYPES.ParserWithConfigFactory);
+	let functionParser = functionParserFactory({
 		identifier: cli.marker
-	}));
+	});
+	parsers.push(<ParserInterface> functionParser);
 }
 extractTask.setParsers(parsers);
 
@@ -133,6 +136,6 @@ const compiler: CompilerInterface = CompilerFactory.create(cli.format, {
 });
 extractTask.setCompiler(compiler);
 
-extractTask.execute();
+//extractTask.execute();
 
 console.log(donateMessage);

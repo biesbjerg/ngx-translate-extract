@@ -1,6 +1,8 @@
 export * from './utils/translation.collection';
 export * from './utils/utils';
 
+export * from './ioc/types';
+
 export * from './cli/cli';
 export * from './cli/tasks/task.interface';
 export * from './cli/tasks/extract.task';
