@@ -10,6 +10,8 @@ import { JsonCompiler } from '../compilers/json.compiler';
 import { PoCompiler } from '../compilers/po.compiler';
 import { NamespacedJsonCompiler } from '../compilers/namespaced-json.compiler';
 import { CustomCompiler } from '../compilers/custom.compiler';
+import { TaskInterface, ExtractTaskOptionsInterface } from '../cli/tasks/task.interface';
+import { ExtractTask } from '../cli/tasks/extract.task';
 
 
 const _container = new Container();
@@ -53,6 +55,13 @@ export const configFactories = (container: Container) => {
 			return compiler;
 		};
 	});
+	container.bind<interfaces.Factory<TaskInterface>>(TYPES.TASK_FACTORY).toFactory<TaskInterface>( (context: interfaces.Context) => {
+		return (input: string[], output: string[], opts?: ExtractTaskOptionsInterface) => {
+			let task = context.container.get<TaskInterface>(TYPES.TASK);
+			task.setup(input, output, opts);
+			return task;
+		};
+	});
 };
 
 export const setupCompilers = (container: Container, compilersConfig?: IoCCompilerConfig) => {
@@ -72,11 +81,19 @@ export const setupCompilers = (container: Container, compilersConfig?: IoCCompil
 
 	defaultCompilersConfig.compilers.forEach( (compiler) => {
 		let selector: string = new compiler().selector;
-		if (!container.isBoundNamed(TYPES.COMPILER,selector)) {
+		if (!container.isBoundNamed(TYPES.COMPILER, selector)) {
 			container.bind<CompilerInterface>(TYPES.COMPILER).to(compiler).whenTargetNamed(selector);
 		}
 	});
 };
+
+export const setupTask = (container: Container, extractTask: interfaces.Newable<TaskInterface>) => {
+	if (container.isBound(TYPES.TASK)) {
+		container.unbind(TYPES.TASK);
+	}
+	container.bind<TaskInterface>(TYPES.TASK).to(extractTask);
+};
+
 
 const defaultCompilersConfig: IoCCompilerConfig = {
 	compilers: [JsonCompiler, NamespacedJsonCompiler, PoCompiler, CustomCompiler]
@@ -92,6 +109,7 @@ const parsersConfig: IoCParserConfig = {
 
 setupParsers(_container, parsersConfig);
 setupCompilers(_container);
+setupTask(_container, ExtractTask);
 configFactories(_container);
 
 export const container = _container;

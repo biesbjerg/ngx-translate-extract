@@ -1,7 +1,6 @@
 import * as fs from 'fs';
 import * as yargs from 'yargs';
 
-import { ExtractTask } from './tasks/extract.task';
 import { ParserInterface, ParserInterfaceWithConfig } from '../parsers/parser.interface';
 
 import { PostProcessorInterface } from '../post-processors/post-processor.interface';
@@ -15,6 +14,7 @@ import { donateMessage } from '../utils/donate';
 import { interfaces } from 'inversify';
 import { TYPES } from '../ioc/types';
 import { container } from '../ioc/inversify.config';
+import { TaskInterface } from './tasks/task.interface';
 
 export const getExtractTask = () => {
 
@@ -99,10 +99,12 @@ export const getExtractTask = () => {
 		.exitProcess(true)
 		.parse(process.argv);
 
-	const extractTask = new ExtractTask(cli.input, cli.output, {
+	const extractTaskFactory = container.get<interfaces.Factory<TaskInterface>>(TYPES.TASK_FACTORY);
+	const extractTask = <TaskInterface> extractTaskFactory(cli.input, cli.output, {
 		replace: cli.replace,
 		patterns: cli.patterns
 	});
+
 	// Parsers
 	const parsers: ParserInterface[] = [container.get<ParserInterface>(TYPES.SERVICE_PARSER),
 		container.get<ParserInterface>(TYPES.DIRECTIVE_PARSER),
