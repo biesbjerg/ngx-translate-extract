@@ -18,6 +18,8 @@ import { TaskInterface } from './tasks/task.interface';
 
 export const getExtractTask = () => {
 
+	let selectors = container.getAll<CompilerInterface>(TYPES.COMPILER).map( compiler => compiler.selector);
+
 	const cli = yargs
 		.usage('Extract strings from files for translation.\nUsage: $0 [options]')
 		.version(require(__dirname + '/../../package.json').version)
@@ -64,7 +66,7 @@ export const getExtractTask = () => {
 			describe: 'Output format',
 			default: 'json',
 			type: 'string',
-			choices: ['json', 'namespaced-json', 'pot', 'custom']
+			choices: selectors
 		})
 		.option('format-indentation', {
 			alias: 'fi',

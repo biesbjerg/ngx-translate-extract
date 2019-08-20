@@ -9,7 +9,6 @@ import { CompilerInterface } from '../compilers/compiler.interface';
 import { JsonCompiler } from '../compilers/json.compiler';
 import { PoCompiler } from '../compilers/po.compiler';
 import { NamespacedJsonCompiler } from '../compilers/namespaced-json.compiler';
-import { CustomCompiler } from '../compilers/custom.compiler';
 import { TaskInterface, ExtractTaskOptionsInterface } from '../cli/tasks/task.interface';
 import { ExtractTask } from '../cli/tasks/extract.task';
 
@@ -96,7 +95,7 @@ export const setupTask = (container: Container, extractTask: interfaces.Newable<
 
 
 const defaultCompilersConfig: IoCCompilerConfig = {
-	compilers: [JsonCompiler, NamespacedJsonCompiler, PoCompiler, CustomCompiler]
+	compilers: [JsonCompiler, NamespacedJsonCompiler, PoCompiler]
 };
 
 const parsersConfig: IoCParserConfig = {
