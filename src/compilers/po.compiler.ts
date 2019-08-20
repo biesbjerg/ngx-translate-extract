@@ -2,17 +2,23 @@ import { CompilerInterface } from './compiler.interface';
 import { TranslationCollection, TranslationType } from '../utils/translation.collection';
 
 import * as gettext from 'gettext-parser';
+import { injectable } from 'inversify';
+import { AbstractCompiler } from './abstract-compiler';
 
-export class PoCompiler implements CompilerInterface {
+@injectable()
+export class PoCompiler extends AbstractCompiler implements CompilerInterface {
 
 	public extension: string = 'po';
+	public selector: string = 'pot';
 
 	/**
 	 * Translation domain
 	 */
 	public domain: string = '';
 
-	public constructor(options?: any) {}
+	public constructor() {
+		super();
+	}
 
 	public compile(collection: TranslationCollection): string {
 		const data = {

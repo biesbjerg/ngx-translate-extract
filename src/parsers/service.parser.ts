@@ -14,7 +14,9 @@ import {
 import { ParserInterface } from './parser.interface';
 import { AbstractAstParser } from './abstract-ast.parser';
 import { TranslationCollection } from '../utils/translation.collection';
+import { injectable } from 'inversify';
 
+@injectable()
 export class ServiceParser extends AbstractAstParser implements ParserInterface {
 
 	protected sourceFile: SourceFile;
@@ -39,7 +41,15 @@ export class ServiceParser extends AbstractAstParser implements ParserInterface 
 			callNodes.forEach(callNode => {
 				const keys: string[] = this.getStringLiterals(callNode);
 				if (keys && keys.length) {
-					collection = collection.addKeys(keys);
+					let preprocessCtx = {template: template,
+										path: path,
+										ctxObj: {
+											sourceFile: this.sourceFile,
+											classDeclaration: classNode,
+											propertyName: propertyName,
+											callExpression: callNode
+										}};
+					collection = collection.addKeys(this.preprocessKeys(keys, preprocessCtx));
 				}
 			});
 		});

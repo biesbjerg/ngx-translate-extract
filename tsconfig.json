@@ -5,6 +5,9 @@
         "noImplicitAny": true,
         "removeComments": true,
         "declaration": true,
+        "experimentalDecorators": true,
+        "emitDecoratorMetadata": true,
+        "typeRoots" : ["./node_modules/@types", "./typings"],
         "target": "es6",
         "lib": [
             "dom",

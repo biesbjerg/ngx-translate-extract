@@ -4,16 +4,18 @@ import { stripBOM } from '../utils/utils';
 
 import { flatten } from 'flat';
 
-export class JsonCompiler implements CompilerInterface {
+import { injectable } from 'inversify';
+import { AbstractCompiler } from './abstract-compiler';
 
-	public indentation: string = '\t';
+@injectable()
+export class JsonCompiler extends AbstractCompiler implements CompilerInterface {
 
+
+	public selector: string = 'json';
 	public extension: string = 'json';
 
-	public constructor(options?: any) {
-		if (options && typeof options.indentation !== 'undefined') {
-			this.indentation = options.indentation;
-		}
+	public constructor() {
+		super();
 	}
 
 	public compile(collection: TranslationCollection): string {

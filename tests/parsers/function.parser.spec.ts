@@ -1,3 +1,6 @@
+import 'reflect-metadata';
+import '../../src/ioc/inversify.config';
+
 import { expect } from 'chai';
 
 import { FunctionParser } from '../../src/parsers/function.parser';

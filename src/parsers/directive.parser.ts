@@ -1,10 +1,13 @@
-import { ParserInterface } from './parser.interface';
+import { ParserInterface, KeysPreprocessContextInterface } from './parser.interface';
+import { AbstractPreprocessParser } from './abstract-preprocess.parser';
 import { TranslationCollection } from '../utils/translation.collection';
 import { isPathAngularComponent, extractComponentInlineTemplate } from '../utils/utils';
 
 import { parseTemplate, TmplAstNode, TmplAstElement, TmplAstTextAttribute } from '@angular/compiler';
+import { injectable } from 'inversify';
 
-export class DirectiveParser implements ParserInterface {
+@injectable()
+export class DirectiveParser extends AbstractPreprocessParser implements ParserInterface {
 
 	public extract(template: string, path: string): TranslationCollection {
 		if (path && isPathAngularComponent(path)) {
@@ -16,7 +19,14 @@ export class DirectiveParser implements ParserInterface {
 		const nodes: TmplAstNode[] = this.parseTemplate(template, path);
 		this.getTranslatableElements(nodes).forEach(element => {
 			const key = this.getElementTranslateAttrValue(element) || this.getElementContents(element);
-			collection = collection.add(key);
+			let preprocessCtx: KeysPreprocessContextInterface = {
+				template: template,
+				path: path,
+				ctxObj: {
+					tmlAstElement: element
+				}
+			};
+			collection = collection.add(this.preprocessKeys([key], preprocessCtx)[0]);
 		});
 
 		return collection;

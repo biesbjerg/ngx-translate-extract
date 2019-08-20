@@ -1,5 +1,5 @@
 import { TranslationCollection } from '../../utils/translation.collection';
-import { TaskInterface } from './task.interface';
+import { TaskInterface, ExtractTaskOptionsInterface } from './task.interface';
 import { ParserInterface } from '../../parsers/parser.interface';
 import { PostProcessorInterface } from '../../post-processors/post-processor.interface';
 import { CompilerInterface } from '../../compilers/compiler.interface';
@@ -9,12 +9,9 @@ import * as glob from 'glob';
 import * as fs from 'fs';
 import * as path from 'path';
 import * as mkdirp from 'mkdirp';
+import { injectable } from 'inversify';
 
-export interface ExtractTaskOptionsInterface {
-	replace?: boolean;
-	patterns?: string[];
-}
-
+@injectable()
 export class ExtractTask implements TaskInterface {
 
 	protected options: ExtractTaskOptionsInterface = {
@@ -22,14 +19,18 @@ export class ExtractTask implements TaskInterface {
 		patterns: []
 	};
 
+	protected inputs: string[];
+	protected outputs: string[];
+
 	protected parsers: ParserInterface[] = [];
 	protected postProcessors: PostProcessorInterface[] = [];
 	protected compiler: CompilerInterface;
 
-	public constructor(protected inputs: string[], protected outputs: string[], options?: ExtractTaskOptionsInterface) {
-		this.inputs = inputs.map(input => path.resolve(input));
-		this.outputs = outputs.map(output => path.resolve(output));
-		this.options = { ...this.options, ...options };
+
+	public setup(input: string[], output: string[], opts?: ExtractTaskOptionsInterface) {
+		this.inputs = input.map( i => path.resolve(i));
+		this.outputs = output.map( o => path.resolve(o));
+		this.options = { ...this.options, ...opts };
 	}
 
 	public execute(): void {

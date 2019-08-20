@@ -6,8 +6,11 @@ import {
 	SyntaxKind,
 	StringLiteral
 } from 'typescript';
+import { AbstractPreprocessParser } from './abstract-preprocess.parser';
+import { injectable } from 'inversify';
 
-export abstract class AbstractAstParser {
+@injectable()
+export abstract class AbstractAstParser extends AbstractPreprocessParser {
 
 	protected sourceFile: SourceFile;
 

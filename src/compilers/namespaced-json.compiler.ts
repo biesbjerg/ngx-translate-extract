@@ -3,17 +3,17 @@ import { TranslationCollection } from '../utils/translation.collection';
 import { stripBOM } from '../utils/utils';
 
 import { flatten, unflatten } from 'flat';
+import { injectable } from 'inversify';
+import { AbstractCompiler } from './abstract-compiler';
 
-export class NamespacedJsonCompiler implements CompilerInterface {
-
-	public indentation: string = '\t';
+@injectable()
+export class NamespacedJsonCompiler extends AbstractCompiler implements CompilerInterface {
 
 	public extension = 'json';
+	public selector = 'namespaced-json';
 
-	public constructor(options?: any) {
-		if (options && typeof options.indentation !== 'undefined') {
-			this.indentation = options.indentation;
-		}
+	public constructor() {
+		super();
 	}
 
 	public compile(collection: TranslationCollection): string {
