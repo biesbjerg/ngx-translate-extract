@@ -7,6 +7,7 @@ export * from './ioc/inversify.config';
 export * from './cli/cli';
 export * from './cli/tasks/task.interface';
 export * from './cli/tasks/extract.task';
+export * from './cli/tasks/task.factory';
 
 export * from './parsers/parser.interface';
 export * from './parsers/abstract-ast.parser';

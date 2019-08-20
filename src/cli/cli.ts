@@ -1,20 +1,17 @@
 import * as fs from 'fs';
 import * as yargs from 'yargs';
 
-import { ParserInterface, ParserInterfaceWithConfig } from '../parsers/parser.interface';
 
 import { PostProcessorInterface } from '../post-processors/post-processor.interface';
 import { SortByKeyPostProcessor } from '../post-processors/sort-by-key.post-processor';
 import { KeyAsDefaultValuePostProcessor } from '../post-processors/key-as-default-value.post-processor';
 import { PurgeObsoleteKeysPostProcessor } from '../post-processors/purge-obsolete-keys.post-processor';
 import { CompilerInterface } from '../compilers/compiler.interface';
-import { CompilerFactory } from '../compilers/compiler.factory';
 import { donateMessage } from '../utils/donate';
 
-import { interfaces } from 'inversify';
 import { TYPES } from '../ioc/types';
 import { container } from '../ioc/inversify.config';
-import { TaskInterface } from './tasks/task.interface';
+import { TaskFactoryOptions, createTask } from './tasks/task.factory';
 
 export const getExtractTask = () => {
 
@@ -101,26 +98,7 @@ export const getExtractTask = () => {
 		.exitProcess(true)
 		.parse(process.argv);
 
-	const extractTaskFactory = container.get<interfaces.Factory<TaskInterface>>(TYPES.TASK_FACTORY);
-	const extractTask = <TaskInterface> extractTaskFactory(cli.input, cli.output, {
-		replace: cli.replace,
-		patterns: cli.patterns
-	});
-
-	// Parsers
-	const parsers: ParserInterface[] = [container.get<ParserInterface>(TYPES.SERVICE_PARSER),
-		container.get<ParserInterface>(TYPES.DIRECTIVE_PARSER),
-		container.get<ParserInterface>(TYPES.PIPE_PARSER)];
-
-
-	if (cli.marker) {
-		let functionParserFactory = container.get<interfaces.Factory<ParserInterfaceWithConfig>>(TYPES.PARSER_WITH_CONFIG_FACTORY);
-		let functionParser = functionParserFactory({
-			identifier: cli.marker
-		});
-		parsers.push(<ParserInterface> functionParser);
-	}
-	extractTask.setParsers(parsers);
+	console.log(donateMessage);
 
 	// Post processors
 	const postProcessors: PostProcessorInterface[] = [];
@@ -133,18 +111,16 @@ export const getExtractTask = () => {
 	if (cli.sort) {
 		postProcessors.push(new SortByKeyPostProcessor());
 	}
-	extractTask.setPostProcessors(postProcessors);
 
-	// Compiler
-	const compiler: CompilerInterface = CompilerFactory.create(cli.format, {
-		indentation: cli.formatIndentation
-	});
-	extractTask.setCompiler(compiler);
+	const taskFactoryOptions: TaskFactoryOptions = {
+		replace: cli.replace,
+		patterns: cli.patterns,
+		format: cli.format,
+		formatIndentation: cli['format-indentation'],
+		marker: cli.marker,
+		postProcessors: postProcessors
+	};
 
-	//extractTask.execute();
-
-	console.log(donateMessage);
-
-	return extractTask;
+	return createTask(cli.input, cli.output, taskFactoryOptions);
 };
 
