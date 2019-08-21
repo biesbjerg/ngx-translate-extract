@@ -15,6 +15,33 @@ export class PoCompiler implements CompilerInterface {
 	public constructor(options?: any) {}
 
 	public compile(collection: TranslationCollection): string {
+
+		const translations: any = {};
+
+		Object.keys(collection.values).forEach( contextKey => {
+			Object.keys( collection.values[ contextKey ] ).forEach( key => {
+
+				const data: TranslationData = collection.values[ contextKey ][ key ];
+				const poData: any = {
+					msgid: key,
+					msgstr: data.value,
+					msgctxt: data.context ? data.context : undefined,
+					comments: {
+						translator: data.comment ? data.comment : undefined,
+						reference: data.reference ? data.reference : undefined
+					}
+				};
+
+				if ( translations[ data.context ] ) {
+					translations[ data.context ][ key ] = poData;
+				} else {
+					translations[ data.context ] = { [ key ]: poData };
+				}
+
+			} ); } );
+
+		//console.log( collection.values[''] );
+
 		const data = {
 			charset: 'utf-8',
 			headers: {
@@ -22,25 +49,7 @@ export class PoCompiler implements CompilerInterface {
 				'content-type': 'text/plain; charset=utf-8',
 				'content-transfer-encoding': '8bit'
 			},
-			translations: {
-				[this.domain]: Object.keys(collection.values).reduce((translations, key) => {
-
-					const translationData: TranslationData = collection.get( key );
-
-					translations[key] = {
-						msgid: key,
-						msgstr: translationData.value,
-						msgctxt: translationData.context ? translationData.context : undefined,
-						comments: {
-							translator: translationData.comment ? translationData.comment : undefined,
-							reference: translationData.reference ? translationData.reference : undefined
-						}
-					};
-
-					return translations;
-
-				}, {} as any)
-			}
+			translations
 		};
 
 		return gettext.po.compile(data);

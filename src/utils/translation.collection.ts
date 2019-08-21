@@ -1,12 +1,14 @@
 export interface TranslationData {
 	value: string;
-	context?: string;
+	context: string;
 	reference?: string;
 	comment?: string;
 }
 
 export interface TranslationType {
-	[key: string]: TranslationData;
+	[key: string]: {
+		[key: string]: TranslationData
+	};
 }
 
 export class TranslationCollection {
@@ -18,13 +20,12 @@ export class TranslationCollection {
 	}
 
 	public add(key: string, data: TranslationData ): TranslationCollection {
-		return new TranslationCollection({ ...this.values, [key]: data });
+		return new TranslationCollection( { ...this.values, ...this.assign( {}, key, data ) } );
 	}
 
 	public addKeys( keys: string[], data: TranslationData[] ): TranslationCollection {
 		const values = keys.reduce((results, key, i) => {
-			results[key] = data && data[ i ] ? data[ i ] : { value: '' };
-			return results;
+			return this.assign( results, key, data[i] );
 		}, {} as TranslationType);
 		return new TranslationCollection({ ...this.values, ...values });
 	}
@@ -34,7 +35,10 @@ export class TranslationCollection {
 	}
 
 	public forEach(callback: (key?: string, data?: TranslationData) => void): TranslationCollection {
-		Object.keys(this.values).forEach(key => callback.call(this, key, this.values[key]));
+		Object.keys(this.values).forEach( contextKey => {
+			Object.keys( this.values[ contextKey ] ).forEach( key => {
+			callback.call( this, key, this.values[contextKey][key] );
+		} ); } );
 		return this;
 	}
 
@@ -42,16 +46,16 @@ export class TranslationCollection {
 		let values: TranslationType = {};
 		this.forEach((key: string, data: TranslationData) => {
 			if (callback.call(this, key, data)) {
-				values[key] = data;
+				this.assign( values, key, data );
 			}
 		});
 		return new TranslationCollection(values);
 	}
 
-	public map(callback: (key?: string, data?: TranslationData) => string): TranslationCollection {
+	public map(callback: (key?: string, data?: TranslationData) => TranslationData): TranslationCollection {
 		let values: TranslationType = {};
 		this.forEach((key: string, data: TranslationData) => {
-			values[key] = callback.call(this, key, data);
+			this.assign( values, key, callback.call(this, key, data) );
 		});
 		return new TranslationCollection(values);
 	}
@@ -62,40 +66,53 @@ export class TranslationCollection {
 
 	public intersect(collection: TranslationCollection): TranslationCollection {
 		let values: TranslationType = {};
-		this.filter(key => collection.has(key))
+		this.filter( (key, data) => collection.has(key, data.context))
 			.forEach((key: string, data: TranslationData) => {
-				values[key] = data;
+				this.assign( values, key, data);
 			});
 
 		return new TranslationCollection(values);
 	}
 
-	public has(key: string): boolean {
-		return this.values.hasOwnProperty(key);
+	public has(key: string, context: string = ''): boolean {
+		return this.values[context] ? this.values[context].hasOwnProperty(key) : false;
 	}
 
-	public get(key: string): TranslationData {
-		return this.values[key];
+	public get(key: string, context: string = ''): TranslationData {
+		return this.values[context] ? this.values[context][key] : null;
 	}
 
-	public keys(): string[] {
-		return Object.keys(this.values);
+	public keys( context: string ): string[] {
+		return Object.keys(this.values[context]);
 	}
 
-	public count(): number {
-		return Object.keys(this.values).length;
+	public count( context: string ): number {
+		return this.values[context] ? Object.keys(this.values[context]).length : 0;
 	}
 
-	public isEmpty(): boolean {
-		return Object.keys(this.values).length === 0;
+	public isEmpty( context: string ): boolean {
+		return this.values[context] ?  Object.keys(this.values[context]).length === 0 : true;
 	}
 
 	public sort(compareFn?: (a: string, b: string) => number): TranslationCollection {
 		let values: TranslationType = {};
-		this.keys().sort(compareFn).forEach((key) => {
-			values[key] = this.get(key);
-		});
+
+		Object.keys( this.values ).forEach( contextKey => {
+			this.keys( contextKey ).sort(compareFn).forEach((key) => {
+				this.assign( values, key, this.values[contextKey][key] );
+			});
+		} );
 
 		return new TranslationCollection(values);
+	}
+
+	private assign( values: TranslationType, key: string, data: TranslationData ): TranslationType {
+		if ( this.values[ data.context ] ) {
+			this.values[ data.context ][ key ] = data;
+		} else {
+			this.values[ data.context ] = { [ key ]: data };
+		}
+
+		return this.values;
 	}
 }

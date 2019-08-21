@@ -43,7 +43,7 @@ export class ExtractTask implements TaskInterface {
 
 		this.out(bold('Extracting:'));
 		const extracted = this.extract();
-		this.out(green(`\nFound %d strings.\n`), extracted.count());
+		this.out(green(`\nFound %d strings.\n`), extracted.count(''));
 
 		this.out(bold('Saving:'));
 
@@ -65,7 +65,7 @@ export class ExtractTask implements TaskInterface {
 			// merge extracted strings with existing
 			const draft = extracted.union(existing);
 
-			if (existing.isEmpty()) {
+			if (existing.isEmpty('')) {
 				this.out(dim(`- ${outputPath}`));
 			} else {
 				this.out(dim(`- ${outputPath} (merged)`));

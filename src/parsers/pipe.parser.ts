@@ -18,7 +18,7 @@ export class PipeParser implements ParserInterface {
 		const regExp: RegExp = /(['"`])((?:(?!\1).|\\\1)+)\1\s*\|\s*translate(:.*:.*:?.*')?/g;
 		let matches: RegExpExecArray;
 		while (matches = regExp.exec(template)) {
-			let context = null;
+			let context = '';
 			let comment = null;
 
 			if ( matches[ 3 ] ) {

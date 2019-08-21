@@ -25,7 +25,7 @@ export class FunctionParser extends AbstractAstParser implements ParserInterface
 			const keys: string[] = this.getStringLiterals(callNode, 0 );
 			const contextArr: string[] = this.getStringLiterals(callNode, 1 );
 			const commentArr: string[] = this.getStringLiterals(callNode, 2 );
-			const context: string = contextArr.length ? contextArr[ 0 ] : null;
+			const context: string = contextArr.length ? contextArr[ 0 ] : '';
 			const comment: string = commentArr.length ? commentArr[ 0 ] : null;
 
 			if (keys && keys.length) {
