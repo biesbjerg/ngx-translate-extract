@@ -41,11 +41,12 @@ describe('DirectiveParser', () => {
 		const contents = `
 			@Component({
 				selector: 'test',
-				template: '<p translate>Hello World</p>'
+				template: '<p translate-context="MY-----CONTEXT" translate>Hello World</p>'
 			})
 			export class TestComponent { }
 		`;
 		const keys = parser.extract(contents, componentFilename).keys();
+
 		expect(keys).to.deep.equal(['Hello World']);
 	});
 

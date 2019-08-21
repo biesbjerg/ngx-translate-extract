@@ -16,7 +16,10 @@ export class DirectiveParser implements ParserInterface {
 		const nodes: TmplAstNode[] = this.parseTemplate(template, path);
 		this.getTranslatableElements(nodes).forEach(element => {
 			const key = this.getElementTranslateAttrValue(element) || this.getElementContents(element);
-			collection = collection.add(key);
+			const context = this.getElementTranslateContextAttrValue( element );
+			const comment = this.getElementTranslateCommentAttrValue( element );
+
+			collection = collection.add( key, { value: '', reference: path, context: context, comment: comment } );
 		});
 
 		return collection;
@@ -70,6 +73,16 @@ export class DirectiveParser implements ParserInterface {
 
 	protected getElementTranslateAttrValue(element: TmplAstElement): string {
 		const attr: TmplAstTextAttribute = element.attributes.find(attribute => attribute.name === 'translate');
+		return attr && attr.value || '';
+	}
+
+	protected getElementTranslateContextAttrValue(element: TmplAstElement): string {
+		const attr: TmplAstTextAttribute = element.attributes.find(attribute => attribute.name === 'translate-context');
+		return attr && attr.value || '';
+	}
+
+	protected getElementTranslateCommentAttrValue(element: TmplAstElement): string {
+		const attr: TmplAstTextAttribute = element.attributes.find(attribute => attribute.name === 'translate-comment');
 		return attr && attr.value || '';
 	}
 

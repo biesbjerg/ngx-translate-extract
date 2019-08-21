@@ -135,4 +135,4 @@ extractTask.setCompiler(compiler);
 
 extractTask.execute();
 
-console.log(donateMessage);
+//console.log(donateMessage);

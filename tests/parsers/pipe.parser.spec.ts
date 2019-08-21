@@ -13,7 +13,7 @@ describe('PipeParser', () => {
 	});
 
 	it('should only extract string using pipe', () => {
-		const contents = `<button [style.background]="'lime'">{{ 'SomeKey_NotWorking' | translate }}</button>`;
+		const contents = `<button [style.background]="'lime'">{{ 'SomeKey_NotWorking' | translate:null:"Country":"Maschine" }}</button>`;
 		const keys = parser.extract(contents, templateFilename).keys();
 		expect(keys).to.deep.equal(['SomeKey_NotWorking']);
 	});

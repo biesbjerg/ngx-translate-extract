@@ -1,5 +1,12 @@
+export interface TranslationData {
+	value: string;
+	context?: string;
+	reference?: string;
+	comment?: string;
+}
+
 export interface TranslationType {
-	[key: string]: string;
+	[key: string]: TranslationData;
 }
 
 export class TranslationCollection {
@@ -10,13 +17,13 @@ export class TranslationCollection {
 		this.values = values;
 	}
 
-	public add(key: string, val: string = ''): TranslationCollection {
-		return new TranslationCollection({ ...this.values, [key]: val });
+	public add(key: string, data: TranslationData ): TranslationCollection {
+		return new TranslationCollection({ ...this.values, [key]: data });
 	}
 
-	public addKeys(keys: string[]): TranslationCollection {
-		const values = keys.reduce((results, key) => {
-			results[key] = '';
+	public addKeys( keys: string[], data: TranslationData[] ): TranslationCollection {
+		const values = keys.reduce((results, key, i) => {
+			results[key] = data && data[ i ] ? data[ i ] : { value: '' };
 			return results;
 		}, {} as TranslationType);
 		return new TranslationCollection({ ...this.values, ...values });
@@ -26,25 +33,25 @@ export class TranslationCollection {
 		return this.filter(k => key !== k);
 	}
 
-	public forEach(callback: (key?: string, val?: string) => void): TranslationCollection {
+	public forEach(callback: (key?: string, data?: TranslationData) => void): TranslationCollection {
 		Object.keys(this.values).forEach(key => callback.call(this, key, this.values[key]));
 		return this;
 	}
 
-	public filter(callback: (key?: string, val?: string) => boolean): TranslationCollection {
+	public filter(callback: (key?: string, data?: TranslationData) => boolean): TranslationCollection {
 		let values: TranslationType = {};
-		this.forEach((key: string, val: string) => {
-			if (callback.call(this, key, val)) {
-				values[key] = val;
+		this.forEach((key: string, data: TranslationData) => {
+			if (callback.call(this, key, data)) {
+				values[key] = data;
 			}
 		});
 		return new TranslationCollection(values);
 	}
 
-	public map(callback: (key?: string, val?: string) => string): TranslationCollection {
+	public map(callback: (key?: string, data?: TranslationData) => string): TranslationCollection {
 		let values: TranslationType = {};
-		this.forEach((key: string, val: string) => {
-			values[key] = callback.call(this, key, val);
+		this.forEach((key: string, data: TranslationData) => {
+			values[key] = callback.call(this, key, data);
 		});
 		return new TranslationCollection(values);
 	}
@@ -56,8 +63,8 @@ export class TranslationCollection {
 	public intersect(collection: TranslationCollection): TranslationCollection {
 		let values: TranslationType = {};
 		this.filter(key => collection.has(key))
-			.forEach((key: string, val: string) => {
-				values[key] = val;
+			.forEach((key: string, data: TranslationData) => {
+				values[key] = data;
 			});
 
 		return new TranslationCollection(values);
@@ -67,7 +74,7 @@ export class TranslationCollection {
 		return this.values.hasOwnProperty(key);
 	}
 
-	public get(key: string): string {
+	public get(key: string): TranslationData {
 		return this.values[key];
 	}
 

@@ -22,9 +22,14 @@ export class FunctionParser extends AbstractAstParser implements ParserInterface
 
 		const callNodes = this.findCallNodes();
 		callNodes.forEach(callNode => {
-			const keys: string[] = this.getStringLiterals(callNode);
+			const keys: string[] = this.getStringLiterals(callNode, 0 );
+			const contextArr: string[] = this.getStringLiterals(callNode, 1 );
+			const commentArr: string[] = this.getStringLiterals(callNode, 2 );
+			const context: string = contextArr.length ? contextArr[ 0 ] : null;
+			const comment: string = commentArr.length ? commentArr[ 0 ] : null;
+
 			if (keys && keys.length) {
-				collection = collection.addKeys(keys);
+				collection = collection.addKeys( keys, keys.map( key => { return { value: '', reference: path, context: context, comment: comment }; } ) );
 			}
 		});
 		return collection;

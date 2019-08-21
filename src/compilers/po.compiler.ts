@@ -1,5 +1,5 @@
 import { CompilerInterface } from './compiler.interface';
-import { TranslationCollection, TranslationType } from '../utils/translation.collection';
+import { TranslationCollection, TranslationData, TranslationType } from '../utils/translation.collection';
 
 import * as gettext from 'gettext-parser';
 
@@ -24,11 +24,21 @@ export class PoCompiler implements CompilerInterface {
 			},
 			translations: {
 				[this.domain]: Object.keys(collection.values).reduce((translations, key) => {
+
+					const translationData: TranslationData = collection.get( key );
+
 					translations[key] = {
 						msgid: key,
-						msgstr: collection.get(key)
+						msgstr: translationData.value,
+						msgctxt: translationData.context ? translationData.context : undefined,
+						comments: {
+							translator: translationData.comment ? translationData.comment : undefined,
+							reference: translationData.reference ? translationData.reference : undefined
+						}
 					};
+
 					return translations;
+
 				}, {} as any)
 			}
 		};

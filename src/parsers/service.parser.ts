@@ -39,7 +39,7 @@ export class ServiceParser extends AbstractAstParser implements ParserInterface 
 			callNodes.forEach(callNode => {
 				const keys: string[] = this.getStringLiterals(callNode);
 				if (keys && keys.length) {
-					collection = collection.addKeys(keys);
+					collection = collection.addKeys(keys, keys.map( key => { return { value: '', reference: path }; } ));
 				}
 			});
 		});

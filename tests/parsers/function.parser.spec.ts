@@ -16,8 +16,8 @@ describe('FunctionParser', () => {
 	it('should extract strings using marker function', () => {
 		const contents = `
 			import { marker } from '@biesbjerg/ngx-translate-extract-marker';
-			marker('Hello world');
-			marker(['I', 'am', 'extracted']);
+			marker('Hello world', 'context1', 'comment1');
+			marker(['I', 'am', 'extracted'], 'context2', 'comment2');
 			otherFunction('But I am not');
 			marker(message || 'binary expression');
 			marker(message ? message : 'conditional operator');

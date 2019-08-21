@@ -18,12 +18,12 @@ export abstract class AbstractAstParser {
 	/**
 	 * Get strings from function call's first argument
 	 */
-	protected getStringLiterals(callNode: CallExpression): string[] {
-		if (!callNode.arguments.length) {
+	protected getStringLiterals(callNode: CallExpression, argumentNumber: number = 0): string[] {
+		if (!callNode.arguments.length || callNode.arguments.length - 1 < argumentNumber ) {
 			return[];
 		}
 
-		const firstArg = callNode.arguments[0];
+		const firstArg = callNode.arguments[argumentNumber];
 		return this.findNodes(firstArg, SyntaxKind.StringLiteral)
 			.map((node: StringLiteral) => node.text);
 	}
