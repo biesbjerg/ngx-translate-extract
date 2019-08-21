@@ -1,3 +1,5 @@
+import * as deepExtend from 'deep-extend';
+
 export interface TranslationData {
 	value: string;
 	context: string;
@@ -20,14 +22,14 @@ export class TranslationCollection {
 	}
 
 	public add(key: string, data: TranslationData ): TranslationCollection {
-		return new TranslationCollection( { ...this.values, ...this.assign( {}, key, data ) } );
+		return new TranslationCollection( deepExtend( this.values, this.assign( {}, key, data ) ) );
 	}
 
 	public addKeys( keys: string[], data: TranslationData[] ): TranslationCollection {
 		const values = keys.reduce((results, key, i) => {
 			return this.assign( results, key, data[i] );
 		}, {} as TranslationType);
-		return new TranslationCollection({ ...this.values, ...values });
+		return new TranslationCollection( deepExtend( this.values, values ) );
 	}
 
 	public remove(key: string): TranslationCollection {
@@ -61,7 +63,7 @@ export class TranslationCollection {
 	}
 
 	public union(collection: TranslationCollection): TranslationCollection {
-		return new TranslationCollection({ ...this.values, ...collection.values });
+		return new TranslationCollection( deepExtend( this.values, collection.values ) );
 	}
 
 	public intersect(collection: TranslationCollection): TranslationCollection {
