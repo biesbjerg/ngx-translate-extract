@@ -1,12 +1,11 @@
-If this tool saves you time, please consider making a donation towards the continued maintainence and development: https://donate.biesbjerg.com
-
-[![Donate](images/donate-badge.png)](https://donate.biesbjerg.com)
-
 # Usage
 
 ## ngx-translate-extract
 Extract translatable (ngx-translate) strings and save as a JSON or Gettext pot file.
 Merges with existing strings if the output file already exists.
+
+It's the fork of [@biesbjerg/ngx-translate-extract](https://github.com/biesbjerg/ngx-translate-extract).
+In this version added string **context** and **message** support feature.
 
 ### Usage
 Install the package in your project:
@@ -70,12 +69,66 @@ Add the `marker` argument when running the extract script:
 You can alias the marker function if needed:
 
 ```ts
-import { marker as _ } from '@biesbjerg/ngx-translate-extract-marker';
+import { marker as $ } from '@biesbjerg/ngx-translate-extract-marker';
 
-_('Extract me');
+$('Extract me');
+
+//Extract string with specific content and comment to translator
+$('Extract me', 'context', 'comment');
+
 ```
 
 `ngx-translate-extract ... -m _`
+
+## Context and comment support
+Sometimes you need to add a context for string.
+For example if you have absolutely the same string with different meaning.
+The real example is Georgia as country and Georgia as US state.
+To solve this problem was added two directives, additional pipe parameters and marker function parameters.
+
+#### Specify context and comment using directives
+Use `translate-context` directive to define translate context (Optional).\
+Use `translate-comment` directive to define translate comment (Optional).
+```html
+<div translate-context="US State" translate-comment="Please, translate it as US STATE." translate>
+  Georgia  
+</div>
+
+<div translate-context="Country" translate-comment="Please, translate it as COUNTRY." translate>
+    Georgia
+</div>
+
+```
+
+#### Specify context and comment using translate pipe parameters
+Set second `translate` pipe parameter to define context.\
+Set third `translate` pipe parameter to define comment.
+
+```html
+<div>
+  {{Georgia | translate:null:'US State':'Please, translate it as US STATE.'}}  
+</div>
+
+<div>
+  {{Georgia | translate:null:'Country':'Please, translate it as COUNTRY.'}} 
+</div>
+
+//If you need just define comment set context to empty string ''
+<div>
+  {{Once upon a time there was a tiny kingdom. | translate:null:'':'Translator, this comment for you!'}} 
+</div>
+
+```
+
+### Specify context and comment using marker function
+```ts
+    import { marker as $ } from '@biesbjerg/ngx-translate-extract-marker';
+    
+    $('Extract me');
+    
+    //Extract string with specific content and comment to translator
+    $('Extract me', 'context', 'comment');
+```
 
 ## Commandline arguments
 ```shell
@@ -97,7 +150,7 @@ Options:
   --marker, -m                Extract strings passed to a marker function
                                                        [string] [default: false]
   --format, -f                Output format
-          [string] [choices: "json", "namespaced-json", "pot"] [default: "json"]
+          [string] [choices: "json", "namespaced-json ( not supported in this version )", "pot"] [default: "json"]
   --format-indentation, --fi  Output format indentation   [string] [default: "	"]
   --replace, -r               Replace the contents of output file if it exists
                               (Merges by default)     [boolean] [default: false]
@@ -107,3 +160,6 @@ Options:
                                                       [boolean] [default: false]
   --key-as-default-value, -k  Use key as default value for translations
                                                       [boolean] [default: false]
+
+```
+
