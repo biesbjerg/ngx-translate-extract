@@ -15,6 +15,16 @@ export interface TranslationType {
 
 export class TranslationCollection {
 
+	public static assign( values: TranslationType, key: string, data: TranslationData ): TranslationType {
+		if ( values[ data.context ] ) {
+			values[ data.context ][ key ] = data;
+		} else {
+			values[ data.context ] = { [ key ]: data };
+		}
+
+		return values;
+	}
+
 	public values: TranslationType = {};
 
 	public constructor(values: TranslationType = {}) {
@@ -22,12 +32,12 @@ export class TranslationCollection {
 	}
 
 	public add(key: string, data: TranslationData ): TranslationCollection {
-		return new TranslationCollection( deepExtend( this.values, this.assign( {}, key, data ) ) );
+		return new TranslationCollection( deepExtend( this.values, TranslationCollection.assign( {}, key, data ) ) );
 	}
 
 	public addKeys( keys: string[], data: TranslationData[] ): TranslationCollection {
 		const values = keys.reduce((results, key, i) => {
-			return this.assign( results, key, data[i] );
+			return TranslationCollection.assign( results, key, data[i] );
 		}, {} as TranslationType);
 		return new TranslationCollection( deepExtend( this.values, values ) );
 	}
@@ -48,17 +58,19 @@ export class TranslationCollection {
 		let values: TranslationType = {};
 		this.forEach((key: string, data: TranslationData) => {
 			if (callback.call(this, key, data)) {
-				this.assign( values, key, data );
+				TranslationCollection.assign( values, key, data );
 			}
 		});
 		return new TranslationCollection(values);
 	}
 
 	public map(callback: (key?: string, data?: TranslationData) => TranslationData): TranslationCollection {
-		let values: TranslationType = {};
+		const values: TranslationType = {};
+
 		this.forEach((key: string, data: TranslationData) => {
-			this.assign( values, key, callback.call(this, key, data) );
+			TranslationCollection.assign( values, key, callback.call(this, key, data) );
 		});
+
 		return new TranslationCollection(values);
 	}
 
@@ -67,10 +79,11 @@ export class TranslationCollection {
 	}
 
 	public intersect(collection: TranslationCollection): TranslationCollection {
-		let values: TranslationType = {};
+
+		const values: TranslationType = {};
 		this.filter( (key, data) => collection.has(key, data.context))
 			.forEach((key: string, data: TranslationData) => {
-				this.assign( values, key, data);
+				TranslationCollection.assign( values, key, data);
 			});
 
 		return new TranslationCollection(values);
@@ -101,20 +114,10 @@ export class TranslationCollection {
 
 		Object.keys( this.values ).forEach( contextKey => {
 			this.keys( contextKey ).sort(compareFn).forEach((key) => {
-				this.assign( values, key, this.values[contextKey][key] );
+				TranslationCollection.assign( values, key, this.values[contextKey][key] );
 			});
 		} );
 
 		return new TranslationCollection(values);
-	}
-
-	private assign( values: TranslationType, key: string, data: TranslationData ): TranslationType {
-		if ( this.values[ data.context ] ) {
-			this.values[ data.context ][ key ] = data;
-		} else {
-			this.values[ data.context ] = { [ key ]: data };
-		}
-
-		return this.values;
 	}
 }

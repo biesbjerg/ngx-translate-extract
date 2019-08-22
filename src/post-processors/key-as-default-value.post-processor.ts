@@ -6,7 +6,7 @@ export class KeyAsDefaultValuePostProcessor implements PostProcessorInterface {
 	public name: string = 'KeyAsDefaultValue';
 
 	public process(draft: TranslationCollection, extracted: TranslationCollection, existing: TranslationCollection): TranslationCollection {
-		return draft.map((key, data) => ! data.value ? { ...data, ...{value: key} } : data );
+		return draft.map( (key, data) => ! data.value ? { ...data, ...{value: key, context: data.context} } : data );
 	}
 
 }

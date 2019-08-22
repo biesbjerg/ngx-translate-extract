@@ -7,11 +7,6 @@ export class PoCompiler implements CompilerInterface {
 
 	public extension: string = 'po';
 
-	/**
-	 * Translation domain
-	 */
-	public domain: string = '';
-
 	public constructor(options?: any) {}
 
 	public compile(collection: TranslationCollection): string {
@@ -40,8 +35,6 @@ export class PoCompiler implements CompilerInterface {
 
 			} ); } );
 
-		//console.log( collection.values[''] );
-
 		const data = {
 			charset: 'utf-8',
 			headers: {
@@ -59,16 +52,27 @@ export class PoCompiler implements CompilerInterface {
 		const collection = new TranslationCollection();
 
 		const po = gettext.po.parse(contents, 'utf8');
-		if (!po.translations.hasOwnProperty(this.domain)) {
+
+		if ( Object.keys( po.translations ).length === 0 ) {
 			return collection;
 		}
 
-		const values = Object.keys(po.translations[this.domain])
-			.filter(key => key.length > 0)
-			.reduce((values, key) => {
-				values[key] = po.translations[this.domain][key].msgstr.pop();
-				return values;
-			}, {} as TranslationType);
+		const values: TranslationType = {};
+
+		Object.keys( po.translations ).forEach( contextKey => {
+			Object.keys( po.translations[ contextKey ] ).forEach( key => {
+
+				const poValue = po.translations[ contextKey ][ key ];
+				const data: TranslationData = {
+					value: poValue.msgstr.pop(),
+					context: contextKey,
+					reference: poValue.comments ? poValue.comments.reference : undefined,
+					comment: poValue.comments ? poValue.comments.translator : undefined
+				};
+
+				TranslationCollection.assign( values, key, data );
+			} );
+		} );
 
 		return new TranslationCollection(values);
 	}

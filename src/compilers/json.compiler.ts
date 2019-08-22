@@ -1,8 +1,6 @@
 import { CompilerInterface } from './compiler.interface';
-import { TranslationCollection } from '../utils/translation.collection';
+import { TranslationCollection, TranslationData, TranslationType } from '../utils/translation.collection';
 import { stripBOM } from '../utils/utils';
-
-import { flatten } from 'flat';
 
 export class JsonCompiler implements CompilerInterface {
 
@@ -17,19 +15,47 @@ export class JsonCompiler implements CompilerInterface {
 	}
 
 	public compile(collection: TranslationCollection): string {
-		return JSON.stringify(collection.values, null, this.indentation);
+
+		const values: any = {};
+
+		Object.keys( collection.values ).forEach( contextKey => {
+			Object.keys( collection.values[ contextKey ] ).forEach( key => {
+
+				const data: TranslationData = collection.values[ contextKey ][ key ];
+
+				if ( contextKey.length === 0 ) {
+					values[ key ] = data.value;
+				} else {
+					if ( values[ contextKey ] ) {
+						values[ contextKey ][ key ] = data.value;
+					} else {
+						values[ contextKey ] = { [ key ]: data.value };
+					}
+				}
+			} );
+		});
+
+		return JSON.stringify( values, null, this.indentation );
 	}
 
 	public parse(contents: string): TranslationCollection {
-		let values: any = JSON.parse(stripBOM(contents));
-		if (this.isNamespacedJsonFormat(values)) {
-			values = flatten(values);
-		}
-		return new TranslationCollection(values);
-	}
 
-	protected isNamespacedJsonFormat(values: any): boolean {
-		return Object.keys(values).some(key => typeof values[key] === 'object');
-	}
+		const json = JSON.parse( stripBOM( contents ) );
 
+		const values: TranslationType = {};
+
+		Object.keys( json ).forEach( contextKey => {
+
+			// Has context
+			if ( typeof json[ contextKey ] === 'object' ) {
+				Object.keys( json[ contextKey ] ).forEach( key => {
+					TranslationCollection.assign( values, key, { value: json[ contextKey ][ key ], context: contextKey } );
+				} );
+			} else { // Doesn't have context
+				TranslationCollection.assign( values, contextKey, { value: json[ contextKey ], context: '' } );
+			}
+		} );
+
+		return new TranslationCollection( values );
+	}
 }
