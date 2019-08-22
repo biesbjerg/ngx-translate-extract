@@ -1,5 +1,5 @@
 {
-  "name": "@biesbjerg/ngx-translate-extract",
+  "name": "@topcon/ngx-translate-extract",
   "version": "3.0.2",
   "description": "Extract strings from projects using ngx-translate",
   "main": "dist/index.js",
@@ -20,7 +20,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/biesbjerg/ngx-translate-extract.git"
+    "url": "https://mos-git.topcon.com/scm/twc/ngx-translate-extract.git"
   },
   "keywords": [
     "angular",
@@ -33,12 +33,12 @@
     "i18n",
     "gettext"
   ],
-  "author": "Kim Biesbjerg <kim@biesbjerg.com>",
+  "author": "Kim Biesbjerg <kim@biesbjerg.com>, Denis Shavenzov <dshavenzov@topcon.com>",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/biesbjerg/ngx-translate-extract/issues"
+    "url": "https://tps-jira.topcon.com/projects/TWC"
   },
-  "homepage": "https://github.com/biesbjerg/ngx-translate-extract",
+  "homepage": "https://mos-git.topcon.com/projects/TWC/repos/ngx-translate-extract/browse",
   "engines": {
     "node": ">=4.3.2"
   },
