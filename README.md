@@ -120,7 +120,7 @@ Set third `translate` pipe parameter to define comment.
 
 ```
 
-### Specify context and comment using marker function
+#### Specify context and comment using marker function
 ```ts
     import { marker as $ } from '@biesbjerg/ngx-translate-extract-marker';
     
