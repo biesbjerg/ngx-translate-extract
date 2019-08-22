@@ -33,7 +33,7 @@
     "i18n",
     "gettext"
   ],
-  "author": "Kim Biesbjerg <kim@biesbjerg.com>, Denis Shavenzov <dshavenzov@topcon.com>",
+  "author": "Denis Shavenzov <dshavenzov@topcon.com>",
   "license": "MIT",
   "bugs": {
     "url": "https://tps-jira.topcon.com/projects/TWC"
