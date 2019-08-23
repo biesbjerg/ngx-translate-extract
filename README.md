@@ -5,7 +5,7 @@ Extract translatable (ngx-translate) strings and save as a JSON or Gettext pot f
 Merges with existing strings if the output file already exists.
 
 It's the fork of [@biesbjerg/ngx-translate-extract](https://github.com/biesbjerg/ngx-translate-extract).
-In this version added string **context** and **message** support feature.
+In this version added string **context** and **comment** support feature.
 
 ### Usage
 Install the package in your project:
