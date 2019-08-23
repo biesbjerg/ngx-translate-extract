@@ -6,7 +6,7 @@ import { parseTemplate, TmplAstNode, TmplAstElement, TmplAstTextAttribute } from
 
 export class DirectiveParser implements ParserInterface {
 
-	public extract(template: string, path: string): TranslationCollection {
+	public extract(template: string, path: string, relativePath?: string): TranslationCollection {
 		if (path && isPathAngularComponent(path)) {
 			template = extractComponentInlineTemplate(template);
 		}
@@ -19,7 +19,7 @@ export class DirectiveParser implements ParserInterface {
 			const context = this.getElementTranslateContextAttrValue( element );
 			const comment = this.getElementTranslateCommentAttrValue( element );
 
-			collection = collection.add( key, { value: '', reference: path, context: context, comment: comment } );
+			collection = collection.add( key, { value: '', reference: relativePath, context: context, comment: comment } );
 		});
 
 		return collection;

@@ -102,11 +102,14 @@ export class ExtractTask implements TaskInterface {
 	protected extract(): TranslationCollection {
 		let extracted: TranslationCollection = new TranslationCollection();
 		this.inputs.forEach(dir => {
+			//Replace window style slashes
+			dir = dir.replace( /\\/g, '/' );
+
 			this.readDir(dir, this.options.patterns).forEach(path => {
 				this.out(dim('- %s'), path);
 				const contents: string = fs.readFileSync(path, 'utf-8');
 				this.parsers.forEach(parser => {
-					extracted = extracted.union(parser.extract(contents, path));
+					extracted = extracted.union(parser.extract(contents, path, path.slice( path.indexOf( dir ) + dir.length ) ) );
 				});
 			});
 		});

@@ -15,7 +15,7 @@ export class FunctionParser extends AbstractAstParser implements ParserInterface
 		}
 	}
 
-	public extract(template: string, path: string): TranslationCollection {
+	public extract(template: string, path: string, relativePath?: string): TranslationCollection {
 		let collection: TranslationCollection = new TranslationCollection();
 
 		this.sourceFile = this.createSourceFile(path, template);
@@ -29,7 +29,7 @@ export class FunctionParser extends AbstractAstParser implements ParserInterface
 			const comment: string = commentArr.length ? commentArr[ 0 ] : null;
 
 			if (keys && keys.length) {
-				collection = collection.addKeys( keys, keys.map( key => { return { value: '', reference: path, context: context, comment: comment }; } ) );
+				collection = collection.addKeys( keys, keys.map( key => { return { value: '', reference: relativePath, context: context, comment: comment }; } ) );
 			}
 		});
 		return collection;

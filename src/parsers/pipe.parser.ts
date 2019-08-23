@@ -4,15 +4,15 @@ import { isPathAngularComponent, extractComponentInlineTemplate } from '../utils
 
 export class PipeParser implements ParserInterface {
 
-	public extract(template: string, path: string): TranslationCollection {
+	public extract(template: string, path: string, relativePath?: string): TranslationCollection {
 		if (path && isPathAngularComponent(path)) {
 			template = extractComponentInlineTemplate(template);
 		}
 
-		return this.parseTemplate(template, path);
+		return this.parseTemplate(template, relativePath);
 	}
 
-	protected parseTemplate(template: string, path: string): TranslationCollection {
+	protected parseTemplate(template: string, relativePath: string): TranslationCollection {
 		let collection: TranslationCollection = new TranslationCollection();
 
 		const regExp: RegExp = /(['"`])((?:(?!\1).|\\\1)+)\1\s*\|\s*translate(:.*:.*:?.*')?/g;
@@ -33,7 +33,7 @@ export class PipeParser implements ParserInterface {
 			 }
 			}
 
-			collection = collection.add(matches[2].split('\\\'').join('\''), { value: '', reference: path, context: context, comment: comment } );
+			collection = collection.add(matches[2].split('\\\'').join('\''), { value: '', reference: relativePath, context: context, comment: comment } );
 		}
 
 		return collection;

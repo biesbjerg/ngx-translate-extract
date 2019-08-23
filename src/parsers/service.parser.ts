@@ -19,7 +19,7 @@ export class ServiceParser extends AbstractAstParser implements ParserInterface 
 
 	protected sourceFile: SourceFile;
 
-	public extract(template: string, path: string): TranslationCollection {
+	public extract(template: string, path: string, relativePath?: string): TranslationCollection {
 		let collection: TranslationCollection = new TranslationCollection();
 
 		this.sourceFile = this.createSourceFile(path, template);
@@ -39,7 +39,7 @@ export class ServiceParser extends AbstractAstParser implements ParserInterface 
 			callNodes.forEach(callNode => {
 				const keys: string[] = this.getStringLiterals(callNode);
 				if (keys && keys.length) {
-					collection = collection.addKeys(keys, keys.map( key => { return { value: '', context: '', reference: path }; } ));
+					collection = collection.addKeys(keys, keys.map( key => { return { value: '', context: '', reference: relativePath }; } ));
 				}
 			});
 		});
