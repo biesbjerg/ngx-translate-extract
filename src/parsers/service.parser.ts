@@ -89,14 +89,14 @@ export class ServiceParser extends AbstractAstParser implements ParserInterface 
 	 * Find class nodes
 	 */
 	protected findClassNodes(node: Node): ClassDeclaration[] {
-		return this.findNodes(node, SyntaxKind.ClassDeclaration) as ClassDeclaration[];
+		return this.findNodes(node, [SyntaxKind.ClassDeclaration]) as ClassDeclaration[];
 	}
 
 	/**
 	 * Find constructor
 	 */
 	protected findConstructorNode(node: ClassDeclaration): ConstructorDeclaration {
-		const constructorNodes = this.findNodes(node, SyntaxKind.Constructor) as ConstructorDeclaration[];
+		const constructorNodes = this.findNodes(node, [SyntaxKind.Constructor]) as ConstructorDeclaration[];
 		if (constructorNodes) {
 			return constructorNodes[0];
 		}
@@ -106,7 +106,7 @@ export class ServiceParser extends AbstractAstParser implements ParserInterface 
 	 * Find all calls to TranslateService methods
 	 */
 	protected findCallNodes(node: Node, propertyIdentifier: string): CallExpression[] {
-		let callNodes = this.findNodes(node, SyntaxKind.CallExpression) as CallExpression[];
+		let callNodes = this.findNodes(node, [SyntaxKind.CallExpression]) as CallExpression[];
 		callNodes = callNodes
 			.filter(callNode => {
 				// Only call expressions with arguments

@@ -38,7 +38,7 @@ export class FunctionParser extends AbstractAstParser implements ParserInterface
 			node = this.sourceFile;
 		}
 
-		let callNodes = this.findNodes(node, SyntaxKind.CallExpression) as CallExpression[];
+		let callNodes = this.findNodes(node, [SyntaxKind.CallExpression]) as CallExpression[];
 		callNodes = callNodes
 			.filter(callNode => {
 				// Only call expressions with arguments

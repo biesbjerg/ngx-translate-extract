@@ -4,7 +4,8 @@ import {
 	CallExpression,
 	Node,
 	SyntaxKind,
-	StringLiteral
+	StringLiteral,
+	NoSubstitutionTemplateLiteral
 } from 'typescript';
 
 export abstract class AbstractAstParser {
@@ -24,19 +25,23 @@ export abstract class AbstractAstParser {
 		}
 
 		const firstArg = callNode.arguments[0];
-		return this.findNodes(firstArg, SyntaxKind.StringLiteral)
-			.map((node: StringLiteral) => node.text);
+
+		return this.findNodes(firstArg, [
+			SyntaxKind.StringLiteral,
+			SyntaxKind.NoSubstitutionTemplateLiteral
+		])
+		.map((node: StringLiteral | NoSubstitutionTemplateLiteral) => node.text);
 	}
 
 	/**
 	 * Find all child nodes of a kind
 	 */
-	protected findNodes(node: Node, kind: SyntaxKind): Node[] {
+	protected findNodes(node: Node, kinds: SyntaxKind[]): Node[] {
 		const childrenNodes: Node[] = node.getChildren(this.sourceFile);
-		const initialValue: Node[] = node.kind === kind ? [node] : [];
+		const initialValue: Node[] = kinds.includes(node.kind) ? [node] : [];
 
 		return childrenNodes.reduce((result: Node[], childNode: Node) => {
-			return result.concat(this.findNodes(childNode, kind));
+			return result.concat(this.findNodes(childNode, kinds));
 		}, initialValue);
 	}
 

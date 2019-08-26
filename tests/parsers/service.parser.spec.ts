@@ -122,6 +122,19 @@ describe('ServiceParser', () => {
 		expect(key).to.deep.equal(['Hello', 'World']);
 	});
 
+	it('should extract string arrays encapsulated in backticks', () => {
+		const contents = `
+			@Component({ })
+			export class AppComponent {
+				public constructor(protected _translateService: TranslateService) { }
+				public test() {
+					this._translateService.get([\`Hello\`, \`World\`]);
+				}
+		`;
+		const keys = parser.extract(contents, componentFilename).keys();
+		expect(keys).to.deep.equal(['Hello', 'World']);
+	});
+
 	it('should not extract strings in get()/instant()/stream() methods of other services', () => {
 		const contents = `
 			@Component({ })

@@ -5,10 +5,10 @@
         "noImplicitAny": true,
         "removeComments": true,
         "declaration": true,
-        "target": "es6",
+        "target": "es2015",
         "lib": [
             "dom",
-            "es2015"
+            "es2018"
         ],
         "module": "commonjs",
         "outDir": "./dist/",
