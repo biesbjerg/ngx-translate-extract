@@ -1,6 +1,6 @@
 {
   "name": "@topcon/ngx-translate-extract",
-  "version": "3.0.5",
+  "version": "3.0.6",
   "description": "Extract strings from projects using ngx-translate",
   "main": "dist/index.js",
   "typings": "dist/index.d.ts",

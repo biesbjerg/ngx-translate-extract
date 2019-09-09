@@ -5,7 +5,7 @@ import { ExtractTask } from './tasks/extract.task';
 import { ParserInterface } from '../parsers/parser.interface';
 import { PipeParser } from '../parsers/pipe.parser';
 import { DirectiveParser } from '../parsers/directive.parser';
-import { ServiceParser } from '../parsers/service.parser';
+//import { ServiceParser } from '../parsers/service.parser';
 import { FunctionParser } from '../parsers/function.parser';
 import { PostProcessorInterface } from '../post-processors/post-processor.interface';
 import { SortByKeyPostProcessor } from '../post-processors/sort-by-key.post-processor';
@@ -103,8 +103,8 @@ const extractTask = new ExtractTask(cli.input, cli.output, {
 // Parsers
 const parsers: ParserInterface[] = [
 	new PipeParser(),
-	new DirectiveParser(),
-	new ServiceParser()
+	new DirectiveParser()/*,
+	new ServiceParser()*/
 ];
 if (cli.marker) {
 	parsers.push(new FunctionParser({
