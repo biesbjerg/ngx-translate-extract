@@ -15,9 +15,17 @@ export class DirectiveParser implements ParserInterface {
 
 		const nodes: TmplAstNode[] = this.parseTemplate(template, path);
 		this.getTranslatableElements(nodes).forEach(element => {
-			const key = this.getElementTranslateAttrValue(element) || this.getElementContents(element);
+			let key = this.getElementTranslateAttrValue(element) || this.getElementContents(element);
 			const context = this.getElementTranslateContextAttrValue( element );
 			const comment = this.getElementTranslateCommentAttrValue( element );
+
+			if ( context ) {
+				if ( key.startsWith( context ) ) {
+					key = key.slice( context.length + 1 );
+				} else {
+					throw new Error( `Key "${key}" have to start with "${context}" because you set a context.` );
+				}
+			}
 
 			collection = collection.add( key, { value: '', reference: relativePath, context: context, comment: comment } );
 		});

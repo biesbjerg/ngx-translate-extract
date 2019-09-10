@@ -33,7 +33,17 @@ export class PipeParser implements ParserInterface {
 			 }
 			}
 
-			collection = collection.add(matches[2].split('\\\'').join('\''), { value: '', reference: relativePath, context: context, comment: comment } );
+			let key = matches[2].split('\\\'').join('\'');
+
+			if ( context ) {
+				if ( key.startsWith( context ) ) {
+					key = key.slice( context.length + 1 );
+				} else {
+					throw new Error( `Key "${key}" have to start with "${context}" because you set a context.` );
+				}
+			}
+
+			collection = collection.add( key, { value: '', reference: relativePath, context: context, comment: comment } );
 		}
 
 		return collection;
