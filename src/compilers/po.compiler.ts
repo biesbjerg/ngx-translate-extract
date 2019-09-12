@@ -22,7 +22,7 @@ export class PoCompiler implements CompilerInterface {
 					msgstr: data.value,
 					msgctxt: data.context ? data.context : undefined,
 					comments: {
-						translator: data.comment ? data.comment : undefined,
+						extracted: data.comment ? data.comment : undefined,
 						reference: data.reference ? data.reference : undefined
 					}
 				};
