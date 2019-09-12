@@ -91,11 +91,11 @@ Use `translate-context` directive to define translate context (Optional).\
 Use `translate-comment` directive to define translate comment (Optional).
 ```html
 <div translate-context="US State" translate-comment="Please, translate it as US STATE." translate>
-  Georgia  
+  US State.Georgia  
 </div>
 
 <div translate-context="Country" translate-comment="Please, translate it as COUNTRY." translate>
-    Georgia
+    Country.Georgia
 </div>
 
 ```
@@ -106,11 +106,11 @@ Set third `translate` pipe parameter to define comment.
 
 ```html
 <div>
-  {{Georgia | translate:null:'US State':'Please, translate it as US STATE.'}}  
+  {{'US State.Georgia' | translate:null:'US State':'Please, translate it as US STATE.'}}  
 </div>
 
 <div>
-  {{Georgia | translate:null:'Country':'Please, translate it as COUNTRY.'}} 
+  {{'Country.Georgia' | translate:null:'Country':'Please, translate it as COUNTRY.'}} 
 </div>
 
 //If you need just define comment set context to empty string ''
@@ -127,7 +127,7 @@ Set third `translate` pipe parameter to define comment.
     $('Extract me');
     
     //Extract string with specific content and comment to translator
-    $('Extract me', 'context', 'comment');
+    $('context.Extract me', 'context', 'comment');
 ```
 
 ## Commandline arguments
