@@ -68,31 +68,26 @@ export const cli = yargs
 	.option('replace', {
 		alias: 'r',
 		describe: 'Replace the contents of output file if it exists (Merges by default)',
-		default: false,
 		type: 'boolean'
 	})
 	.option('sort', {
 		alias: 's',
 		describe: 'Sort strings in alphabetical order when saving',
-		default: false,
 		type: 'boolean'
 	})
 	.option('clean', {
 		alias: 'c',
 		describe: 'Remove obsolete strings when merging',
-		default: false,
 		type: 'boolean'
 	})
 	.option('key-as-default-value', {
 		alias: 'k',
 		describe: 'Use key as default value for translations',
-		default: false,
 		type: 'boolean'
 	})
 	.option('null-as-default-value', {
 		alias: 'n',
 		describe: 'Use null as default value for translations',
-		default: false,
 		type: 'boolean'
 	})
 	.conflicts('key-as-default-value', 'null-as-default-value')
