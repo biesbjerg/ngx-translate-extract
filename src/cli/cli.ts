@@ -25,12 +25,13 @@ export const cli = yargs
 	.option('input', {
 		alias: 'i',
 		describe: 'Paths you would like to extract strings from. You can use path expansion, glob patterns and multiple paths',
-		default: process.env.PWD,
+		default: [process.env.PWD],
 		type: 'array',
-		normalize: true
+		normalize: true,
+		required: true
 	})
 	.check(options => {
-		(options.input as unknown as string[]).forEach((dir: string) => {
+		options.input.forEach((dir: string) => {
 			if (!fs.existsSync(dir) || !fs.statSync(dir).isDirectory()) {
 				throw new Error(`The path you supplied was not found: '${dir}'`);
 			}
@@ -98,7 +99,7 @@ export const cli = yargs
 	.exitProcess(true)
 	.parse(process.argv);
 
-const extractTask = new ExtractTask(cli.input as unknown as string[], cli.output, {
+const extractTask = new ExtractTask(cli.input, cli.output, {
 	replace: cli.replace,
 	patterns: cli.patterns
 });
