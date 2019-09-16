@@ -224,6 +224,7 @@ describe('ServiceParser', () => {
 						console.log(translations[variable]);
 					});
 				}
+			}
 		`;
 		const keys = parser.extract(contents, componentFilename).keys();
 		expect(keys).to.deep.equal(['yes']);
@@ -261,6 +262,41 @@ describe('ServiceParser', () => {
 		`;
 		const keys = parser.extract(contents, componentFilename).keys();
 		expect(keys).to.deep.equal(['Extract me!', 'Hello!']);
+	});
+
+	it('should extract strings when TranslateService is declared as a property', () => {
+		const contents = `
+			export class MyComponent {
+				protected translateService: TranslateService;
+				public constructor() {
+					this.translateService = new TranslateService();
+				}
+				public test() {
+					this.translateService.instant('Hello World');
+				}
+		`;
+		const keys = parser.extract(contents, componentFilename).keys();
+		expect(keys).to.deep.equal(['Hello World']);
+	});
+
+	it('should extract strings passed to TranslateServices methods only', () => {
+		const contents = `
+			export class AppComponent implements OnInit {
+				constructor(protected config: Config, protected translateService: TranslateService) {}
+
+				public ngOnInit(): void {
+					this.localizeBackButton();
+				}
+
+				protected localizeBackButton(): void {
+					this.translateService.onLangChange.subscribe((event: LangChangeEvent) => {
+						this.config.set('backButtonText', this.translateService.instant('Back'));
+					});
+				}
+			}
+		`;
+		const keys = parser.extract(contents, componentFilename).keys();
+		expect(keys).to.deep.equal(['Back']);
 	});
 
 });

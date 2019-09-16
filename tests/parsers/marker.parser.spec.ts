@@ -1,15 +1,15 @@
 import { expect } from 'chai';
 
-import { FunctionParser } from '../../src/parsers/function.parser';
+import { MarkerParser } from '../../src/parsers/marker.parser';
 
-describe('FunctionParser', () => {
+describe('MarkerParser', () => {
 
 	const componentFilename: string = 'test.component.ts';
 
-	let parser: FunctionParser;
+	let parser: MarkerParser;
 
 	beforeEach(() => {
-		parser = new FunctionParser();
+		parser = new MarkerParser();
 	});
 
 

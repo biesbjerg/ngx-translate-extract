@@ -100,17 +100,20 @@ export class ExtractTask implements TaskInterface {
 	 * Extract strings from specified input dirs using configured parsers
 	 */
 	protected extract(): TranslationCollection {
-		let extracted: TranslationCollection = new TranslationCollection();
+		let collection: TranslationCollection = new TranslationCollection();
 		this.inputs.forEach(dir => {
 			this.readDir(dir, this.options.patterns).forEach(path => {
 				this.out(dim('- %s'), path);
 				const contents: string = fs.readFileSync(path, 'utf-8');
 				this.parsers.forEach(parser => {
-					extracted = extracted.union(parser.extract(contents, path));
+					const extracted = parser.extract(contents, path);
+					if (extracted) {
+						collection = collection.union(extracted);
+					}
 				});
 			});
 		});
-		return extracted;
+		return collection;
 	}
 
 	/**

@@ -6,7 +6,7 @@ import { ParserInterface } from '../parsers/parser.interface';
 import { PipeParser } from '../parsers/pipe.parser';
 import { DirectiveParser } from '../parsers/directive.parser';
 import { ServiceParser } from '../parsers/service.parser';
-import { FunctionParser } from '../parsers/function.parser';
+import { MarkerParser } from '../parsers/marker.parser';
 import { PostProcessorInterface } from '../post-processors/post-processor.interface';
 import { SortByKeyPostProcessor } from '../post-processors/sort-by-key.post-processor';
 import { KeyAsDefaultValuePostProcessor } from '../post-processors/key-as-default-value.post-processor';
@@ -29,7 +29,7 @@ export const cli = yargs
 		normalize: true
 	})
 	.check(options => {
-		options.input.forEach((dir: string) => {
+		(options.input as unknown as string[]).forEach((dir: string) => {
 			if (!fs.existsSync(dir) || !fs.statSync(dir).isDirectory()) {
 				throw new Error(`The path you supplied was not found: '${dir}'`);
 			}
@@ -49,12 +49,6 @@ export const cli = yargs
 		type: 'array',
 		normalize: true,
 		required: true
-	})
-	.option('marker', {
-		alias: 'm',
-		describe: 'Extract strings passed to a marker function',
-		default: false,
-		type: 'string'
 	})
 	.option('format', {
 		alias: 'f',
@@ -96,7 +90,7 @@ export const cli = yargs
 	.exitProcess(true)
 	.parse(process.argv);
 
-const extractTask = new ExtractTask(cli.input, cli.output, {
+const extractTask = new ExtractTask(cli.input as unknown as string[], cli.output, {
 	replace: cli.replace,
 	patterns: cli.patterns
 });
@@ -105,13 +99,9 @@ const extractTask = new ExtractTask(cli.input, cli.output, {
 const parsers: ParserInterface[] = [
 	new PipeParser(),
 	new DirectiveParser(),
-	new ServiceParser()
+	new ServiceParser(),
+	new MarkerParser()
 ];
-if (cli.marker) {
-	parsers.push(new FunctionParser({
-		identifier: cli.marker
-	}));
-}
 extractTask.setParsers(parsers);
 
 // Post processors

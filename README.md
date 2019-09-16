@@ -52,7 +52,7 @@ If you want to use spaces instead, you can do the following:
 `ngx-translate-extract --input ./src --output ./src/i18n/en.json --format-indentation '  '`
 
 ## Mark strings for extraction using a marker function
-If, for some reason, you want to extract strings not passed directly to `TranslateService`'s `get()` or `instant()` methods, you can wrap them in a custom marker function to let `ngx-translate-extract` know you want to extract them.
+If, for some reason, you want to extract strings not passed directly to `TranslateService`'s `get()` or `instant()` methods, you can wrap them in a marker function to let `ngx-translate-extract` know you want to extract them.
 
 Install marker function:
 `npm install @biesbjerg/ngx-translate-extract-marker`
@@ -94,8 +94,6 @@ Options:
   --output, -o                Paths where you would like to save extracted
                               strings. You can use path expansion, glob patterns
                               and multiple paths              [array] [required]
-  --marker, -m                Extract strings passed to a marker function
-                                                       [string] [default: false]
   --format, -f                Output format
           [string] [choices: "json", "namespaced-json", "pot"] [default: "json"]
   --format-indentation, --fi  Output format indentation   [string] [default: "	"]
