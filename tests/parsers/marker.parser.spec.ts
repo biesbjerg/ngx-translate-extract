@@ -27,4 +27,19 @@ describe('MarkerParser', () => {
 		expect(keys).to.deep.equal(['Hello world', 'I', 'am', 'extracted', 'binary expression', 'conditional operator', 'FOO.bar']);
 	});
 
+	it('should extract split strings', () => {
+		const contents = `
+			import { marker as _ } from '@biesbjerg/ngx-translate-extract-marker';
+			_('Hello ' + 'world');
+			_('This is a ' + 'very ' + 'very ' + 'very ' + 'very ' + 'long line.');
+			_('Mix ' + \`of \` + 'different ' + \`types\`);
+		`;
+		const keys = parser.extract(contents, componentFilename).keys();
+		expect(keys).to.deep.equal([
+			'Hello world',
+			'This is a very very very very long line.',
+			'Mix of different types'
+		]);
+	});
+
 });
