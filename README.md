@@ -78,7 +78,7 @@ _('Extract me');
 `ngx-translate-extract ... -m _`
 
 ## Commandline arguments
-```shell
+```
 Usage:
 ngx-translate-extract [options]
 
@@ -89,23 +89,22 @@ Options:
                               can use path expansion, glob patterns and multiple
                               paths
                       [array] [default: current working path]
-  --patterns, -p              Extract strings from the following file patterns
+     [array] [required] [default: current working path]
+  --patterns, -p               Extract strings from the following file patterns
                                     [array] [default: ["/**/*.html","/**/*.ts"]]
-  --output, -o                Paths where you would like to save extracted
-                              strings. You can use path expansion, glob patterns
-                              and multiple paths              [array] [required]
-  --format, -f                Output format
+  --output, -o                 Paths where you would like to save extracted
+                               strings. You can use path expansion, glob
+                               patterns and multiple paths    [array] [required]
+  --format, -f                 Output format
           [string] [choices: "json", "namespaced-json", "pot"] [default: "json"]
-  --format-indentation, --fi  Output format indentation   [string] [default: "	"]
-  --replace, -r               Replace the contents of output file if it exists
-                              (Merges by default)     [boolean] [default: false]
-  --sort, -s                  Sort strings in alphabetical order when saving
-                                                      [boolean] [default: false]
-  --clean, -c                 Remove obsolete strings when merging
-                                                      [boolean] [default: false]
+  --format-indentation, --fi   Output format indentation  [string] [default: "	"]
+  --replace, -r                Replace the contents of output file if it exists
+                               (Merges by default)                     [boolean]
+  --sort, -s                   Sort strings in alphabetical order when saving
+                                                                       [boolean]
+  --clean, -c                  Remove obsolete strings when merging    [boolean]
   --key-as-default-value, -k   Use key as default value for translations
-                                                      [boolean] [default: false]
+                                                                       [boolean]
   --null-as-default-value, -n  Use null as default value for translations
-                                                      [boolean] [default: false]
-
-Arguments key-as-default-value and null-as-default-value are mutually exclusive
+                                                                       [boolean]
+```
