@@ -10,6 +10,7 @@ import { MarkerParser } from '../parsers/marker.parser';
 import { PostProcessorInterface } from '../post-processors/post-processor.interface';
 import { SortByKeyPostProcessor } from '../post-processors/sort-by-key.post-processor';
 import { KeyAsDefaultValuePostProcessor } from '../post-processors/key-as-default-value.post-processor';
+import { NullAsDefaultValuePostProcessor } from '../post-processors/null-as-default-value.post-processor';
 import { PurgeObsoleteKeysPostProcessor } from '../post-processors/purge-obsolete-keys.post-processor';
 import { CompilerInterface } from '../compilers/compiler.interface';
 import { CompilerFactory } from '../compilers/compiler.factory';
@@ -87,6 +88,13 @@ export const cli = yargs
 		default: false,
 		type: 'boolean'
 	})
+	.option('null-as-default-value', {
+		alias: 'n',
+		describe: 'Use null as default value for translations',
+		default: false,
+		type: 'boolean'
+	})
+	.conflicts('key-as-default-value', 'null-as-default-value')
 	.exitProcess(true)
 	.parse(process.argv);
 
@@ -111,6 +119,8 @@ if (cli.clean) {
 }
 if (cli.keyAsDefaultValue) {
 	postProcessors.push(new KeyAsDefaultValuePostProcessor());
+} else if (cli.nullAsDefaultValue) {
+	postProcessors.push(new NullAsDefaultValuePostProcessor());
 }
 if (cli.sort) {
 	postProcessors.push(new SortByKeyPostProcessor());

@@ -103,5 +103,9 @@ Options:
                                                       [boolean] [default: false]
   --clean, -c                 Remove obsolete strings when merging
                                                       [boolean] [default: false]
-  --key-as-default-value, -k  Use key as default value for translations
+  --key-as-default-value, -k   Use key as default value for translations
                                                       [boolean] [default: false]
+  --null-as-default-value, -n  Use null as default value for translations
+                                                      [boolean] [default: false]
+
+Arguments key-as-default-value and null-as-default-value are mutually exclusive
