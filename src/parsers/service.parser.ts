@@ -9,7 +9,7 @@ const TRANSLATE_SERVICE_METHOD_NAMES = ['get', 'instant', 'stream'];
 
 export class ServiceParser implements ParserInterface {
 
-	public extract(source: string, filePath: string): TranslationCollection {
+	public extract(source: string, filePath: string): TranslationCollection | null {
 		const sourceFile = tsquery.ast(source, filePath);
 
 		const classNodes = findClasses(sourceFile);

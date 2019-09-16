@@ -9,7 +9,7 @@ const MARKER_PACKAGE_IMPORT_NAME = 'marker';
 
 export class MarkerParser implements ParserInterface {
 
-	public extract(contents: string, filePath: string): TranslationCollection {
+	public extract(contents: string, filePath: string): TranslationCollection | null {
 		const sourceFile = tsquery.ast(contents, filePath);
 
 		const markerFnName = getNamedImportAlias(sourceFile, MARKER_PACKAGE_MODULE_NAME, MARKER_PACKAGE_IMPORT_NAME);
