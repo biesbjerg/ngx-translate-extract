@@ -2,7 +2,7 @@ import { tsquery } from '@phenomnomnominal/tsquery';
 
 import { ParserInterface } from './parser.interface';
 import { TranslationCollection } from '../utils/translation.collection';
-import { findClasses, findClassPropertyByType, findMethodCallExpression, getStringsFromExpression } from '../utils/ast-helpers';
+import { findClasses, findClassPropertyByType, findMethodCallExpressions, getStringsFromExpression } from '../utils/ast-helpers';
 
 const TRANSLATE_SERVICE_TYPE_REFERENCE = 'TranslateService';
 const TRANSLATE_SERVICE_METHOD_NAMES = ['get', 'instant', 'stream'];
@@ -25,7 +25,7 @@ export class ServiceParser implements ParserInterface {
 				return;
 			}
 
-			const callNodes = findMethodCallExpression(classNode, propName, TRANSLATE_SERVICE_METHOD_NAMES);
+			const callNodes = findMethodCallExpressions(classNode, propName, TRANSLATE_SERVICE_METHOD_NAMES);
 			callNodes.forEach(callNode => {
 				const [firstArgNode] = callNode.arguments;
 				if (!firstArgNode) {

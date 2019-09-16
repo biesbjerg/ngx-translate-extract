@@ -72,7 +72,7 @@ export function findFunctionCallExpressions(node: Node, fnName: string | string[
 	return nodes;
 }
 
-export function findMethodCallExpression(node: Node, prop: string, fnName: string | string[]): CallExpression[] {
+export function findMethodCallExpressions(node: Node, prop: string, fnName: string | string[]): CallExpression[] {
 	if (Array.isArray(fnName)) {
 		fnName = fnName.join('|');
 	}
