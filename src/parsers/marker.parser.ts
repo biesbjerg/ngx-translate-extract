@@ -12,20 +12,20 @@ export class MarkerParser implements ParserInterface {
 	public extract(contents: string, filePath: string): TranslationCollection | null {
 		const sourceFile = tsquery.ast(contents, filePath);
 
-		const markerFnName = getNamedImportAlias(sourceFile, MARKER_PACKAGE_MODULE_NAME, MARKER_PACKAGE_IMPORT_NAME);
-		if (!markerFnName) {
+		const markerImportName = getNamedImportAlias(sourceFile, MARKER_PACKAGE_MODULE_NAME, MARKER_PACKAGE_IMPORT_NAME);
+		if (!markerImportName) {
 			return;
 		}
 
 		let collection: TranslationCollection = new TranslationCollection();
 
-		const callNodes = findFunctionCallExpressions(sourceFile, markerFnName);
-		callNodes.forEach(callNode => {
-			const [firstArgNode] = callNode.arguments;
-			if (!firstArgNode) {
+		const callExpressions = findFunctionCallExpressions(sourceFile, markerImportName);
+		callExpressions.forEach(callExpression => {
+			const [firstArg] = callExpression.arguments;
+			if (!firstArg) {
 				return;
 			}
-			const strings = getStringsFromExpression(firstArgNode);
+			const strings = getStringsFromExpression(firstArg);
 			collection = collection.addKeys(strings);
 		});
 		return collection;

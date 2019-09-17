@@ -6,14 +6,14 @@ import { parseTemplate, TmplAstNode, TmplAstElement, TmplAstTextAttribute } from
 
 export class DirectiveParser implements ParserInterface {
 
-	public extract(template: string, path: string): TranslationCollection {
-		if (path && isPathAngularComponent(path)) {
-			template = extractComponentInlineTemplate(template);
+	public extract(source: string, filePath: string): TranslationCollection | null {
+		if (filePath && isPathAngularComponent(filePath)) {
+			source = extractComponentInlineTemplate(source);
 		}
 
 		let collection: TranslationCollection = new TranslationCollection();
 
-		const nodes: TmplAstNode[] = this.parseTemplate(template, path);
+		const nodes: TmplAstNode[] = this.parseTemplate(source, filePath);
 		this.getTranslatableElements(nodes).forEach(element => {
 			const key = this.getElementTranslateAttrValue(element) || this.getElementContents(element);
 			collection = collection.add(key);

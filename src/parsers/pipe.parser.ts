@@ -4,12 +4,12 @@ import { isPathAngularComponent, extractComponentInlineTemplate } from '../utils
 
 export class PipeParser implements ParserInterface {
 
-	public extract(template: string, path: string): TranslationCollection {
-		if (path && isPathAngularComponent(path)) {
-			template = extractComponentInlineTemplate(template);
+	public extract(source: string, filePath: string): TranslationCollection | null {
+		if (filePath && isPathAngularComponent(filePath)) {
+			source = extractComponentInlineTemplate(source);
 		}
 
-		return this.parseTemplate(template);
+		return this.parseTemplate(source);
 	}
 
 	protected parseTemplate(template: string): TranslationCollection {

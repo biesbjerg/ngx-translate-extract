@@ -36,7 +36,7 @@ export function getNamedImportAlias(node: Node, moduleName: string, importName: 
 	return null;
 }
 
-export function findClasses(node: Node): ClassDeclaration[] {
+export function findClassDeclarations(node: Node): ClassDeclaration[] {
 	const query = 'ClassDeclaration';
 	return tsquery<ClassDeclaration>(node, query);
 }
