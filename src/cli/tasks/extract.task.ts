@@ -107,7 +107,7 @@ export class ExtractTask implements TaskInterface {
 				const contents: string = fs.readFileSync(path, 'utf-8');
 				this.parsers.forEach(parser => {
 					const extracted = parser.extract(contents, path);
-					if (extracted) {
+					if (extracted instanceof TranslationCollection) {
 						collection = collection.union(extracted);
 					}
 				});
