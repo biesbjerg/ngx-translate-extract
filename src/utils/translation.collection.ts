@@ -57,8 +57,7 @@ export class TranslationCollection {
 
 	public intersect(collection: TranslationCollection): TranslationCollection {
 		const values: TranslationType = {};
-		this.filter(key => collection.has(key));
-		this.forEach((key, val) => {
+		this.filter(key => collection.has(key)).forEach((key, val) => {
 			values[key] = val;
 		});
 
