@@ -4,7 +4,6 @@ import { TranslationCollection, TranslationType } from '../utils/translation.col
 import * as gettext from 'gettext-parser';
 
 export class PoCompiler implements CompilerInterface {
-
 	public extension: string = 'po';
 
 	/**
@@ -23,13 +22,16 @@ export class PoCompiler implements CompilerInterface {
 				'content-transfer-encoding': '8bit'
 			},
 			translations: {
-				[this.domain]: Object.keys(collection.values).reduce((translations, key) => {
-					translations[key] = {
-						msgid: key,
-						msgstr: collection.get(key)
-					};
-					return translations;
-				}, {} as any)
+				[this.domain]: Object.keys(collection.values).reduce(
+					(translations, key) => {
+						translations[key] = {
+							msgid: key,
+							msgstr: collection.get(key)
+						};
+						return translations;
+					},
+					{} as any
+				)
 			}
 		};
 
@@ -46,12 +48,14 @@ export class PoCompiler implements CompilerInterface {
 
 		const values = Object.keys(po.translations[this.domain])
 			.filter(key => key.length > 0)
-			.reduce((values, key) => {
-				values[key] = po.translations[this.domain][key].msgstr.pop();
-				return values;
-			}, {} as TranslationType);
+			.reduce(
+				(result, key) => {
+					result[key] = po.translations[this.domain][key].msgstr.pop();
+					return result;
+				},
+				{} as TranslationType
+			);
 
 		return new TranslationCollection(values);
 	}
-
 }

@@ -3,7 +3,6 @@ export interface TranslationType {
 }
 
 export class TranslationCollection {
-
 	public values: TranslationType = {};
 
 	public constructor(values: TranslationType = {}) {
@@ -15,10 +14,13 @@ export class TranslationCollection {
 	}
 
 	public addKeys(keys: string[]): TranslationCollection {
-		const values = keys.reduce((results, key) => {
-			results[key] = '';
-			return results;
-		}, {} as TranslationType);
+		const values = keys.reduce(
+			(results, key) => {
+				results[key] = '';
+				return results;
+			},
+			{} as TranslationType
+		);
 		return new TranslationCollection({ ...this.values, ...values });
 	}
 
@@ -32,7 +34,7 @@ export class TranslationCollection {
 	}
 
 	public filter(callback: (key?: string, val?: string) => boolean): TranslationCollection {
-		let values: TranslationType = {};
+		const values: TranslationType = {};
 		this.forEach((key, val) => {
 			if (callback.call(this, key, val)) {
 				values[key] = val;
@@ -42,7 +44,7 @@ export class TranslationCollection {
 	}
 
 	public map(callback: (key?: string, val?: string) => string): TranslationCollection {
-		let values: TranslationType = {};
+		const values: TranslationType = {};
 		this.forEach((key, val) => {
 			values[key] = callback.call(this, key, val);
 		});
@@ -54,11 +56,11 @@ export class TranslationCollection {
 	}
 
 	public intersect(collection: TranslationCollection): TranslationCollection {
-		let values: TranslationType = {};
-		this.filter(key => collection.has(key))
-			this.forEach((key, val) => {
-				values[key] = val;
-			});
+		const values: TranslationType = {};
+		this.filter(key => collection.has(key));
+		this.forEach((key, val) => {
+			values[key] = val;
+		});
 
 		return new TranslationCollection(values);
 	}
@@ -84,10 +86,12 @@ export class TranslationCollection {
 	}
 
 	public sort(compareFn?: (a: string, b: string) => number): TranslationCollection {
-		let values: TranslationType = {};
-		this.keys().sort(compareFn).forEach((key) => {
-			values[key] = this.get(key);
-		});
+		const values: TranslationType = {};
+		this.keys()
+			.sort(compareFn)
+			.forEach(key => {
+				values[key] = this.get(key);
+			});
 
 		return new TranslationCollection(values);
 	}

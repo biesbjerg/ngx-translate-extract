@@ -77,7 +77,7 @@ export function findMethodCallExpressions(node: Node, prop: string, fnName: stri
 		fnName = fnName.join('|');
 	}
 	const query = `CallExpression > PropertyAccessExpression:has(Identifier[name=/^(${fnName})$/]):has(PropertyAccessExpression:has(Identifier[name="${prop}"]):has(ThisKeyword))`;
-	let nodes = tsquery<PropertyAccessExpression>(node, query).map(node => node.parent as CallExpression);
+	const nodes = tsquery<PropertyAccessExpression>(node, query).map(n => n.parent as CallExpression);
 	return nodes;
 }
 
@@ -89,10 +89,7 @@ export function getStringsFromExpression(expression: Expression): string[] {
 	if (isArrayLiteralExpression(expression)) {
 		return expression.elements.reduce((result: string[], element: Expression) => {
 			const strings = getStringsFromExpression(element);
-			return [
-				...result,
-				...strings
-			];
+			return [...result, ...strings];
 		}, []);
 	}
 

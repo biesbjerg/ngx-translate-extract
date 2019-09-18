@@ -16,7 +16,6 @@ export interface ExtractTaskOptionsInterface {
 }
 
 export class ExtractTask implements TaskInterface {
-
 	protected options: ExtractTaskOptionsInterface = {
 		replace: false,
 		patterns: []
@@ -102,11 +101,11 @@ export class ExtractTask implements TaskInterface {
 	protected extract(): TranslationCollection {
 		let collection: TranslationCollection = new TranslationCollection();
 		this.inputs.forEach(dir => {
-			this.readDir(dir, this.options.patterns).forEach(path => {
-				this.out(dim('- %s'), path);
-				const contents: string = fs.readFileSync(path, 'utf-8');
+			this.readDir(dir, this.options.patterns).forEach(filePath => {
+				this.out(dim('- %s'), filePath);
+				const contents: string = fs.readFileSync(filePath, 'utf-8');
 				this.parsers.forEach(parser => {
-					const extracted = parser.extract(contents, path);
+					const extracted = parser.extract(contents, filePath);
 					if (extracted instanceof TranslationCollection) {
 						collection = collection.union(extracted);
 					}
@@ -119,7 +118,11 @@ export class ExtractTask implements TaskInterface {
 	/**
 	 * Run strings through configured post processors
 	 */
-	protected process(draft: TranslationCollection, extracted: TranslationCollection, existing: TranslationCollection): TranslationCollection {
+	protected process(
+		draft: TranslationCollection,
+		extracted: TranslationCollection,
+		existing: TranslationCollection
+	): TranslationCollection {
 		this.postProcessors.forEach(postProcessor => {
 			draft = postProcessor.process(draft, extracted, existing);
 		});
@@ -143,8 +146,9 @@ export class ExtractTask implements TaskInterface {
 	 */
 	protected readDir(dir: string, patterns: string[]): string[] {
 		return patterns.reduce((results, pattern) => {
-			return glob.sync(dir + pattern)
-				.filter(path => fs.statSync(path).isFile())
+			return glob
+				.sync(dir + pattern)
+				.filter(filePath => fs.statSync(filePath).isFile())
 				.concat(results);
 		}, []);
 	}
@@ -178,5 +182,4 @@ export class ExtractTask implements TaskInterface {
 		this.out(cyan(dim(`- ${this.compiler.constructor.name}`)));
 		this.out();
 	}
-
 }
