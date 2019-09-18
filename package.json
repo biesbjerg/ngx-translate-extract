@@ -18,6 +18,24 @@
     "lint": "tslint --force './src/**/*.ts'",
     "test": "mocha -r ts-node/register tests/**/*.spec.ts"
   },
+  "husky": {
+    "hooks": {
+      "pre-commit": "lint-staged && npm test"
+    }
+  },
+  "prettier": {
+    "trailingComma": "none",
+    "printWidth": 145,
+    "useTabs": true,
+    "singleQuote": true
+  },
+  "lint-staged": {
+    "{src,tests}/**/*.{ts}": [
+      "tslint --project tsconfig.json -c tslint.commit.json --fix",
+      "prettier --write",
+      "git add"
+    ]
+  },
   "repository": {
     "type": "git",
     "url": "https://github.com/biesbjerg/ngx-translate-extract.git"
@@ -52,10 +70,15 @@
     "@types/node": "^12.7.5",
     "@types/yargs": "^13.0.2",
     "chai": "^4.2.0",
+    "husky": "^3.0.5",
+    "lint-staged": "^9.2.5",
     "mocha": "^6.2.0",
+    "prettier": "^1.18.2",
     "ts-node": "^8.4.1",
     "tslint": "^5.20.0",
-    "tslint-eslint-rules": "^5.4.0"
+    "tslint-config-prettier": "^1.18.0",
+    "tslint-eslint-rules": "^5.4.0",
+    "tslint-etc": "^1.7.0"
   },
   "bundledDependencies": [
     "flat"
