@@ -5,7 +5,6 @@ import { isPathAngularComponent, extractComponentInlineTemplate } from '../utils
 import { parseTemplate, TmplAstNode, TmplAstElement, TmplAstTextAttribute } from '@angular/compiler';
 
 export class DirectiveParser implements ParserInterface {
-
 	public extract(source: string, filePath: string): TranslationCollection | null {
 		if (filePath && isPathAngularComponent(filePath)) {
 			source = extractComponentInlineTemplate(source);
@@ -42,13 +41,16 @@ export class DirectiveParser implements ParserInterface {
 			return [node];
 		}
 
-		return node.children.reduce((result: TmplAstElement[], childNode: TmplAstNode) => {
-			if (this.isElement(childNode)) {
-				const children = this.findChildrenElements(childNode);
-				return result.concat(children);
-			}
-			return result;
-		}, [node]);
+		return node.children.reduce(
+			(result: TmplAstElement[], childNode: TmplAstNode) => {
+				if (this.isElement(childNode)) {
+					const children = this.findChildrenElements(childNode);
+					return result.concat(children);
+				}
+				return result;
+			},
+			[node]
+		);
 	}
 
 	protected parseTemplate(template: string, path: string): TmplAstNode[] {
@@ -56,9 +58,7 @@ export class DirectiveParser implements ParserInterface {
 	}
 
 	protected isElement(node: any): node is TmplAstElement {
-		return node
-			&& node.attributes !== undefined
-			&& node.children !== undefined;
+		return node && node.attributes !== undefined && node.children !== undefined;
 	}
 
 	protected isTranslatable(node: TmplAstNode): boolean {
@@ -70,7 +70,7 @@ export class DirectiveParser implements ParserInterface {
 
 	protected getElementTranslateAttrValue(element: TmplAstElement): string {
 		const attr: TmplAstTextAttribute = element.attributes.find(attribute => attribute.name === 'translate');
-		return attr && attr.value || '';
+		return (attr && attr.value) || '';
 	}
 
 	protected getElementContents(element: TmplAstElement): string {
@@ -79,5 +79,4 @@ export class DirectiveParser implements ParserInterface {
 		const end = element.endSourceSpan.start.offset;
 		return contents.substring(start, end).trim();
 	}
-
 }

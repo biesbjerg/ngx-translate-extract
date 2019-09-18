@@ -5,15 +5,14 @@ import { PurgeObsoleteKeysPostProcessor } from '../../src/post-processors/purge-
 import { TranslationCollection } from '../../src/utils/translation.collection';
 
 describe('PurgeObsoleteKeysPostProcessor', () => {
-
-	let processor: PostProcessorInterface;
+	let postProcessor: PostProcessorInterface;
 
 	beforeEach(() => {
-		processor = new PurgeObsoleteKeysPostProcessor();
+		postProcessor = new PurgeObsoleteKeysPostProcessor();
 	});
 
 	it('should purge obsolete keys', () => {
-		const collection = new TranslationCollection({
+		const draft = new TranslationCollection({
 			'I am completely new': '',
 			'I already exist': '',
 			'I already exist but was not present in extract': ''
@@ -27,10 +26,9 @@ describe('PurgeObsoleteKeysPostProcessor', () => {
 			'I already exist but was not present in extract': ''
 		});
 
-		expect(processor.process(collection, extracted, existing).values).to.deep.equal({
+		expect(postProcessor.process(draft, extracted, existing).values).to.deep.equal({
 			'I am completely new': '',
 			'I already exist': ''
 		});
 	});
-
 });

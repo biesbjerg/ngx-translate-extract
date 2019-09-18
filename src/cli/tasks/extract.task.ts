@@ -118,11 +118,7 @@ export class ExtractTask implements TaskInterface {
 	/**
 	 * Run strings through configured post processors
 	 */
-	protected process(
-		draft: TranslationCollection,
-		extracted: TranslationCollection,
-		existing: TranslationCollection
-	): TranslationCollection {
+	protected process(draft: TranslationCollection, extracted: TranslationCollection, existing: TranslationCollection): TranslationCollection {
 		this.postProcessors.forEach(postProcessor => {
 			draft = postProcessor.process(draft, extracted, existing);
 		});

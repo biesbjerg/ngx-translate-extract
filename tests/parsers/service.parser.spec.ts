@@ -2,12 +2,9 @@ import { expect } from 'chai';
 
 import { ServiceParser } from '../../src/parsers/service.parser';
 
-class TestServiceParser extends ServiceParser {
-
-}
+class TestServiceParser extends ServiceParser {}
 
 describe('ServiceParser', () => {
-
 	const componentFilename: string = 'test.component.ts';
 
 	let parser: TestServiceParser;
@@ -44,7 +41,7 @@ describe('ServiceParser', () => {
 		expect(keys).to.deep.equal(['Fallback message']);
 	});
 
-	it('should extract strings in TranslateService\'s get() method', () => {
+	it("should extract strings in TranslateService's get() method", () => {
 		const contents = `
 			@Component({ })
 			export class AppComponent {
@@ -57,7 +54,7 @@ describe('ServiceParser', () => {
 		expect(keys).to.deep.equal(['Hello World']);
 	});
 
-	it('should extract strings in TranslateService\'s instant() method', () => {
+	it("should extract strings in TranslateService's instant() method", () => {
 		const contents = `
 			@Component({ })
 			export class AppComponent {
@@ -70,7 +67,7 @@ describe('ServiceParser', () => {
 		expect(keys).to.deep.equal(['Hello World']);
 	});
 
-	it('should extract strings in TranslateService\'s stream() method', () => {
+	it("should extract strings in TranslateService's stream() method", () => {
 		const contents = `
 			@Component({ })
 			export class AppComponent {
@@ -83,7 +80,7 @@ describe('ServiceParser', () => {
 		expect(keys).to.deep.equal(['Hello World']);
 	});
 
-	it('should extract array of strings in TranslateService\'s get() method', () => {
+	it("should extract array of strings in TranslateService's get() method", () => {
 		const contents = `
 			@Component({ })
 			export class AppComponent {
@@ -96,7 +93,7 @@ describe('ServiceParser', () => {
 		expect(keys).to.deep.equal(['Hello', 'World']);
 	});
 
-	it('should extract array of strings in TranslateService\'s instant() method', () => {
+	it("should extract array of strings in TranslateService's instant() method", () => {
 		const contents = `
 			@Component({ })
 			export class AppComponent {
@@ -109,7 +106,7 @@ describe('ServiceParser', () => {
 		expect(key).to.deep.equal(['Hello', 'World']);
 	});
 
-	it('should extract array of strings in TranslateService\'s stream() method', () => {
+	it("should extract array of strings in TranslateService's stream() method", () => {
 		const contents = `
 			@Component({ })
 			export class AppComponent {
@@ -298,5 +295,4 @@ describe('ServiceParser', () => {
 		const keys = parser.extract(contents, componentFilename).keys();
 		expect(keys).to.deep.equal(['Back']);
 	});
-
 });

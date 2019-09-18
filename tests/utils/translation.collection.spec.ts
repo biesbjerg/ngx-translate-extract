@@ -3,7 +3,6 @@ import { expect } from 'chai';
 import { TranslationCollection } from '../../src/utils/translation.collection';
 
 describe('StringCollection', () => {
-
 	let collection: TranslationCollection;
 
 	beforeEach(() => {
@@ -64,12 +63,15 @@ describe('StringCollection', () => {
 	it('should merge with other collection', () => {
 		collection = collection.add('oldKey', 'oldVal');
 		const newCollection = new TranslationCollection({ newKey: 'newVal' });
-		expect(collection.union(newCollection).values).to.deep.equal({ oldKey: 'oldVal', newKey: 'newVal' });
+		expect(collection.union(newCollection).values).to.deep.equal({
+			oldKey: 'oldVal',
+			newKey: 'newVal'
+		});
 	});
 
 	it('should intersect with passed collection', () => {
 		collection = collection.addKeys(['red', 'green', 'blue']);
-		const newCollection = new TranslationCollection( { red: '', blue: '' });
+		const newCollection = new TranslationCollection({ red: '', blue: '' });
 		expect(collection.intersect(newCollection).values).to.deep.equal({ red: '', blue: '' });
 	});
 
@@ -88,7 +90,10 @@ describe('StringCollection', () => {
 	it('should map values', () => {
 		collection = new TranslationCollection({ red: 'rød', green: 'grøn', blue: 'blå' });
 		collection = collection.map((key, val) => 'mapped value');
-		expect(collection.values).to.deep.equal({ red: 'mapped value', green: 'mapped value', blue: 'mapped value' });
+		expect(collection.values).to.deep.equal({
+			red: 'mapped value',
+			green: 'mapped value',
+			blue: 'mapped value'
+		});
 	});
-
 });

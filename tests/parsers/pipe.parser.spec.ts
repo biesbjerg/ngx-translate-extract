@@ -3,7 +3,6 @@ import { expect } from 'chai';
 import { PipeParser } from '../../src/parsers/pipe.parser';
 
 describe('PipeParser', () => {
-
 	const templateFilename: string = 'test.template.html';
 
 	let parser: PipeParser;
@@ -118,5 +117,4 @@ describe('PipeParser', () => {
 		const keys = parser.extract(contents, templateFilename).keys();
 		expect(keys).to.deep.equal(['message']);
 	});
-
 });

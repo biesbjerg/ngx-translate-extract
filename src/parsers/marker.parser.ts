@@ -8,7 +8,6 @@ const MARKER_MODULE_NAME = '@biesbjerg/ngx-translate-extract-marker';
 const MARKER_IMPORT_NAME = 'marker';
 
 export class MarkerParser implements ParserInterface {
-
 	public extract(source: string, filePath: string): TranslationCollection | null {
 		const sourceFile = tsquery.ast(source, filePath);
 
@@ -30,5 +29,4 @@ export class MarkerParser implements ParserInterface {
 		});
 		return collection;
 	}
-
 }

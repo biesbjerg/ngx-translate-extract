@@ -2,7 +2,7 @@
  * Assumes file is an Angular component if type is javascript/typescript
  */
 export function isPathAngularComponent(path: string): boolean {
-	return (/\.ts|js$/i).test(path);
+	return /\.ts|js$/i.test(path);
 }
 
 /**

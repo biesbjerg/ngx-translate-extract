@@ -3,7 +3,6 @@ import { TranslationCollection } from '../utils/translation.collection';
 import { isPathAngularComponent, extractComponentInlineTemplate } from '../utils/utils';
 
 export class PipeParser implements ParserInterface {
-
 	public extract(source: string, filePath: string): TranslationCollection | null {
 		if (filePath && isPathAngularComponent(filePath)) {
 			source = extractComponentInlineTemplate(source);
@@ -17,11 +16,10 @@ export class PipeParser implements ParserInterface {
 
 		const regExp: RegExp = /(['"`])((?:(?!\1).|\\\1)+)\1\s*\|\s*translate/g;
 		let matches: RegExpExecArray;
-		while (matches = regExp.exec(template)) {
-			collection = collection.add(matches[2].split('\\\'').join('\''));
+		while ((matches = regExp.exec(template))) {
+			collection = collection.add(matches[2].split("\\'").join("'"));
 		}
 
 		return collection;
 	}
-
 }

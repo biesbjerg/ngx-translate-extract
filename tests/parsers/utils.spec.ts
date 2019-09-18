@@ -3,7 +3,6 @@ import { expect } from 'chai';
 import { isPathAngularComponent, extractComponentInlineTemplate } from '../../src/utils/utils';
 
 describe('Utils', () => {
-
 	it('should recognize js extension as angular component', () => {
 		const result = isPathAngularComponent('test.js');
 		expect(result).to.equal(true);
@@ -63,5 +62,4 @@ describe('Utils', () => {
 		const template = extractComponentInlineTemplate(contents);
 		expect(template).to.equal('\n\t\t\t\t\t<p>\n\t\t\t\t\t\tHello World\n\t\t\t\t\t</p>\n\t\t\t\t');
 	});
-
 });

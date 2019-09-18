@@ -4,7 +4,6 @@ import { TranslationCollection } from '../../src/utils/translation.collection';
 import { NamespacedJsonCompiler } from '../../src/compilers/namespaced-json.compiler';
 
 describe('NamespacedJsonCompiler', () => {
-
 	let compiler: NamespacedJsonCompiler;
 
 	beforeEach(() => {
@@ -23,7 +22,10 @@ describe('NamespacedJsonCompiler', () => {
 			}
 		`;
 		const collection: TranslationCollection = compiler.parse(contents);
-		expect(collection.values).to.deep.equal({'NAMESPACE.KEY.FIRST_KEY': '', 'NAMESPACE.KEY.SECOND_KEY': 'VALUE' });
+		expect(collection.values).to.deep.equal({
+			'NAMESPACE.KEY.FIRST_KEY': '',
+			'NAMESPACE.KEY.SECOND_KEY': 'VALUE'
+		});
 	});
 
 	it('should unflatten keys on compile', () => {
@@ -59,11 +61,10 @@ describe('NamespacedJsonCompiler', () => {
 
 	it('should not reorder keys when compiled', () => {
 		const collection = new TranslationCollection({
-			'BROWSE': '',
-			'LOGIN': ''
+			BROWSE: '',
+			LOGIN: ''
 		});
 		const result: string = compiler.compile(collection);
 		expect(result).to.equal('{\n\t"BROWSE": "",\n\t"LOGIN": ""\n}');
 	});
-
 });

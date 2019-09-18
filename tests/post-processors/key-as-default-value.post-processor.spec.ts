@@ -5,7 +5,6 @@ import { KeyAsDefaultValuePostProcessor } from '../../src/post-processors/key-as
 import { TranslationCollection } from '../../src/utils/translation.collection';
 
 describe('KeyAsDefaultValuePostProcessor', () => {
-
 	let processor: PostProcessorInterface;
 
 	beforeEach(() => {
@@ -27,5 +26,4 @@ describe('KeyAsDefaultValuePostProcessor', () => {
 			'Use this key as value as well': 'Use this key as value as well'
 		});
 	});
-
 });

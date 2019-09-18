@@ -5,7 +5,6 @@ import { stripBOM } from '../utils/utils';
 import { flatten, unflatten } from 'flat';
 
 export class NamespacedJsonCompiler implements CompilerInterface {
-
 	public indentation: string = '\t';
 
 	public extension = 'json';
@@ -27,5 +26,4 @@ export class NamespacedJsonCompiler implements CompilerInterface {
 		const values: {} = flatten(JSON.parse(stripBOM(contents)));
 		return new TranslationCollection(values);
 	}
-
 }

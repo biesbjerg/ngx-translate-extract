@@ -35,7 +35,6 @@ export const cli = yargs
 			if (!fs.existsSync(dir) || !fs.statSync(dir).isDirectory()) {
 				throw new Error(`The path you supplied was not found: '${dir}'`);
 			}
-
 		});
 		return true;
 	})
@@ -100,12 +99,7 @@ const extractTask = new ExtractTask(cli.input, cli.output, {
 });
 
 // Parsers
-const parsers: ParserInterface[] = [
-	new PipeParser(),
-	new DirectiveParser(),
-	new ServiceParser(),
-	new MarkerParser()
-];
+const parsers: ParserInterface[] = [new PipeParser(), new DirectiveParser(), new ServiceParser(), new MarkerParser()];
 extractTask.setParsers(parsers);
 
 // Post processors

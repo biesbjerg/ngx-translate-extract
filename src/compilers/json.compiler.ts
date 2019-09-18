@@ -5,7 +5,6 @@ import { stripBOM } from '../utils/utils';
 import { flatten } from 'flat';
 
 export class JsonCompiler implements CompilerInterface {
-
 	public indentation: string = '\t';
 
 	public extension: string = 'json';
@@ -31,5 +30,4 @@ export class JsonCompiler implements CompilerInterface {
 	protected isNamespacedJsonFormat(values: any): boolean {
 		return Object.keys(values).some(key => typeof values[key] === 'object');
 	}
-
 }

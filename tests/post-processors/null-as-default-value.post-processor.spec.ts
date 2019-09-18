@@ -5,7 +5,6 @@ import { NullAsDefaultValuePostProcessor } from '../../src/post-processors/null-
 import { TranslationCollection } from '../../src/utils/translation.collection';
 
 describe('NullAsDefaultValuePostProcessor', () => {
-
 	let processor: PostProcessorInterface;
 
 	beforeEach(() => {
@@ -38,5 +37,4 @@ describe('NullAsDefaultValuePostProcessor', () => {
 			'String A': 'Streng A'
 		});
 	});
-
 });

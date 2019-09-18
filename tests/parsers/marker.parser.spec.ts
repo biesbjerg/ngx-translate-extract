@@ -3,7 +3,6 @@ import { expect } from 'chai';
 import { MarkerParser } from '../../src/parsers/marker.parser';
 
 describe('MarkerParser', () => {
-
 	const componentFilename: string = 'test.component.ts';
 
 	let parser: MarkerParser;
@@ -11,7 +10,6 @@ describe('MarkerParser', () => {
 	beforeEach(() => {
 		parser = new MarkerParser();
 	});
-
 
 	it('should extract strings using marker function', () => {
 		const contents = `
@@ -35,11 +33,6 @@ describe('MarkerParser', () => {
 			_('Mix ' + \`of \` + 'different ' + \`types\`);
 		`;
 		const keys = parser.extract(contents, componentFilename).keys();
-		expect(keys).to.deep.equal([
-			'Hello world',
-			'This is a very very very very long line.',
-			'Mix of different types'
-		]);
+		expect(keys).to.deep.equal(['Hello world', 'This is a very very very very long line.', 'Mix of different types']);
 	});
-
 });

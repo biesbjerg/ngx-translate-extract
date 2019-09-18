@@ -3,7 +3,6 @@ import { expect } from 'chai';
 import { DirectiveParser } from '../../src/parsers/directive.parser';
 
 describe('DirectiveParser', () => {
-
 	const templateFilename: string = 'test.template.html';
 	const componentFilename: string = 'test.component.ts';
 
@@ -86,5 +85,4 @@ describe('DirectiveParser', () => {
 		const keys = parser.extract(contents, componentFilename).keys();
 		expect(keys).to.deep.equal([]);
 	});
-
 });

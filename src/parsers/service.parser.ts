@@ -8,7 +8,6 @@ const TRANSLATE_SERVICE_TYPE_REFERENCE = 'TranslateService';
 const TRANSLATE_SERVICE_METHOD_NAMES = ['get', 'instant', 'stream'];
 
 export class ServiceParser implements ParserInterface {
-
 	public extract(source: string, filePath: string): TranslationCollection | null {
 		const sourceFile = tsquery.ast(source, filePath);
 
@@ -37,5 +36,4 @@ export class ServiceParser implements ParserInterface {
 		});
 		return collection;
 	}
-
 }
