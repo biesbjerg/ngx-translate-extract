@@ -33,7 +33,7 @@ export class TranslationCollection {
 
 	public filter(callback: (key?: string, val?: string) => boolean): TranslationCollection {
 		let values: TranslationType = {};
-		this.forEach((key: string, val: string) => {
+		this.forEach((key, val) => {
 			if (callback.call(this, key, val)) {
 				values[key] = val;
 			}
@@ -43,7 +43,7 @@ export class TranslationCollection {
 
 	public map(callback: (key?: string, val?: string) => string): TranslationCollection {
 		let values: TranslationType = {};
-		this.forEach((key: string, val: string) => {
+		this.forEach((key, val) => {
 			values[key] = callback.call(this, key, val);
 		});
 		return new TranslationCollection(values);
@@ -56,7 +56,7 @@ export class TranslationCollection {
 	public intersect(collection: TranslationCollection): TranslationCollection {
 		let values: TranslationType = {};
 		this.filter(key => collection.has(key))
-			.forEach((key: string, val: string) => {
+			this.forEach((key, val) => {
 				values[key] = val;
 			});
 

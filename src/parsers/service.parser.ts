@@ -14,7 +14,7 @@ export class ServiceParser implements ParserInterface {
 
 		const classDeclarations = findClassDeclarations(sourceFile);
 		if (!classDeclarations) {
-			return;
+			return null;
 		}
 
 		let collection: TranslationCollection = new TranslationCollection();

@@ -22,7 +22,7 @@ export function getNamedImports(node: Node, moduleName: string): NamedImports[] 
 export function getNamedImportAlias(node: Node, moduleName: string, importName: string): string | null {
 	const [namedImportNode] = getNamedImports(node, moduleName);
 	if (!namedImportNode) {
-		return;
+		return null;
 	}
 
 	const query = `ImportSpecifier:has(Identifier[name="${importName}"]) > Identifier`;
@@ -88,7 +88,7 @@ export function getStringsFromExpression(expression: Expression): string[] {
 
 	if (isArrayLiteralExpression(expression)) {
 		return expression.elements.reduce((result: string[], element: Expression) => {
-			const strings = this.getStringsFromExpression(element);
+			const strings = getStringsFromExpression(element);
 			return [
 				...result,
 				...strings
@@ -97,8 +97,8 @@ export function getStringsFromExpression(expression: Expression): string[] {
 	}
 
 	if (isBinaryExpression(expression)) {
-		const [left] = this.getStringsFromExpression(expression.left);
-		const [right] = this.getStringsFromExpression(expression.right);
+		const [left] = getStringsFromExpression(expression.left);
+		const [right] = getStringsFromExpression(expression.right);
 
 		if (expression.operatorToken.kind === SyntaxKind.PlusToken) {
 			if (typeof left === 'string' && typeof right === 'string') {
@@ -119,8 +119,8 @@ export function getStringsFromExpression(expression: Expression): string[] {
 	}
 
 	if (isConditionalExpression(expression)) {
-		const [whenTrue] = this.getStringsFromExpression(expression.whenTrue);
-		const [whenFalse] = this.getStringsFromExpression(expression.whenFalse);
+		const [whenTrue] = getStringsFromExpression(expression.whenTrue);
+		const [whenFalse] = getStringsFromExpression(expression.whenFalse);
 
 		const result = [];
 		if (typeof whenTrue === 'string') {

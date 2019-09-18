@@ -9,12 +9,12 @@ const MARKER_IMPORT_NAME = 'marker';
 
 export class MarkerParser implements ParserInterface {
 
-	public extract(contents: string, filePath: string): TranslationCollection | null {
-		const sourceFile = tsquery.ast(contents, filePath);
+	public extract(source: string, filePath: string): TranslationCollection | null {
+		const sourceFile = tsquery.ast(source, filePath);
 
 		const markerImportName = getNamedImportAlias(sourceFile, MARKER_MODULE_NAME, MARKER_IMPORT_NAME);
 		if (!markerImportName) {
-			return;
+			return null;
 		}
 
 		let collection: TranslationCollection = new TranslationCollection();
