@@ -2,15 +2,13 @@ import { expect } from 'chai';
 
 import { ServiceParser } from '../../src/parsers/service.parser';
 
-class TestServiceParser extends ServiceParser {}
-
 describe('ServiceParser', () => {
 	const componentFilename: string = 'test.component.ts';
 
-	let parser: TestServiceParser;
+	let parser: ServiceParser;
 
 	beforeEach(() => {
-		parser = new TestServiceParser();
+		parser = new ServiceParser();
 	});
 
 	it('should support extracting binary expressions', () => {
