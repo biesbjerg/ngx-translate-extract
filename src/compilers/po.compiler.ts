@@ -24,11 +24,13 @@ export class PoCompiler implements CompilerInterface {
 			translations: {
 				[this.domain]: Object.keys(collection.values).reduce(
 					(translations, key) => {
-						translations[key] = {
-							msgid: key,
-							msgstr: collection.get(key)
+						return {
+							...translations,
+							[key]: {
+								msgid: key,
+								msgstr: collection.get(key)
+							}
 						};
-						return translations;
 					},
 					{} as any
 				)
@@ -50,8 +52,10 @@ export class PoCompiler implements CompilerInterface {
 			.filter(key => key.length > 0)
 			.reduce(
 				(result, key) => {
-					result[key] = po.translations[this.domain][key].msgstr.pop();
-					return result;
+					return {
+						...result,
+						[key]: po.translations[this.domain][key].msgstr.pop()
+					};
 				},
 				{} as TranslationType
 			);
