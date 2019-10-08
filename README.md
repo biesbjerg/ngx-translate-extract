@@ -77,13 +77,12 @@ Usage:
 ngx-translate-extract [options]
 
 Options:
-  --version, -v               Show version number                      [boolean]
-  --help, -h                  Show help                                [boolean]
-  --input, -i                 Paths you would like to extract strings from. You
-                              can use path expansion, glob patterns and multiple
-                              paths
-                      [array] [default: current working path]
-     [array] [required] [default: current working path]
+  --version, -v                Show version number                     [boolean]
+  --help, -h                   Show help                               [boolean]
+  --input, -i                  Paths you would like to extract strings from. You
+                               can use path expansion, glob patterns and
+                               multiple paths
+                                            [array] [required] [default: [null]]
   --patterns, -p               Extract strings from the following file patterns
                                     [array] [default: ["/**/*.html","/**/*.ts"]]
   --output, -o                 Paths where you would like to save extracted
@@ -91,7 +90,9 @@ Options:
                                patterns and multiple paths    [array] [required]
   --format, -f                 Output format
           [string] [choices: "json", "namespaced-json", "pot"] [default: "json"]
-  --format-indentation, --fi   Output format indentation  [string] [default: "	"]
+  --format-indentation, --fi   Output format indentation  [string] [default: "  "]
+  --newline-at-eof, --fn       Adds newline to the end of output
+                                                      [boolean] [default: false]
   --replace, -r                Replace the contents of output file if it exists
                                (Merges by default)                     [boolean]
   --sort, -s                   Sort strings in alphabetical order when saving

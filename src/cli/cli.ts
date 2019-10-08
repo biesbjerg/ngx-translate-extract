@@ -64,6 +64,12 @@ export const cli = yargs
 		default: '\t',
 		type: 'string'
 	})
+	.option('newline-at-eof', {
+		alias: 'fn',
+		describe: 'Adds newline to the end of output',
+		default: false,
+		type: 'boolean'
+	})
 	.option('replace', {
 		alias: 'r',
 		describe: 'Replace the contents of output file if it exists (Merges by default)',
@@ -119,7 +125,8 @@ extractTask.setPostProcessors(postProcessors);
 
 // Compiler
 const compiler: CompilerInterface = CompilerFactory.create(cli.format, {
-	indentation: cli.formatIndentation
+	indentation: cli.formatIndentation,
+	newlineAtEndOfFile: cli.newlineAtEof
 });
 extractTask.setCompiler(compiler);
 

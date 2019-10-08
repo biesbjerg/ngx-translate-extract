@@ -59,6 +59,19 @@ describe('NamespacedJsonCompiler', () => {
 		expect(result).to.equal('{\n  "NAMESPACE": {\n    "KEY": {\n      "FIRST_KEY": "",\n      "SECOND_KEY": "VALUE"\n    }\n  }\n}');
 	});
 
+	it('should add newline to end of file when requested', () => {
+		const collection = new TranslationCollection({
+			'NAMESPACE.KEY.FIRST_KEY': '',
+			'NAMESPACE.KEY.SECOND_KEY': 'VALUE'
+		});
+		const customCompiler = new NamespacedJsonCompiler({
+			indentation: '  ',
+            newlineAtEndOfFile : true
+		});
+		const result: string = customCompiler.compile(collection);
+		expect(result).to.equal('{\n  "NAMESPACE": {\n    "KEY": {\n      "FIRST_KEY": "",\n      "SECOND_KEY": "VALUE"\n    }\n  }\n}\n');
+	});
+
 	it('should not reorder keys when compiled', () => {
 		const collection = new TranslationCollection({
 			BROWSE: '',
