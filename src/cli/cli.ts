@@ -89,13 +89,19 @@ export const cli = yargs
 		describe: 'Use null as default value for translations',
 		type: 'boolean'
 	})
+	.option('verbose', {
+		alias: 'vb',
+		describe: 'Show details about result of extraction',
+		type: 'boolean'
+	})
 	.conflicts('key-as-default-value', 'null-as-default-value')
 	.exitProcess(true)
 	.parse(process.argv);
 
 const extractTask = new ExtractTask(cli.input, cli.output, {
 	replace: cli.replace,
-	patterns: cli.patterns
+	patterns: cli.patterns,
+	verbose: cli.verbose
 });
 
 // Parsers
