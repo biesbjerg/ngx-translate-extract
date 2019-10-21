@@ -68,10 +68,6 @@ export class ExtractTask implements TaskInterface {
 			// merge extracted strings with existing
 			const draft = extracted.union(existing);
 
-			if (!this.options.replace) {
-				this.out(green(`\nFound %d new strings.\n`), draft.count() - existing.count());
-			}
-
 			if (existing.isEmpty()) {
 				this.out(dim(`- ${outputPath}`));
 			} else {
@@ -80,6 +76,11 @@ export class ExtractTask implements TaskInterface {
 
 			// Run collection through post processors
 			const final = this.process(draft, extracted, existing);
+
+			if (!this.options.replace) {
+				this.out(green(`\nFound %d new strings.`), draft.count() - existing.count());
+			}
+			this.out(green(`\nDeleted %d strings.\n`), draft.count() - final.count());
 
 			// Save to file
 			this.save(outputPath, final);
