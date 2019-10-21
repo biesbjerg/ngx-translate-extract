@@ -13,12 +13,14 @@ import * as mkdirp from 'mkdirp';
 export interface ExtractTaskOptionsInterface {
 	replace?: boolean;
 	patterns?: string[];
+	verbose?: boolean;
 }
 
 export class ExtractTask implements TaskInterface {
 	protected options: ExtractTaskOptionsInterface = {
 		replace: false,
-		patterns: []
+		patterns: [],
+		verbose: false
 	};
 
 	protected parsers: ParserInterface[] = [];
@@ -36,9 +38,11 @@ export class ExtractTask implements TaskInterface {
 			throw new Error('No compiler configured');
 		}
 
-		this.printEnabledParsers();
-		this.printEnabledPostProcessors();
-		this.printEnabledCompiler();
+		if (this.options.verbose) {
+			this.printEnabledParsers();
+			this.printEnabledPostProcessors();
+			this.printEnabledCompiler();
+		}
 
 		this.out(bold('Extracting:'));
 		const extracted = this.extract();
@@ -73,6 +77,11 @@ export class ExtractTask implements TaskInterface {
 			// Run collection through post processors
 			const final = this.process(draft, extracted, existing);
 
+			if (!this.options.replace) {
+				this.out(green(`\nFound %d new strings.`), draft.count() - existing.count());
+			}
+			this.out(green(`\nDeleted %d strings.\n`), draft.count() - final.count());
+
 			// Save to file
 			this.save(outputPath, final);
 		});
@@ -102,7 +111,9 @@ export class ExtractTask implements TaskInterface {
 		let collection: TranslationCollection = new TranslationCollection();
 		this.inputs.forEach(dir => {
 			this.readDir(dir, this.options.patterns).forEach(filePath => {
-				this.out(dim('- %s'), filePath);
+				if (this.options.verbose) {
+					this.out(dim('- %s'), filePath);
+				}
 				const contents: string = fs.readFileSync(filePath, 'utf-8');
 				this.parsers.forEach(parser => {
 					const extracted = parser.extract(contents, filePath);
