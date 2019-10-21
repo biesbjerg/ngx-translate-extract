@@ -68,6 +68,10 @@ export class ExtractTask implements TaskInterface {
 			// merge extracted strings with existing
 			const draft = extracted.union(existing);
 
+			if (!this.options.replace) {
+				this.out(green(`\nFound %d new strings.\n`), draft.count() - existing.count());
+			}
+
 			if (existing.isEmpty()) {
 				this.out(dim(`- ${outputPath}`));
 			} else {
