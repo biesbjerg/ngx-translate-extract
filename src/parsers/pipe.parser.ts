@@ -15,7 +15,7 @@ export class PipeParser implements ParserInterface {
 	protected parseTemplate(template: string, relativePath: string): TranslationCollection {
 		let collection: TranslationCollection = new TranslationCollection();
 
-		const regExp: RegExp = /(['"`])((?:(?!\1).|\\\1)+)\1\s*\|\s*translate(:.*:.*:?.*')?/g;
+		const regExp: RegExp = /(['"`])((?:(?!\1).|\\\1)+)\1\s*\|\s*twcTranslate(:.*:.*:?.*')?/g;
 		let matches: RegExpExecArray;
 		while (matches = regExp.exec(template)) {
 			let context = '';

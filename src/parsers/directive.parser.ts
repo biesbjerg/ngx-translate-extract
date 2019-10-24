@@ -73,14 +73,14 @@ export class DirectiveParser implements ParserInterface {
 	}
 
 	protected isTranslatable(node: TmplAstNode): boolean {
-		if (this.isElement(node) && node.attributes.some(attribute => attribute.name === 'translate')) {
+		if (this.isElement(node) && node.attributes.some(attribute => attribute.name === 'twcTranslate')) {
 			return true;
 		}
 		return false;
 	}
 
 	protected getElementTranslateAttrValue(element: TmplAstElement): string {
-		const attr: TmplAstTextAttribute = element.attributes.find(attribute => attribute.name === 'translate');
+		const attr: TmplAstTextAttribute = element.attributes.find(attribute => attribute.name === 'twcTranslate');
 		return attr && attr.value || '';
 	}
 
