@@ -88,7 +88,7 @@
     "@phenomnomnominal/tsquery": "^3.0.0",
     "boxen": "^4.1.0",
     "colorette": "^1.1.0",
-    "flat": "github:lenchvolodymyr/flat#ffe77ef",
+    "flat": "5.0.0",
     "gettext-parser": "^4.0.2",
     "glob": "^7.1.4",
     "mkdirp": "^0.5.1",
