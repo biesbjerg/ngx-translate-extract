@@ -1,11 +1,13 @@
 import { ParserInterface } from './parser.interface';
 import { TranslationCollection } from '../utils/translation.collection';
-import { isPathAngularComponent, extractComponentInlineTemplate } from '../utils/utils';
+import { isPathAngularComponent, extractComponentInlineTemplate, pugConverterParser } from '../utils/utils';
 
 import { parseTemplate, TmplAstNode, TmplAstElement, TmplAstTextAttribute } from '@angular/compiler';
 
 export class DirectiveParser implements ParserInterface {
 	public extract(source: string, filePath: string): TranslationCollection | null {
+		source = pugConverterParser(source, filePath);
+
 		if (filePath && isPathAngularComponent(filePath)) {
 			source = extractComponentInlineTemplate(source);
 		}

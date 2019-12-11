@@ -93,6 +93,7 @@
     "glob": "^7.1.4",
     "mkdirp": "^0.5.1",
     "path": "^0.12.7",
+    "pug": "^2.0.4",
     "terminal-link": "^2.0.0",
     "typescript": "^3.6.3",
     "yargs": "^14.0.0"

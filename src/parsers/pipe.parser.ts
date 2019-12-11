@@ -1,13 +1,13 @@
 import { ParserInterface } from './parser.interface';
 import { TranslationCollection } from '../utils/translation.collection';
-import { isPathAngularComponent, extractComponentInlineTemplate } from '../utils/utils';
+import { isPathAngularComponent, extractComponentInlineTemplate, pugConverterParser } from '../utils/utils';
 
 export class PipeParser implements ParserInterface {
 	public extract(source: string, filePath: string): TranslationCollection | null {
 		if (filePath && isPathAngularComponent(filePath)) {
 			source = extractComponentInlineTemplate(source);
 		}
-
+		source = pugConverterParser(source, filePath);
 		return this.parseTemplate(source);
 	}
 

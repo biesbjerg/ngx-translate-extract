@@ -3,12 +3,14 @@ import { tsquery } from '@phenomnomnominal/tsquery';
 import { ParserInterface } from './parser.interface';
 import { TranslationCollection } from '../utils/translation.collection';
 import { findClassDeclarations, findClassPropertyByType, findMethodCallExpressions, getStringsFromExpression } from '../utils/ast-helpers';
+import { pugConverterParser } from '../utils/utils';
 
 const TRANSLATE_SERVICE_TYPE_REFERENCE = 'TranslateService';
 const TRANSLATE_SERVICE_METHOD_NAMES = ['get', 'instant', 'stream'];
 
 export class ServiceParser implements ParserInterface {
 	public extract(source: string, filePath: string): TranslationCollection | null {
+		source = pugConverterParser(source, filePath);
 		const sourceFile = tsquery.ast(source, filePath);
 
 		const classDeclarations = findClassDeclarations(sourceFile);
