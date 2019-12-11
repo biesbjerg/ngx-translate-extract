@@ -85,7 +85,7 @@ Options:
                       [array] [default: current working path]
      [array] [required] [default: current working path]
   --patterns, -p               Extract strings from the following file patterns
-                                    [array] [default: ["/**/*.html","/**/*.ts"]]
+                                    [array] [default: ["/**/*.html", "/**/*.ts", "/**/*.pug"]
   --output, -o                 Paths where you would like to save extracted
                                strings. You can use path expansion, glob
                                patterns and multiple paths    [array] [required]

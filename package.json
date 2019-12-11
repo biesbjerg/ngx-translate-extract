@@ -16,7 +16,8 @@
     "watch": "npm run clean && tsc --watch",
     "clean": "rm -rf ./dist",
     "lint": "tslint --force './src/**/*.ts'",
-    "test": "mocha -r ts-node/register tests/**/*.spec.ts"
+    "test": "mocha -r ts-node/register tests/**/*.spec.ts",
+    "dev": "ts-node -D 7016 src -p '/**/*.html' -p '/**/*.pug' -p '/**/*.ts' --input /home/ido/projects/angular/cms-scrnz/src --output ./i18n/strings.json --clean --sort --format namespaced-json"
   },
   "husky": {
     "hooks": {
@@ -86,6 +87,7 @@
   "dependencies": {
     "@angular/compiler": "^8.2.6",
     "@phenomnomnominal/tsquery": "^3.0.0",
+    "@types/pug": "^2.0.4",
     "boxen": "^4.1.0",
     "colorette": "^1.1.0",
     "flat": "github:lenchvolodymyr/flat#ffe77ef",
@@ -93,7 +95,10 @@
     "glob": "^7.1.4",
     "mkdirp": "^0.5.1",
     "path": "^0.12.7",
+    "pug": "^2.0.4",
+    "pug-cli": "^1.0.0-alpha6",
     "terminal-link": "^2.0.0",
+    "ts-node-dev": "^1.0.0-pre.44",
     "typescript": "^3.6.3",
     "yargs": "^14.0.0"
   }

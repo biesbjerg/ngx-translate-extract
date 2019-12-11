@@ -3,12 +3,14 @@ import { tsquery } from '@phenomnomnominal/tsquery';
 import { ParserInterface } from './parser.interface';
 import { TranslationCollection } from '../utils/translation.collection';
 import { getNamedImportAlias, findFunctionCallExpressions, getStringsFromExpression } from '../utils/ast-helpers';
+import { pugConverterParser } from '../utils/utils';
 
 const MARKER_MODULE_NAME = '@biesbjerg/ngx-translate-extract-marker';
 const MARKER_IMPORT_NAME = 'marker';
 
 export class MarkerParser implements ParserInterface {
 	public extract(source: string, filePath: string): TranslationCollection | null {
+		source = pugConverterParser(source, filePath);
 		const sourceFile = tsquery.ast(source, filePath);
 
 		const markerImportName = getNamedImportAlias(sourceFile, MARKER_MODULE_NAME, MARKER_IMPORT_NAME);

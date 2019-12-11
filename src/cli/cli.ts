@@ -42,7 +42,7 @@ export const cli = yargs
 		alias: 'p',
 		describe: 'Extract strings from the following file patterns',
 		type: 'array',
-		default: ['/**/*.html', '/**/*.ts']
+		default: ['/**/*.html', '/**/*.ts', '/**/*.pug']
 	})
 	.option('output', {
 		alias: 'o',
