@@ -1,5 +1,3 @@
-import * as pug from 'pug';
-
 /**
  * Assumes file is an Angular component if type is javascript/typescript
  */
@@ -12,7 +10,16 @@ export function pugConverterParser(source: string, filePath: string) {
 		return /\.pug/i.test(path);
 	}
 
-	if (isPathPugComponent(filePath)) {
+	let isPugModuleInstalled: boolean;
+	let pug: any;
+	try {
+		pug = require('pug');
+		isPugModuleInstalled = true;
+	} catch (err) {
+		isPugModuleInstalled = false;
+	}
+
+	if (isPathPugComponent(filePath) && isPugModuleInstalled) {
 		return pug.renderFile(filePath);
 	}
 	return source;
