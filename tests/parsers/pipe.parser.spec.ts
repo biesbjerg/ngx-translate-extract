@@ -53,6 +53,12 @@ describe('PipeParser', () => {
 		expect(keys).to.deep.equal(['Hello', 'World']);
 	});
 
+	it('should extract strings from nested ternary operators ', () => {
+		const contents = `<h3>{{ (condition ? 'Hello' : anotherCondition ? 'Nested' : 'World' ) | translate }}</h3>`;
+		const keys = parser.extract(contents, templateFilename).keys();
+		expect(keys).to.deep.equal(['Hello', 'Nested', 'World']);
+	});
+
 	it('should extract strings from ternary operators inside attribute interpolations', () => {
 		const contents = `<span attr="{{(condition ? 'Hello' : 'World') | translate}}"></span>`;
 		const keys = parser.extract(contents, templateFilename).keys();

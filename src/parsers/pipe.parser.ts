@@ -66,17 +66,17 @@ export class PipeParser implements ParserInterface {
 		return ret;
 	}
 
-	protected parseTranslationKeysFromPipe(pipe: BindingPipe): string[] {
+	protected parseTranslationKeysFromPipe(pipeContent: BindingPipe | LiteralPrimitive | Conditional): string[] {
 		const ret: string[] = [];
-		if (pipe.exp instanceof LiteralPrimitive) {
-			ret.push(pipe.exp.value);
-		} else if (pipe.exp instanceof Conditional) {
-			const trueExp: LiteralPrimitive = (pipe.exp.trueExp as any) as LiteralPrimitive;
-			const falseExp: LiteralPrimitive = (pipe.exp.falseExp as any) as LiteralPrimitive;
-			ret.push(trueExp.value);
-			ret.push(falseExp.value);
-		} else if (pipe.exp instanceof BindingPipe) {
-			ret.push(...this.parseTranslationKeysFromPipe(pipe.exp));
+		if (pipeContent instanceof LiteralPrimitive) {
+			ret.push(pipeContent.value);
+		} else if (pipeContent instanceof Conditional) {
+			const trueExp: LiteralPrimitive | Conditional = pipeContent.trueExp as any;
+			ret.push(...this.parseTranslationKeysFromPipe(trueExp));
+			const falseExp: LiteralPrimitive | Conditional = pipeContent.falseExp as any;
+			ret.push(...this.parseTranslationKeysFromPipe(falseExp));
+		} else if (pipeContent instanceof BindingPipe) {
+			ret.push(...this.parseTranslationKeysFromPipe(pipeContent.exp as any));
 		}
 		return ret;
 	}
