@@ -9,6 +9,7 @@ import { ServiceParser } from '../parsers/service.parser';
 import { MarkerParser } from '../parsers/marker.parser';
 import { PostProcessorInterface } from '../post-processors/post-processor.interface';
 import { SortByKeyPostProcessor } from '../post-processors/sort-by-key.post-processor';
+import { CustomDefaultValuePostProcessor } from '../post-processors/custom-default-value.post-processor';
 import { KeyAsDefaultValuePostProcessor } from '../post-processors/key-as-default-value.post-processor';
 import { NullAsDefaultValuePostProcessor } from '../post-processors/null-as-default-value.post-processor';
 import { PurgeObsoleteKeysPostProcessor } from '../post-processors/purge-obsolete-keys.post-processor';
@@ -79,17 +80,24 @@ export const cli = yargs
 		describe: 'Remove obsolete strings when merging',
 		type: 'boolean'
 	})
+	.option('custom-default-value', {
+		alias: 'cu',
+		describe: 'Use custom default value for translations',
+		type: 'string',
+		conflicts: ['key-as-default-value', 'null-as-default-value']
+	})
 	.option('key-as-default-value', {
 		alias: 'k',
 		describe: 'Use key as default value for translations',
-		type: 'boolean'
+		type: 'boolean',
+		conflicts: ['custom-default-value', 'null-as-default-value']
 	})
 	.option('null-as-default-value', {
 		alias: 'n',
 		describe: 'Use null as default value for translations',
-		type: 'boolean'
+		type: 'boolean',
+		conflicts: ['custom-default-value', 'key-as-default-value']
 	})
-	.conflicts('key-as-default-value', 'null-as-default-value')
 	.exitProcess(true)
 	.parse(process.argv);
 
@@ -107,7 +115,9 @@ const postProcessors: PostProcessorInterface[] = [];
 if (cli.clean) {
 	postProcessors.push(new PurgeObsoleteKeysPostProcessor());
 }
-if (cli.keyAsDefaultValue) {
+if (typeof cli.customDefaultValue === 'string') {
+	postProcessors.push(new CustomDefaultValuePostProcessor(cli.customDefaultValue));
+} else if (cli.keyAsDefaultValue) {
 	postProcessors.push(new KeyAsDefaultValuePostProcessor());
 } else if (cli.nullAsDefaultValue) {
 	postProcessors.push(new NullAsDefaultValuePostProcessor());

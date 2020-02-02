@@ -97,6 +97,9 @@ Options:
   --sort, -s                   Sort strings in alphabetical order when saving
                                                                        [boolean]
   --clean, -c                  Remove obsolete strings when merging    [boolean]
+  --custom-default-value, --cu Use custom default value for translations.
+                               Default: Missing translation.
+                                                                       [string]
   --key-as-default-value, -k   Use key as default value for translations
                                                                        [boolean]
   --null-as-default-value, -n  Use null as default value for translations
