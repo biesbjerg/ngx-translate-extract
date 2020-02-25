@@ -1,7 +1,7 @@
 {
-  "name": "@topcon/ngx-translate-extract",
+  "name": "shavenzov/ngx-translate-extract",
   "version": "3.0.10",
-  "description": "Extract strings from projects using ngx-translate",
+  "description": "Extract strings from projects using ngx-translate with context and comment support",
   "main": "dist/index.js",
   "typings": "dist/index.d.ts",
   "files": [
@@ -20,7 +20,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://mos-git.topcon.com/scm/twc/ngx-translate-extract.git"
+    "url": "https://github.com/shavenzov/ngx-translate-extract.git"
   },
   "keywords": [
     "angular",
@@ -33,12 +33,12 @@
     "i18n",
     "gettext"
   ],
-  "author": "Denis Shavenzov <dshavenzov@topcon.com>",
+  "author": "Denis Shavenzov <shavenzov@gmail.com>",
   "license": "MIT",
   "bugs": {
-    "url": "https://tps-jira.topcon.com/projects/TWC"
+    "url": "https://github.com/shavenzov/ngx-translate-extract/issues"
   },
-  "homepage": "https://mos-git.topcon.com/projects/TWC/repos/ngx-translate-extract/browse",
+  "homepage": "https://github.com/shavenzov/ngx-translate-extract",
   "engines": {
     "node": ">=4.3.2"
   },

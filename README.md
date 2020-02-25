@@ -10,7 +10,7 @@ In this version added string **context** and **comment** support feature.
 ### Usage
 Install the package in your project:
 
-`npm install @topcon/ngx-translate-extract --save-dev`
+`npm install shavenzov/ngx-translate-extract --save-dev`
 
 Add a script to your project's `package.json`:
 ```json
@@ -54,10 +54,10 @@ If you want to use spaces instead, you can do the following:
 If, for some reason, you want to extract strings not passed directly to `TranslateService`'s `get()` or `instant()` methods, you can wrap them in a custom marker function to let `ngx-translate-extract` know you want to extract them.
 
 Install marker function:
-`npm install @topcon/ngx-translate-extract-marker`
+`npm install shavenzov/ngx-translate-extract-marker`
 
 ```ts
-import { marker } from '@topcon/ngx-translate-extract-marker';
+import { marker } from 'shavenzov/ngx-translate-extract-marker';
 
 marker('Extract me');
 ```
@@ -69,7 +69,7 @@ Add the `marker` argument when running the extract script:
 You can alias the marker function if needed:
 
 ```ts
-import { marker as $ } from '@topcon/ngx-translate-extract-marker';
+import { marker as $ } from 'shavenzov/ngx-translate-extract-marker';
 
 $('Extract me');
 
@@ -122,11 +122,11 @@ Set third `translate` pipe parameter to define comment.
 
 #### Specify context and comment using marker function
 ```ts
-    import { marker as $ } from '@topcon/ngx-translate-extract-marker';
+    import { marker as $ } from 'shavenzov/ngx-translate-extract-marker';
     
     $('Extract me');
     
-    //Extract string with specific content and comment to translator
+    //Extract string with specific context and comment to translator
     $('context.Extract me', 'context', 'comment');
 ```
 
