@@ -58,43 +58,40 @@
   },
   "homepage": "https://github.com/biesbjerg/ngx-translate-extract",
   "engines": {
-    "node": ">=8"
+    "node": ">=12"
   },
   "config": {},
   "devDependencies": {
-    "@types/chai": "^4.2.2",
-    "@types/flat": "^0.0.28",
+    "@types/chai": "^4.2.10",
+    "@types/flat": "^5.0.0",
     "@types/glob": "^7.1.1",
-    "@types/mkdirp": "^0.5.2",
-    "@types/mocha": "^5.2.7",
-    "@types/node": "^12.7.5",
-    "@types/yargs": "^13.0.2",
+    "@types/mkdirp": "^1.0.0",
+    "@types/mocha": "^7.0.2",
+    "@types/node": "^12.12.29",
+    "@types/yargs": "^15.0.4",
     "chai": "^4.2.0",
-    "husky": "^3.0.5",
-    "lint-staged": "^9.2.5",
-    "mocha": "^6.2.0",
-    "prettier": "^1.18.2",
-    "ts-node": "^8.4.1",
-    "tslint": "^5.20.0",
+    "husky": "^4.2.3",
+    "lint-staged": "^10.0.8",
+    "mocha": "^7.1.0",
+    "prettier": "^1.19.1",
+    "ts-node": "^8.6.2",
+    "tslint": "^6.0.0",
     "tslint-config-prettier": "^1.18.0",
     "tslint-eslint-rules": "^5.4.0",
-    "tslint-etc": "^1.7.0"
+    "tslint-etc": "^1.10.1"
   },
-  "bundledDependencies": [
-    "flat"
-  ],
   "dependencies": {
-    "@angular/compiler": "^8.2.6",
-    "@phenomnomnominal/tsquery": "^3.0.0",
-    "boxen": "^4.1.0",
+    "@angular/compiler": "^9.0.5",
+    "@phenomnomnominal/tsquery": "^4.0.0",
+    "boxen": "^4.2.0",
     "colorette": "^1.1.0",
-    "flat": "5.0.0",
+    "flat": "^5.0.0",
     "gettext-parser": "^4.0.2",
-    "glob": "^7.1.4",
-    "mkdirp": "^0.5.1",
+    "glob": "^7.1.6",
+    "mkdirp": "^1.0.3",
     "path": "^0.12.7",
-    "terminal-link": "^2.0.0",
-    "typescript": "^3.6.3",
-    "yargs": "^14.0.0"
+    "terminal-link": "^2.1.1",
+    "typescript": "^3.6.5",
+    "yargs": "^15.1.0"
   }
 }
