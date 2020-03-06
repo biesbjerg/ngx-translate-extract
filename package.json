@@ -32,8 +32,7 @@
   "lint-staged": {
     "{src,tests}/**/*.{ts}": [
       "tslint --project tsconfig.json -c tslint.commit.json --fix",
-      "prettier --write",
-      "git add"
+      "prettier --write"
     ]
   },
   "repository": {
