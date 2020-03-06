@@ -88,20 +88,22 @@ export const cli = y
 	.option('key-as-default-value', {
 		alias: 'k',
 		describe: 'Use key as default value',
-		type: 'boolean'
+		type: 'boolean',
+		conflicts: ['null-as-default-value']
 	})
 	.option('null-as-default-value', {
 		alias: 'n',
 		describe: 'Use null as default value',
-		type: 'boolean'
+		type: 'boolean',
+		conflicts: ['key-as-default-value']
 	})
 	.group(['format', 'format-indentation', 'sort', 'clean'], 'Output')
 	.group(['key-as-default-value', 'null-as-default-value'], 'Default value (defaults to empty string)')
 	.conflicts('key-as-default-value', 'null-as-default-value')
 	.example(`$0 -i ./src-a/ -i ./src-b/ -o strings.json`, 'Extract (ts, html) from multiple paths')
 	.example(`$0 -i './{src-a,src-b}/' -o strings.json`, 'Extract (ts, html) from multiple paths using brace expansion')
-	.example(`$0 -i ./src/ -o ./i18n/da.json -o ./i18n/en.json`, 'Extract (ts, html) and save to da.json+en.json')
-	.example(`$0 -i ./src/ -o './i18n/{en,da}.json'`, 'Extract (ts, html) and save to da.json+en.json using brace expansion')
+	.example(`$0 -i ./src/ -o ./i18n/da.json -o ./i18n/en.json`, 'Extract (ts, html) and save to da.json and en.json')
+	.example(`$0 -i ./src/ -o './i18n/{en,da}.json'`, 'Extract (ts, html) and save to da.json and en.json using brace expansion')
 	.example(`$0 -i './src/**/*.{ts,tsx,html}' -o strings.json`, 'Extract from ts, tsx and html')
 	.example(`$0 -i './src/**/!(*.spec).{ts,html}' -o strings.json`, 'Extract from ts, html, excluding files with ".spec" in filename')
 	.wrap(110)
