@@ -8,6 +8,8 @@ npm-debug.log*
 
 # Compiled files
 dist
+src/**/*.js
+tests/**/*.js
 
 # Extracted strings
 strings.json

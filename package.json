@@ -61,6 +61,7 @@
   },
   "config": {},
   "devDependencies": {
+    "@types/braces": "^3.0.0",
     "@types/chai": "^4.2.10",
     "@types/flat": "^5.0.0",
     "@types/glob": "^7.1.1",
@@ -68,6 +69,7 @@
     "@types/mocha": "^7.0.2",
     "@types/node": "^12.12.29",
     "@types/yargs": "^15.0.4",
+    "braces": "^3.0.2",
     "chai": "^4.2.0",
     "husky": "^4.2.3",
     "lint-staged": "^10.0.8",

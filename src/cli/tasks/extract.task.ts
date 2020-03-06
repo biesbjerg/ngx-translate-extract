@@ -12,13 +12,11 @@ import * as mkdirp from 'mkdirp';
 
 export interface ExtractTaskOptionsInterface {
 	replace?: boolean;
-	patterns?: string[];
 }
 
 export class ExtractTask implements TaskInterface {
 	protected options: ExtractTaskOptionsInterface = {
-		replace: false,
-		patterns: []
+		replace: false
 	};
 
 	protected parsers: ParserInterface[] = [];
@@ -100,8 +98,8 @@ export class ExtractTask implements TaskInterface {
 	 */
 	protected extract(): TranslationCollection {
 		let collection: TranslationCollection = new TranslationCollection();
-		this.inputs.forEach(dir => {
-			this.readDir(dir, this.options.patterns).forEach(filePath => {
+		this.inputs.forEach(pattern => {
+			this.getFiles(pattern).forEach(filePath => {
 				this.out(dim('- %s'), filePath);
 				const contents: string = fs.readFileSync(filePath, 'utf-8');
 				this.parsers.forEach(parser => {
@@ -138,15 +136,12 @@ export class ExtractTask implements TaskInterface {
 	}
 
 	/**
-	 * Get all files in dir matching patterns
+	 * Get all files matching pattern
 	 */
-	protected readDir(dir: string, patterns: string[]): string[] {
-		return patterns.reduce((results, pattern) => {
-			return glob
-				.sync(dir + pattern)
-				.filter(filePath => fs.statSync(filePath).isFile())
-				.concat(results);
-		}, []);
+	protected getFiles(pattern: string): string[] {
+		return glob
+			.sync(pattern)
+			.filter(filePath => fs.statSync(filePath).isFile());
 	}
 
 	protected out(...args: any[]): void {
