@@ -10,6 +10,7 @@ import { PostProcessorInterface } from '../post-processors/post-processor.interf
 import { SortByKeyPostProcessor } from '../post-processors/sort-by-key.post-processor';
 import { KeyAsDefaultValuePostProcessor } from '../post-processors/key-as-default-value.post-processor';
 import { NullAsDefaultValuePostProcessor } from '../post-processors/null-as-default-value.post-processor';
+import { StringAsDefaultValuePostProcessor } from '../post-processors/string-as-default-value.post-processor';
 import { PurgeObsoleteKeysPostProcessor } from '../post-processors/purge-obsolete-keys.post-processor';
 import { CompilerInterface } from '../compilers/compiler.interface';
 import { CompilerFactory } from '../compilers/compiler.factory';
@@ -89,16 +90,22 @@ export const cli = y
 		alias: 'k',
 		describe: 'Use key as default value',
 		type: 'boolean',
-		conflicts: ['null-as-default-value']
+		conflicts: ['null-as-default-value', 'string-as-default-value']
 	})
 	.option('null-as-default-value', {
 		alias: 'n',
 		describe: 'Use null as default value',
 		type: 'boolean',
-		conflicts: ['key-as-default-value']
+		conflicts: ['key-as-default-value', 'string-as-default-value']
 	})
-	.group(['format', 'format-indentation', 'sort', 'clean'], 'Output')
-	.group(['key-as-default-value', 'null-as-default-value'], 'Default value (defaults to empty string)')
+	.option('string-as-default-value', {
+		alias: 'd',
+		describe: 'Use string as default value',
+		type: 'string',
+		conflicts: ['null-as-default-value', 'key-as-default-value']
+	})
+	.group(['format', 'format-indentation', 'sort', 'clean', 'replace'], 'Output')
+	.group(['key-as-default-value', 'null-as-default-value', 'string-as-default-value'], 'Default value (defaults to empty string)')
 	.conflicts('key-as-default-value', 'null-as-default-value')
 	.example(`$0 -i ./src-a/ -i ./src-b/ -o strings.json`, 'Extract (ts, html) from multiple paths')
 	.example(`$0 -i './{src-a,src-b}/' -o strings.json`, 'Extract (ts, html) from multiple paths using brace expansion')
@@ -127,7 +134,10 @@ if (cli.keyAsDefaultValue) {
 	postProcessors.push(new KeyAsDefaultValuePostProcessor());
 } else if (cli.nullAsDefaultValue) {
 	postProcessors.push(new NullAsDefaultValuePostProcessor());
+} else if (cli.stringAsDefaultValue) {
+	postProcessors.push(new StringAsDefaultValuePostProcessor({ defaultValue: cli.stringAsDefaultValue as string }));
 }
+
 if (cli.sort) {
 	postProcessors.push(new SortByKeyPostProcessor());
 }
