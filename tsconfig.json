@@ -11,7 +11,7 @@
         "target": "es2015",
         "lib": [
             "dom",
-            "es2018"
+            "esnext.array"
         ],
         "module": "commonjs",
         "outDir": "./dist/",
@@ -25,7 +25,6 @@
         "tests/**/*.ts"
     ],
     "exclude": [
-        "node_modules",
-        "tests/**/*.ts"
+        "node_modules"
     ]
 }

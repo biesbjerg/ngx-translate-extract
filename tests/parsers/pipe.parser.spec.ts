@@ -29,10 +29,40 @@ describe('PipeParser', () => {
 		expect(keys).to.deep.equal(['World']);
 	});
 
-	it('should extract interpolated strings when translate pipe is used in conjunction with other pipes', () => {
+	it('should extract interpolated strings when translate pipe is used before other pipes', () => {
 		const contents = `Hello {{ 'World' | translate | upper }}`;
 		const keys = parser.extract(contents, templateFilename).keys();
 		expect(keys).to.deep.equal(['World']);
+	});
+
+	it('should extract interpolated strings when translate pipe is used after other pipes', () => {
+		const contents = `Hello {{ 'World'  | upper | translate }}`;
+		const keys = parser.extract(contents, templateFilename).keys();
+		expect(keys).to.deep.equal(['World']);
+	});
+
+	it('should extract strings from ternary operators inside interpolations', () => {
+		const contents = `{{ (condition ? 'Hello' : 'World') | translate }}`;
+		const keys = parser.extract(contents, templateFilename).keys();
+		expect(keys).to.deep.equal(['Hello', 'World']);
+	});
+
+	it('should extract strings from ternary operators inside attribute bindings', () => {
+		const contents = `<span [attr]="(condition ? 'Hello' : 'World') | translate"></span>`;
+		const keys = parser.extract(contents, templateFilename).keys();
+		expect(keys).to.deep.equal(['Hello', 'World']);
+	});
+
+	it('should extract strings from nested ternary operators ', () => {
+		const contents = `<h3>{{ (condition ? 'Hello' : anotherCondition ? 'Nested' : 'World' ) | translate }}</h3>`;
+		const keys = parser.extract(contents, templateFilename).keys();
+		expect(keys).to.deep.equal(['Hello', 'Nested', 'World']);
+	});
+
+	it('should extract strings from ternary operators inside attribute interpolations', () => {
+		const contents = `<span attr="{{(condition ? 'Hello' : 'World') | translate}}"></span>`;
+		const keys = parser.extract(contents, templateFilename).keys();
+		expect(keys).to.deep.equal(['Hello', 'World']);
 	});
 
 	it('should extract strings with escaped quotes', () => {
@@ -59,7 +89,7 @@ describe('PipeParser', () => {
 		expect(keys).to.deep.equal(['Hello World']);
 	});
 
-	it('should not use a greedy regular expression', () => {
+	it('should extract multiple entries from nodes', () => {
 		const contents = `
 			<ion-header>
 				<ion-navbar color="brand">
