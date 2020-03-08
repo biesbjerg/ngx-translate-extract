@@ -58,7 +58,7 @@ export class DirectiveParser implements ParserInterface {
 	}
 
 	protected isElement(node: any): node is TmplAstElement {
-		return node && node.attributes !== undefined && node.children !== undefined;
+		return node?.attributes && node?.children;
 	}
 
 	protected isTranslatable(node: TmplAstNode): boolean {
@@ -70,7 +70,7 @@ export class DirectiveParser implements ParserInterface {
 
 	protected getElementTranslateAttrValue(element: TmplAstElement): string {
 		const attr: TmplAstTextAttribute = element.attributes.find(attribute => attribute.name === 'translate');
-		return (attr && attr.value) || '';
+		return attr?.value ?? '';
 	}
 
 	protected getElementContents(element: TmplAstElement): string {

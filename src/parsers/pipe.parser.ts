@@ -1,7 +1,10 @@
+import { TmplAstNode, parseTemplate, BindingPipe, LiteralPrimitive, Conditional, TmplAstTextAttribute } from '@angular/compiler';
+
 import { ParserInterface } from './parser.interface';
 import { TranslationCollection } from '../utils/translation.collection';
 import { isPathAngularComponent, extractComponentInlineTemplate } from '../utils/utils';
-import { TmplAstNode, parseTemplate, BindingPipe, LiteralPrimitive, Conditional, TmplAstTextAttribute } from '@angular/compiler';
+
+const TRANSLATE_PIPE_NAME = 'translate';
 
 export class PipeParser implements ParserInterface {
 	public extract(source: string, filePath: string): TranslationCollection | null {
@@ -23,7 +26,7 @@ export class PipeParser implements ParserInterface {
 	protected findPipesInNode(node: any): BindingPipe[] {
 		let ret: BindingPipe[] = [];
 
-		if (node.children) {
+		if (node?.children) {
 			ret = node.children.reduce(
 				(result: BindingPipe[], childNode: TmplAstNode) => {
 					const children = this.findPipesInNode(childNode);
@@ -33,27 +36,27 @@ export class PipeParser implements ParserInterface {
 			);
 		}
 
-		if (node.value && node.value.ast && node.value.ast.expressions) {
+		if (node?.value?.ast?.expressions) {
 			const translateables = node.value.ast.expressions.filter((exp: any) => this.expressionIsOrHasBindingPipe(exp));
 			ret.push(...translateables);
 		}
 
-		if (node.attributes) {
+		if (node?.attributes) {
 			const translateableAttributes = node.attributes.filter((attr: TmplAstTextAttribute) => {
-				return attr.name === 'translate';
+				return attr.name === TRANSLATE_PIPE_NAME;
 			});
 			ret = [...ret, ...translateableAttributes];
 		}
 
-		if (node.inputs) {
+		if (node?.inputs) {
 			node.inputs.forEach((input: any) => {
 				// <element [attrib]="'identifier' | translate">
-				if (input.value && input.value.ast && this.expressionIsOrHasBindingPipe(input.value.ast)) {
+				if (input?.value?.ast && this.expressionIsOrHasBindingPipe(input.value.ast)) {
 					ret.push(input.value.ast);
 				}
 
 				// <element attrib="{{'identifier' | translate}}>"
-				if (input.value && input.value.ast && input.value.ast.expressions) {
+				if (input?.value?.ast?.expressions) {
 					input.value.ast.expressions.forEach((exp: BindingPipe) => {
 						if (this.expressionIsOrHasBindingPipe(exp)) {
 							ret.push(exp);
@@ -82,7 +85,7 @@ export class PipeParser implements ParserInterface {
 	}
 
 	protected expressionIsOrHasBindingPipe(exp: any): boolean {
-		if (exp.name && exp.name === 'translate') {
+		if (exp.name && exp.name === TRANSLATE_PIPE_NAME) {
 			return true;
 		}
 		if (exp.exp && exp.exp instanceof BindingPipe) {
