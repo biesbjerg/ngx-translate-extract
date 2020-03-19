@@ -105,7 +105,7 @@ export const cli = y
 		conflicts: ['null-as-default-value', 'key-as-default-value']
 	})
 	.group(['format', 'format-indentation', 'sort', 'clean', 'replace'], 'Output')
-	.group(['key-as-default-value', 'null-as-default-value', 'string-as-default-value'], 'Default value (defaults to empty string)')
+	.group(['key-as-default-value', 'null-as-default-value', 'string-as-default-value'], 'Extracted key value (defaults to empty string)')
 	.conflicts('key-as-default-value', 'null-as-default-value')
 	.example(`$0 -i ./src-a/ -i ./src-b/ -o strings.json`, 'Extract (ts, html) from multiple paths')
 	.example(`$0 -i './{src-a,src-b}/' -o strings.json`, 'Extract (ts, html) from multiple paths using brace expansion')
