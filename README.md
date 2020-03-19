@@ -91,12 +91,12 @@ Options:
                  patterns and multiple paths                                                [array] [required]
 
 Examples:
-  cli.js -i ./src-a/ -i ./src-b/ -o strings.json           Extract (ts, html) from multiple paths
-  cli.js -i './{src-a,src-b}/' -o strings.json             Extract (ts, html) from multiple paths using brace
+  ngx-translate-extract -i ./src-a/ -i ./src-b/ -o strings.json           Extract (ts, html) from multiple paths
+  ngx-translate-extract -i './{src-a,src-b}/' -o strings.json             Extract (ts, html) from multiple paths using brace
                                                            expansion
-  cli.js -i ./src/ -o ./i18n/da.json -o ./i18n/en.json     Extract (ts, html) and save to da.json and en.json
-  cli.js -i ./src/ -o './i18n/{en,da}.json'                Extract (ts, html) and save to da.json and en.json
+  ngx-translate-extract -i ./src/ -o ./i18n/da.json -o ./i18n/en.json     Extract (ts, html) and save to da.json and en.json
+  ngx-translate-extract -i ./src/ -o './i18n/{en,da}.json'                Extract (ts, html) and save to da.json and en.json
                                                            using brace expansion
-  cli.js -i './src/**/*.{ts,tsx,html}' -o strings.json     Extract from ts, tsx and html
-  cli.js -i './src/**/!(*.spec).{ts,html}' -o              Extract from ts, html, excluding files with ".spec"
+  ngx-translate-extract -i './src/**/*.{ts,tsx,html}' -o strings.json     Extract from ts, tsx and html
+  ngx-translate-extract -i './src/**/!(*.spec).{ts,html}' -o              Extract from ts, html, excluding files with ".spec"
   strings.json
