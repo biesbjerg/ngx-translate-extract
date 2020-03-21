@@ -14,7 +14,7 @@
   "scripts": {
     "build": "npm run clean && tsc",
     "watch": "npm run clean && tsc --watch",
-    "clean": "rm -rf ./dist",
+    "clean": "rimraf ./dist",
     "lint": "tslint --force './src/**/*.ts'",
     "test": "mocha -r ts-node/register tests/**/*.spec.ts"
   },
@@ -79,7 +79,8 @@
     "tslint": "^6.1.0",
     "tslint-config-prettier": "^1.18.0",
     "tslint-eslint-rules": "^5.4.0",
-    "tslint-etc": "^1.10.1"
+    "tslint-etc": "^1.10.1",
+    "rimraf": "^3.0.2"
   },
   "dependencies": {
     "@angular/compiler": "^9.0.7",
