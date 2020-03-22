@@ -11,6 +11,18 @@ describe('ServiceParser', () => {
 		parser = new ServiceParser();
 	});
 
+	it('should extract strings when TranslateService is accessed directly via constructor parameter', () => {
+		const contents = `
+			@Component({ })
+			export class MyComponent {
+				public constructor(protected translateService: TranslateService) {
+					translateService.get('It works!');
+				}
+		`;
+		const keys = parser.extract(contents, componentFilename).keys();
+		expect(keys).to.deep.equal(['It works!']);
+	});
+
 	it('should support extracting binary expressions', () => {
 		const contents = `
 			@Component({ })

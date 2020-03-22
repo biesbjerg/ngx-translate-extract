@@ -1,15 +1,16 @@
 import { tsquery } from '@phenomnomnominal/tsquery';
 import {
+	SyntaxKind,
 	Node,
 	NamedImports,
 	Identifier,
 	ClassDeclaration,
-	CallExpression,
+	ConstructorDeclaration,
 	isStringLiteralLike,
 	isArrayLiteralExpression,
+	CallExpression,
 	Expression,
 	isBinaryExpression,
-	SyntaxKind,
 	isConditionalExpression,
 	PropertyAccessExpression
 } from 'typescript';
@@ -45,6 +46,30 @@ export function findClassPropertyByType(node: ClassDeclaration, type: string): s
 	return findClassPropertyConstructorParameterByType(node, type) || findClassPropertyDeclarationByType(node, type);
 }
 
+export function findConstructorDeclaration(node: ClassDeclaration): ConstructorDeclaration {
+	const query = `Constructor`;
+	const [result] = tsquery<ConstructorDeclaration>(node, query);
+	return result;
+}
+
+export function findMethodParameterByType(node: Node, type: string): string | null {
+	const query = `Parameter:has(TypeReference > Identifier[name="${type}"]) > Identifier`;
+	const [result] = tsquery<Identifier>(node, query);
+	if (result) {
+		return result.text;
+	}
+	return null;
+}
+
+export function findMethodCallExpressions(node: Node, propName: string, fnName: string | string[]): CallExpression[] {
+	if (Array.isArray(fnName)) {
+		fnName = fnName.join('|');
+	}
+	const query = `CallExpression > PropertyAccessExpression:has(Identifier[name=/^(${fnName})$/]):has(PropertyAccessExpression:has(Identifier[name="${propName}"]):not(:has(ThisKeyword)))`;
+	const nodes = tsquery<PropertyAccessExpression>(node, query).map(n => n.parent as CallExpression);
+	return nodes;
+}
+
 export function findClassPropertyConstructorParameterByType(node: ClassDeclaration, type: string): string | null {
 	const query = `Constructor Parameter:has(TypeReference > Identifier[name="${type}"]):has(PublicKeyword,ProtectedKeyword,PrivateKeyword) > Identifier`;
 	const [result] = tsquery<Identifier>(node, query);
@@ -72,7 +97,7 @@ export function findFunctionCallExpressions(node: Node, fnName: string | string[
 	return nodes;
 }
 
-export function findMethodCallExpressions(node: Node, prop: string, fnName: string | string[]): CallExpression[] {
+export function findPropertyCallExpressions(node: Node, prop: string, fnName: string | string[]): CallExpression[] {
 	if (Array.isArray(fnName)) {
 		fnName = fnName.join('|');
 	}
