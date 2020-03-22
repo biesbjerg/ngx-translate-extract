@@ -147,4 +147,10 @@ describe('PipeParser', () => {
 		const keys = parser.extract(contents, templateFilename).keys();
 		expect(keys).to.deep.equal(['message']);
 	});
+
+	it('should ignore calculated values', () => {
+		const contents = `{{ 'SOURCES.' + source.name + '.NAME_PLURAL' | translate }}`;
+		const keys = parser.extract(contents, templateFilename).keys();
+		expect(keys).to.deep.equal([]);
+	});
 });
