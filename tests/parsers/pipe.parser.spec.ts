@@ -153,4 +153,10 @@ describe('PipeParser', () => {
 		const keys = parser.extract(contents, templateFilename).keys();
 		expect(keys).to.deep.equal([]);
 	});
+
+	it('should not extract pipe argument', () => {
+		const contents = `{{ value | valueToTranslationKey: 'argument' | translate }}`;
+		const keys = parser.extract(contents, templateFilename).keys();
+		expect(keys).to.deep.equal([]);
+	});
 });
