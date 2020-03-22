@@ -35,4 +35,20 @@ describe('MarkerParser', () => {
 		const keys = parser.extract(contents, componentFilename).keys();
 		expect(keys).to.deep.equal(['Hello world', 'This is a very very very very long line.', 'Mix of different types']);
 	});
+
+	it('should extract the strings', () => {
+		const contents = `
+		import { marker } from '@biesbjerg/ngx-translate-extract-marker';
+
+		export class AppModule {
+			constructor() {
+				marker('DYNAMIC_TRAD.val1');
+				marker('DYNAMIC_TRAD.val2');
+			}
+		}
+		`;
+		const keys = parser.extract(contents, componentFilename).keys();
+		expect(keys).to.deep.equal(['DYNAMIC_TRAD.val1', 'DYNAMIC_TRAD.val2']);
+	});
+
 });

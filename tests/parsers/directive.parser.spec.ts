@@ -107,4 +107,10 @@ describe('DirectiveParser', () => {
 		const keys = parser.extract(contents, templateFilename).keys();
 		expect(keys).to.deep.equal(['There are currently no students in this class. The good news is, adding students is really easy! Just use the options at the top.']);
 	});
+
+	it('should extract contents without indent spaces', () => {
+		const contents = `<button mat-button (click)="search()" translate>client.search.searchBtn</button>`;
+		const keys = parser.extract(contents, templateFilename).keys();
+		expect(keys).to.deep.equal(['client.search.searchBtn']);
+	});
 });
