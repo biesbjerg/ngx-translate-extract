@@ -85,4 +85,26 @@ describe('DirectiveParser', () => {
 		const keys = parser.extract(contents, componentFilename).keys();
 		expect(keys).to.deep.equal([]);
 	});
+
+	it('should extract contents without line breaks', () => {
+		const contents = `
+			<p translate>
+				Please leave a message for your client letting them know why you 
+				rejected the field and what they need to do to fix it.
+			</p>
+		`;
+		const keys = parser.extract(contents, templateFilename).keys();
+		expect(keys).to.deep.equal(['Please leave a message for your client letting them know why you rejected the field and what they need to do to fix it.']);
+	});
+
+	it('should extract contents without indent spaces', () => {
+		const contents = `
+			<div *ngIf="!isLoading && studentsToGrid && studentsToGrid.length == 0" class="no-students" mt-rtl translate>There 
+				are currently no students in this class. The good news is, adding students is really easy! Just use the options 
+				at the top.
+			</div>
+		`;
+		const keys = parser.extract(contents, templateFilename).keys();
+		expect(keys).to.deep.equal(['There are currently no students in this class. The good news is, adding students is really easy! Just use the options at the top.']);
+	});
 });

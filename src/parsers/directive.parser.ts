@@ -14,7 +14,7 @@ export class DirectiveParser implements ParserInterface {
 
 		const nodes: TmplAstNode[] = this.parseTemplate(source, filePath);
 		this.getTranslatableElements(nodes).forEach(element => {
-			const key = this.getElementTranslateAttrValue(element) || this.getElementContents(element);
+			const key = this.getElementTranslateAttrValue(element) || this.getElementContent(element);
 			collection = collection.add(key);
 		});
 
@@ -35,7 +35,7 @@ export class DirectiveParser implements ParserInterface {
 			return [];
 		}
 
-		// If element has translate attribute all its contents is translatable
+		// If element has translate attribute all its content is translatable
 		// so we don't need to traverse any deeper
 		if (this.isTranslatable(node)) {
 			return [node];
@@ -73,10 +73,15 @@ export class DirectiveParser implements ParserInterface {
 		return attr?.value ?? '';
 	}
 
-	protected getElementContents(element: TmplAstElement): string {
-		const contents = element.sourceSpan.start.file.content;
+	protected getElementContent(element: TmplAstElement): string {
+		const content = element.sourceSpan.start.file.content;
 		const start = element.startSourceSpan.end.offset;
 		const end = element.endSourceSpan.start.offset;
-		return contents.substring(start, end).trim();
+		const val = content.substring(start, end);
+		return this.cleanKey(val);
+	}
+
+	protected cleanKey(val: string): string {
+		return val.replace(/\r?\n|\r|\t/g, '');
 	}
 }
