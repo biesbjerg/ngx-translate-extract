@@ -100,3 +100,7 @@ Examples:
   ngx-translate-extract -i './src/**/*.{ts,tsx,html}' -o strings.json     Extract from ts, tsx and html
   ngx-translate-extract -i './src/**/!(*.spec).{ts,html}' -o              Extract from ts, html, excluding files with ".spec"
   strings.json
+
+## Note for GetText users
+
+Please pay attention of which version of `gettext-parser` you actually use in your project. For instance, `gettext-parser:1.2.2` does not support HTML tags in translation keys.

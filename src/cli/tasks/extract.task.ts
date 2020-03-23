@@ -42,8 +42,6 @@ export class ExtractTask implements TaskInterface {
 		const extracted = this.extract();
 		this.out(green(`\nFound %d strings.\n`), extracted.count());
 
-		console.log("Extracted", extracted);
-
 		this.out(bold('Saving:'));
 
 		this.outputs.forEach(output => {
