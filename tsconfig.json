@@ -2,7 +2,9 @@
     "compilerOptions": {
         "allowSyntheticDefaultImports": true,
         "noUnusedLocals": true,
-        "noImplicitAny": true,
+        // I had to do this to support gettext-parser typing with mocha
+        // "noImplicitAny": true,
+        "noImplicitAny": false,
         "noImplicitReturns": true,
         "noImplicitThis": true,
         "noImplicitUseStrict": true,

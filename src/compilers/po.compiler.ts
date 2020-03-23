@@ -44,6 +44,7 @@ export class PoCompiler implements CompilerInterface {
 		const collection = new TranslationCollection();
 
 		const po = gettext.po.parse(contents, 'utf8');
+
 		if (!po.translations.hasOwnProperty(this.domain)) {
 			return collection;
 		}
