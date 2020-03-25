@@ -18,14 +18,13 @@ import { normalizePaths } from '../utils/fs-helpers';
 import { donateMessage } from '../utils/donate';
 
 // First parsing pass to be able to access pattern argument for use input/output arguments
-const y = yargs
-	.option('patterns', {
-		alias: 'p',
-		describe: 'Default patterns',
-		type: 'array',
-		default: ['/**/*.html', '/**/*.ts'],
-		hidden: true
-	});
+const y = yargs.option('patterns', {
+	alias: 'p',
+	describe: 'Default patterns',
+	type: 'array',
+	default: ['/**/*.html', '/**/*.ts'],
+	hidden: true
+});
 
 const parsed = y.parse();
 

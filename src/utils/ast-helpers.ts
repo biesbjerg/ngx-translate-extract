@@ -66,7 +66,7 @@ export function findMethodCallExpressions(node: Node, propName: string, fnName: 
 		fnName = fnName.join('|');
 	}
 	const query = `CallExpression > PropertyAccessExpression:has(Identifier[name=/^(${fnName})$/]):has(PropertyAccessExpression:has(Identifier[name="${propName}"]):not(:has(ThisKeyword)))`;
-	const nodes = tsquery<PropertyAccessExpression>(node, query).map(n => n.parent as CallExpression);
+	const nodes = tsquery<PropertyAccessExpression>(node, query).map((n) => n.parent as CallExpression);
 	return nodes;
 }
 
@@ -102,7 +102,7 @@ export function findPropertyCallExpressions(node: Node, prop: string, fnName: st
 		fnName = fnName.join('|');
 	}
 	const query = `CallExpression > PropertyAccessExpression:has(Identifier[name=/^(${fnName})$/]):has(PropertyAccessExpression:has(Identifier[name="${prop}"]):has(ThisKeyword))`;
-	const nodes = tsquery<PropertyAccessExpression>(node, query).map(n => n.parent as CallExpression);
+	const nodes = tsquery<PropertyAccessExpression>(node, query).map((n) => n.parent as CallExpression);
 	return nodes;
 }
 

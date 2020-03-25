@@ -14,8 +14,8 @@ export class PipeParser implements ParserInterface {
 
 		let collection: TranslationCollection = new TranslationCollection();
 		const nodes: TmplAstNode[] = this.parseTemplate(source, filePath);
-		const pipes: BindingPipe[] = nodes.map(node => this.findPipesInNode(node)).flat();
-		pipes.forEach(pipe => {
+		const pipes: BindingPipe[] = nodes.map((node) => this.findPipesInNode(node)).flat();
+		pipes.forEach((pipe) => {
 			this.parseTranslationKeysFromPipe(pipe).forEach((key: string) => {
 				collection = collection.add(key);
 			});
