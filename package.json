@@ -57,7 +57,7 @@
   },
   "homepage": "https://github.com/biesbjerg/ngx-translate-extract",
   "engines": {
-    "node": ">=12"
+    "node": ">=11.15.0"
   },
   "config": {},
   "devDependencies": {

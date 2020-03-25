@@ -8,10 +8,9 @@
         "noImplicitUseStrict": true,
         "removeComments": true,
         "declaration": true,
-        "target": "es2015",
+        "target": "es2019",
         "lib": [
-            "dom",
-            "esnext.array"
+            "es2019"
         ],
         "module": "commonjs",
         "outDir": "dist",
