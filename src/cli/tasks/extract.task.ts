@@ -59,28 +59,30 @@ export class ExtractTask implements TaskInterface {
 				try {
 					existing = this.compiler.parse(fs.readFileSync(outputPath, 'utf-8'));
 				} catch (e) {
-					this.out(`%s %s`, dim(`- ${outputPath}`), red(`(merge error: ${e})`));
-					return;
+					this.out(`%s %s`, dim(`- ${outputPath}`), red(`[ERROR]`));
+					throw e;
 				}
 			}
 
 			// merge extracted strings with existing
 			const draft = extracted.union(existing);
 
-			if (existing.isEmpty()) {
-				this.out(dim(`- ${outputPath}`));
-			} else {
-				this.out(`%s %s`, dim(`- ${outputPath}`), green('(merged)'));
-			}
-
 			// Run collection through post processors
 			const final = this.process(draft, extracted, existing);
 
-			// Save to file
-			this.save(outputPath, final);
+			// Save
+			try {
+				let event = 'CREATED';
+				if (!fs.existsSync(outputPath)) {
+					this.options.replace ? event = 'REPLACED' : event = 'MERGED';
+				}
+				this.save(outputPath, final);
+				this.out(`%s %s`, dim(`- ${outputPath}`), green(`[${event}]`));
+			} catch (e) {
+				this.out(`%s %s`, dim(`- ${outputPath}`), red(`[ERROR]`));
+				throw e;
+			}
 		});
-
-		this.out(green('\nDone.\n'));
 	}
 
 	public setParsers(parsers: ParserInterface[]): this {

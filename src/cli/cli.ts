@@ -1,4 +1,5 @@
 import * as yargs from 'yargs';
+import { red, green } from 'colorette';
 
 import { ExtractTask } from './tasks/extract.task';
 import { ParserInterface } from '../parsers/parser.interface';
@@ -148,6 +149,13 @@ const compiler: CompilerInterface = CompilerFactory.create(cli.format, {
 });
 extractTask.setCompiler(compiler);
 
-extractTask.execute();
-
-console.log(donateMessage);
+// Run task
+try {
+	extractTask.execute();
+	console.log(green('\nDone.\n'));
+	console.log(donateMessage);
+	process.exit(0);
+} catch (e) {
+	console.log(red(`\nAn error occurred: ${e}\n`));
+	process.exit(1);
+}
