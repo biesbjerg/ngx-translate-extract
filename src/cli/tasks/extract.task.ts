@@ -73,7 +73,7 @@ export class ExtractTask implements TaskInterface {
 			// Save
 			try {
 				let event = 'CREATED';
-				if (!fs.existsSync(outputPath)) {
+				if (fs.existsSync(outputPath)) {
 					this.options.replace ? event = 'REPLACED' : event = 'MERGED';
 				}
 				this.save(outputPath, final);
