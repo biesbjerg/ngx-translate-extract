@@ -4,7 +4,7 @@ import { ParserInterface } from '../../parsers/parser.interface';
 import { PostProcessorInterface } from '../../post-processors/post-processor.interface';
 import { CompilerInterface } from '../../compilers/compiler.interface';
 
-import { cyan, green, bold, dim } from 'colorette';
+import { cyan, green, bold, dim, red } from 'colorette';
 import * as glob from 'glob';
 import * as fs from 'fs';
 import * as path from 'path';
@@ -56,7 +56,12 @@ export class ExtractTask implements TaskInterface {
 
 			let existing: TranslationCollection = new TranslationCollection();
 			if (!this.options.replace && fs.existsSync(outputPath)) {
-				existing = this.compiler.parse(fs.readFileSync(outputPath, 'utf-8'));
+				try {
+					existing = this.compiler.parse(fs.readFileSync(outputPath, 'utf-8'));
+				} catch (e) {
+					this.out(`%s %s`, dim(`- ${outputPath}`), red(`(merge error: ${e})`));
+					return;
+				}
 			}
 
 			// merge extracted strings with existing
@@ -65,7 +70,7 @@ export class ExtractTask implements TaskInterface {
 			if (existing.isEmpty()) {
 				this.out(dim(`- ${outputPath}`));
 			} else {
-				this.out(dim(`- ${outputPath} (merged)`));
+				this.out(`%s %s`, dim(`- ${outputPath}`), green('(merged)'));
 			}
 
 			// Run collection through post processors
