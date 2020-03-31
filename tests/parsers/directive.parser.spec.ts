@@ -117,4 +117,22 @@ describe('DirectiveParser', () => {
 		const keys = parser.extract(contents, templateFilename).keys();
 		expect(keys).to.deep.equal(['client.search.searchBtn']);
 	});
+
+	it('should extract contents without indent spaces and trim leading/trailing whitespace', () => {
+		const contents = `
+			<div translate>
+				this is an example 
+				of a long label 
+			</div>
+
+			<div>
+				<p translate>
+					this is an example 
+					of a long label 
+				</p>
+			</div>
+		`;
+		const keys = parser.extract(contents, templateFilename).keys();
+		expect(keys).to.deep.equal(['this is an example of a long label']);
+	});
 });

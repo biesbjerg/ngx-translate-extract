@@ -82,6 +82,6 @@ export class DirectiveParser implements ParserInterface {
 	}
 
 	protected cleanKey(val: string): string {
-		return val.replace(/\r?\n|\r|\t/g, '');
+		return val.replace(/\r?\n|\r|\t/g, '').trim();
 	}
 }
