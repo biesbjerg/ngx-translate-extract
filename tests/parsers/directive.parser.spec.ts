@@ -36,6 +36,12 @@ describe('DirectiveParser', () => {
 		expect(keys).to.deep.equal(['Hello <strong translate>World</strong>']);
 	});
 
+	it('should not exclude html tags in children', () => {
+		const contents = `<div translate>Hello <strong>World</strong></div>`;
+		const keys = parser.extract(contents, templateFilename).keys();
+		expect(keys).to.deep.equal(['Hello <strong>World</strong>']);
+	});
+
 	it('should extract and parse inline template', () => {
 		const contents = `
 			@Component({

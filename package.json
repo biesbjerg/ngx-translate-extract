@@ -69,6 +69,7 @@
     "@types/mocha": "^7.0.2",
     "@types/node": "^12.12.31",
     "@types/yargs": "^15.0.4",
+    "@types/gettext-parser": "4.0.0",
     "braces": "^3.0.2",
     "chai": "^4.2.0",
     "husky": "^4.2.3",
