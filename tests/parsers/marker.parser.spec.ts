@@ -61,5 +61,4 @@ describe('MarkerParser', () => {
 		const keys = parser.extract(contents, componentFilename).keys();
 		expect(keys).to.deep.equal(['DYNAMIC_TRAD.val1', 'DYNAMIC_TRAD.val2']);
 	});
-
 });

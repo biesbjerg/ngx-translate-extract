@@ -20,13 +20,17 @@ export function expandPattern(pattern: string): string[] {
 }
 
 export function normalizePaths(patterns: string[], defaultPatterns: string[] = []): string[] {
-	return patterns.map(pattern =>
-		expandPattern(pattern).map(path => {
-			path = normalizeHomeDir(path);
-			if (fs.existsSync(path) && fs.statSync(path).isDirectory()) {
-				return defaultPatterns.map(defaultPattern => path + defaultPattern);
-			}
-			return path;
-		}).flat()
-	).flat();
+	return patterns
+		.map((pattern) =>
+			expandPattern(pattern)
+				.map((path) => {
+					path = normalizeHomeDir(path);
+					if (fs.existsSync(path) && fs.statSync(path).isDirectory()) {
+						return defaultPatterns.map((defaultPattern) => path + defaultPattern);
+					}
+					return path;
+				})
+				.flat()
+		)
+		.flat();
 }

@@ -13,7 +13,7 @@ export class DirectiveParser implements ParserInterface {
 		let collection: TranslationCollection = new TranslationCollection();
 
 		const nodes: TmplAstNode[] = this.parseTemplate(source, filePath);
-		this.getTranslatableElements(nodes).forEach(element => {
+		this.getTranslatableElements(nodes).forEach((element) => {
 			const key = this.getElementTranslateAttrValue(element) || this.getElementContent(element);
 			collection = collection.add(key);
 		});
@@ -23,11 +23,11 @@ export class DirectiveParser implements ParserInterface {
 
 	protected getTranslatableElements(nodes: TmplAstNode[]): TmplAstElement[] {
 		return nodes
-			.filter(element => this.isElement(element))
+			.filter((element) => this.isElement(element))
 			.reduce((result: TmplAstElement[], element: TmplAstElement) => {
 				return result.concat(this.findChildrenElements(element));
 			}, [])
-			.filter(element => this.isTranslatable(element));
+			.filter((element) => this.isTranslatable(element));
 	}
 
 	protected findChildrenElements(node: TmplAstNode): TmplAstElement[] {
@@ -62,14 +62,14 @@ export class DirectiveParser implements ParserInterface {
 	}
 
 	protected isTranslatable(node: TmplAstNode): boolean {
-		if (this.isElement(node) && node.attributes.some(attribute => attribute.name === 'translate')) {
+		if (this.isElement(node) && node.attributes.some((attribute) => attribute.name === 'translate')) {
 			return true;
 		}
 		return false;
 	}
 
 	protected getElementTranslateAttrValue(element: TmplAstElement): string {
-		const attr: TmplAstTextAttribute = element.attributes.find(attribute => attribute.name === 'translate');
+		const attr: TmplAstTextAttribute = element.attributes.find((attribute) => attribute.name === 'translate');
 		return attr?.value ?? '';
 	}
 
@@ -82,6 +82,6 @@ export class DirectiveParser implements ParserInterface {
 	}
 
 	protected cleanKey(val: string): string {
-		return val.replace(/\r?\n|\r|\t/g, '');
+		return val.replace(/\r?\n|\r|\t/g, '').trim();
 	}
 }

@@ -14,21 +14,18 @@ export class TranslationCollection {
 	}
 
 	public addKeys(keys: string[]): TranslationCollection {
-		const values = keys.reduce(
-			(results, key) => {
-				return { ...results, [key]: '' };
-			},
-			{} as TranslationType
-		);
+		const values = keys.reduce((results, key) => {
+			return { ...results, [key]: '' };
+		}, {} as TranslationType);
 		return new TranslationCollection({ ...this.values, ...values });
 	}
 
 	public remove(key: string): TranslationCollection {
-		return this.filter(k => key !== k);
+		return this.filter((k) => key !== k);
 	}
 
 	public forEach(callback: (key?: string, val?: string) => void): TranslationCollection {
-		Object.keys(this.values).forEach(key => callback.call(this, key, this.values[key]));
+		Object.keys(this.values).forEach((key) => callback.call(this, key, this.values[key]));
 		return this;
 	}
 
@@ -56,7 +53,7 @@ export class TranslationCollection {
 
 	public intersect(collection: TranslationCollection): TranslationCollection {
 		const values: TranslationType = {};
-		this.filter(key => collection.has(key)).forEach((key, val) => {
+		this.filter((key) => collection.has(key)).forEach((key, val) => {
 			values[key] = val;
 		});
 
@@ -87,7 +84,7 @@ export class TranslationCollection {
 		const values: TranslationType = {};
 		this.keys()
 			.sort(compareFn)
-			.forEach(key => {
+			.forEach((key) => {
 				values[key] = this.get(key);
 			});
 

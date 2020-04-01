@@ -19,7 +19,7 @@ export class MarkerParser implements ParserInterface {
 		let collection: TranslationCollection = new TranslationCollection();
 
 		const callExpressions = findFunctionCallExpressions(sourceFile, markerImportName);
-		callExpressions.forEach(callExpression => {
+		callExpressions.forEach((callExpression) => {
 			const [firstArg] = callExpression.arguments;
 			if (!firstArg) {
 				return;

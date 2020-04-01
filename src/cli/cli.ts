@@ -1,4 +1,5 @@
 import * as yargs from 'yargs';
+import { red, green } from 'colorette';
 
 import { ExtractTask } from './tasks/extract.task';
 import { ParserInterface } from '../parsers/parser.interface';
@@ -18,14 +19,13 @@ import { normalizePaths } from '../utils/fs-helpers';
 import { donateMessage } from '../utils/donate';
 
 // First parsing pass to be able to access pattern argument for use input/output arguments
-const y = yargs
-	.option('patterns', {
-		alias: 'p',
-		describe: 'Default patterns',
-		type: 'array',
-		default: ['/**/*.html', '/**/*.ts'],
-		hidden: true
-	});
+const y = yargs.option('patterns', {
+	alias: 'p',
+	describe: 'Default patterns',
+	type: 'array',
+	default: ['/**/*.html', '/**/*.ts'],
+	hidden: true
+});
 
 const parsed = y.parse();
 
@@ -149,6 +149,13 @@ const compiler: CompilerInterface = CompilerFactory.create(cli.format, {
 });
 extractTask.setCompiler(compiler);
 
-extractTask.execute();
-
-console.log(donateMessage);
+// Run task
+try {
+	extractTask.execute();
+	console.log(green('\nDone.\n'));
+	console.log(donateMessage);
+	process.exit(0);
+} catch (e) {
+	console.log(red(`\nAn error occurred: ${e}\n`));
+	process.exit(1);
+}

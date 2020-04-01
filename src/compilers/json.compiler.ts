@@ -28,6 +28,6 @@ export class JsonCompiler implements CompilerInterface {
 	}
 
 	protected isNamespacedJsonFormat(values: any): boolean {
-		return Object.keys(values).some(key => typeof values[key] === 'object');
+		return Object.keys(values).some((key) => typeof values[key] === 'object');
 	}
 }

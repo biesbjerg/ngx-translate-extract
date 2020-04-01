@@ -15,7 +15,7 @@ Add a script to your project's `package.json`:
 ```json
 ...
 "scripts": {
-  "extract-i18n": "ngx-translate-extract --input ./src --output ./src/assets/i18n/ --clean --sort --format namespaced-json"
+  "extract-i18n": "ngx-translate-extract --input ./src --output ./src/assets/i18n/strings.json --key-as-default-value --clean --sort --format namespaced-json"
 }
 ...
 ```
@@ -25,11 +25,11 @@ You can now run `npm run extract-i18n` and it will extract strings from your pro
 
 **Extract from dir and save to file**
 
-`ngx-translate-extract --input ./src --output ./src/assets/i18n/template.json`
+`ngx-translate-extract --input ./src --output ./src/assets/i18n/strings.json`
 
 **Extract from multiple dirs**
 
-`ngx-translate-extract --input ./src-a ./src-b --output ./src/assets/i18n/template.json`
+`ngx-translate-extract --input ./src-a ./src-b --output ./src/assets/i18n/strings.json`
 
 
 **Extract and save to multiple files using path expansion**
