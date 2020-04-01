@@ -34,7 +34,7 @@ export class PoCompiler implements CompilerInterface {
 			}
 		};
 
-		return po.compile(data).toString("utf8");
+		return po.compile(data).toString('utf8');
 	}
 
 	public parse(contents: string): TranslationCollection {
