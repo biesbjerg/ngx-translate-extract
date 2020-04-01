@@ -112,6 +112,7 @@
       "check-operator",
       "check-separator",
       "check-type"
-    ]
+    ],
+    "quotemark": [true, "single"]
   }
 }
