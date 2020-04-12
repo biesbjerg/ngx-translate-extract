@@ -1,6 +1,6 @@
 import { ParserInterface } from './parser.interface';
-import { TranslationCollection } from '../utils/translation.collection';
-import { isPathAngularComponent, extractComponentInlineTemplate, pugConverterParser } from '../utils/utils';
+import { TranslationCollection } from '..';
+import { isPathAngularComponent, extractComponentInlineTemplate, pugConverterParser } from '..';
 
 import { parseTemplate, TmplAstNode, TmplAstElement, TmplAstTextAttribute } from '@angular/compiler';
 
@@ -16,7 +16,14 @@ export class DirectiveParser implements ParserInterface {
 
 		const nodes: TmplAstNode[] = this.parseTemplate(source, filePath);
 		this.getTranslatableElements(nodes).forEach(element => {
-			const key = this.getElementTranslateAttrValue(element) || this.getElementContents(element);
+			const getElementTranslateAttrValue = this.getElementTranslateAttrValue(element); // translate
+			const getElementContents = this.getElementContents(element);
+			let key;
+			if (getElementTranslateAttrValue && getElementContents) {
+				key = getElementTranslateAttrValue === 'translate' ? getElementContents : getElementTranslateAttrValue;
+			} else {
+				key = getElementTranslateAttrValue || getElementContents;
+			}
 			collection = collection.add(key);
 		});
 
@@ -64,10 +71,7 @@ export class DirectiveParser implements ParserInterface {
 	}
 
 	protected isTranslatable(node: TmplAstNode): boolean {
-		if (this.isElement(node) && node.attributes.some(attribute => attribute.name === 'translate')) {
-			return true;
-		}
-		return false;
+		return this.isElement(node) && node.attributes.some(attribute => attribute.name === 'translate');
 	}
 
 	protected getElementTranslateAttrValue(element: TmplAstElement): string {
