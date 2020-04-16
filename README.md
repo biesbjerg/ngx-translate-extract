@@ -15,7 +15,8 @@ Add a script to your project's `package.json`:
 ```json
 ...
 "scripts": {
-  "extract-i18n": "ngx-translate-extract --input ./src --output ./src/assets/i18n/strings.json --key-as-default-value --clean --sort --format namespaced-json"
+  "i18n:init": "ngx-translate-extract --input ./src --output ./src/assets/i18n/template.json --key-as-default-value --replace --format json",
+  "i18n:extract": "ngx-translate-extract --input ./src --output ./src/assets/i18n/{en,da,de,fi,nb,nl,sv}.json --clean --format json"
 }
 ...
 ```
