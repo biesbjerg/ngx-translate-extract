@@ -87,35 +87,41 @@ export class PipeParser implements ParserInterface {
 	}
 
 	protected getTranslatablesFromAst(ast: AST): BindingPipe[] {
-		// 'foo' | translate
-		// (condition ? 'foo' : 'bar') | translate
+
+		// the entire expression is the translate pipe, e.g.:
+		// - 'foo' | translate
+		// - (condition ? 'foo' : 'bar') | translate
 		if (this.expressionIsOrHasBindingPipe(ast)) {
 			return [ast];
 
-			// expression entry point
+			// angular double curly bracket interpolation, e.g.:
+			// - {{ expressions }}
 		} else if (ast instanceof Interpolation) {
 			return this.flatten(ast.expressions.map((expression: AST) => this.getTranslatablesFromAst(expression)));
 
-			// condition ? null : ('foo' | translate)
-			// condition ? ('foo' | translate) : null
+			// ternary operator, e.g.:
+			// - condition ? null : ('foo' | translate)
+			// - condition ? ('foo' | translate) : null
 		} else if (ast instanceof Conditional) {
-			return [ast.trueExp, ast.falseExp].filter((conditionalExp): conditionalExp is BindingPipe =>
-				this.expressionIsOrHasBindingPipe(conditionalExp)
-			);
+			return this.flatten([ast.trueExp, ast.falseExp].map((exp) => this.getTranslatablesFromAst(exp)));
 
-			// 'foo' + 'bar' + ('baz' | translate)
+			// string concatenation, e.g.:
+			// - 'foo' + 'bar' + ('baz' | translate)
 		} else if (ast instanceof Binary) {
-			return [...this.getTranslatablesFromAst(ast.left), ...this.getTranslatablesFromAst(ast.right)];
+			return this.flatten([ast.left, ast.right].map((exp) => this.getTranslatablesFromAst(exp)));
 
-			// object literal entry point
+			// a pipe on the outer expression, but not the translate pipe - ignore the pipe, visit the expression, e.g.:
+			// - { foo: 'Hello' | translate } | json
 		} else if (ast instanceof BindingPipe) {
 			return this.getTranslatablesFromAst(ast.exp);
 
-			// { key1: 'value1' | translate, key2: 'value2' | translate }
+			// object - ignore the keys, visit all values, e.g.:
+			// - { key1: 'value1' | translate, key2: 'value2' | translate }
 		} else if (ast instanceof LiteralMap) {
 			return this.flatten(ast.values.map((value) => this.getTranslatablesFromAst(value)));
 
-			// [ 'value' | translate ]
+			// array - visit all its values, e.g.:
+			// - [ 'value1' | translate, 'value2' | translate ]
 		} else if (ast instanceof LiteralArray) {
 			return this.flatten(ast.expressions.map((value) => this.getTranslatablesFromAst(value)));
 		}
