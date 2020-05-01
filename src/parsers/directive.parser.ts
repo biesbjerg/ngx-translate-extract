@@ -2,7 +2,8 @@ import { ParserInterface } from './parser.interface';
 import { TranslationCollection } from '../utils/translation.collection';
 import { isPathAngularComponent, extractComponentInlineTemplate } from '../utils/utils';
 
-import { parseTemplate, TmplAstNode, TmplAstElement, TmplAstTextAttribute } from '@angular/compiler';
+import { parseTemplate, TmplAstNode, TmplAstElement, TmplAstTextAttribute, ASTWithSource } from '@angular/compiler';
+import { BoundAttribute } from '@angular/compiler/src/render3/r3_ast';
 
 export class DirectiveParser implements ParserInterface {
 	public extract(source: string, filePath: string): TranslationCollection | null {
@@ -14,7 +15,8 @@ export class DirectiveParser implements ParserInterface {
 
 		const nodes: TmplAstNode[] = this.parseTemplate(source, filePath);
 		this.getTranslatableElements(nodes).forEach((element) => {
-			const key = this.getElementTranslateAttrValue(element) || this.getElementContent(element);
+			const key =
+				this.getElementTranslateInputBindingValue(element) || this.getElementTranslateAttrValue(element) || this.getElementContent(element);
 			collection = collection.add(key);
 		});
 
@@ -62,15 +64,28 @@ export class DirectiveParser implements ParserInterface {
 	}
 
 	protected isTranslatable(node: TmplAstNode): boolean {
+		// attribute value
 		if (this.isElement(node) && node.attributes.some((attribute) => attribute.name === 'translate')) {
 			return true;
 		}
+
+		// attribute input binding
+		if (this.isElement(node) && node.inputs.some((input) => input.name === 'translate')) {
+			return true;
+		}
+
 		return false;
 	}
 
 	protected getElementTranslateAttrValue(element: TmplAstElement): string {
 		const attr: TmplAstTextAttribute = element.attributes.find((attribute) => attribute.name === 'translate');
 		return attr?.value ?? '';
+	}
+
+	protected getElementTranslateInputBindingValue(element: TmplAstElement): string {
+		const input: BoundAttribute = element.inputs.find((input) => input.name === 'translate');
+		const inputVal = (input?.value as ASTWithSource)?.source?.replace(/(^')|('$)/g, '');
+		return inputVal ?? '';
 	}
 
 	protected getElementContent(element: TmplAstElement): string {

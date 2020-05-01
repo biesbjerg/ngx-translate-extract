@@ -141,4 +141,10 @@ describe('DirectiveParser', () => {
 		const keys = parser.extract(contents, templateFilename).keys();
 		expect(keys).to.deep.equal(['this is an example of a long label']);
 	});
+
+	it('should extract key when input binding is used on a translate directive', () => {
+		const contents = '<div [translate]="\'KEY\'"></div>';
+		const keys = parser.extract(contents, templateFilename).keys();
+		expect(keys).to.deep.equal(['KEY']);
+	});
 });
