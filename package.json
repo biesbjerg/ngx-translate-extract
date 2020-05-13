@@ -17,7 +17,7 @@
     "clean": "rm -rf ./dist",
     "lint": "tslint --force './src/**/*.ts'",
     "test": "mocha -r ts-node/register tests/**/*.spec.ts",
-    "dev": "ts-node -D 7016 src -p '/**/*.html' -p '/**/*.pug' -p '/**/*.ts' --input /home/ido/projects/angular/ui-streaming-scrnz/src --output ./i18n/strings.json --clean --sort --format namespaced-json"
+    "dev": "ts-node -D 7016 src -p '/**/*.html' -p '/**/*.pug' -p '/**/*.ts' --input /home/ido/projects/angular/ui-streaming-scrnz/src --output /home/ido/projects/angular/ui-streaming-scrnz/src/assets/i18n/*.json --clean --sort --format namespaced-json"
   },
   "prettier": {
     "trailingComma": "none",
