@@ -47,8 +47,44 @@ describe('PipeParser', () => {
 		expect(keys).to.deep.equal(['Hello', 'World']);
 	});
 
+	it('should extract strings from ternary operators right expression', () => {
+		const contents = `{{ condition ? null : ('World' | translate) }}`;
+		const keys = parser.extract(contents, templateFilename).keys();
+		expect(keys).to.deep.equal(['World']);
+	});
+
+	it('should extract strings from ternary operators inside attribute bindings', () => {
+		const contents = `<span [attr]="condition ? null : ('World' | translate)"></span>`;
+		const keys = parser.extract(contents, templateFilename).keys();
+		expect(keys).to.deep.equal(['World']);
+	});
+
+	it('should extract strings from ternary operators left expression', () => {
+		const contents = `{{ condition ? ('World' | translate) : null }}`;
+		const keys = parser.extract(contents, templateFilename).keys();
+		expect(keys).to.deep.equal(['World']);
+	});
+
+	it('should extract strings inside string concatenation', () => {
+		const contents = `{{ 'a' + ('Hello' | translate) + 'b' + 'c' + ('World' | translate) + 'd' }}`;
+		const keys = parser.extract(contents, templateFilename).keys();
+		expect(keys).to.deep.equal(['Hello', 'World']);
+	});
+
+	it('should extract strings from object', () => {
+		const contents = `{{ { foo: 'Hello' | translate, bar: ['World' | translate], deep: { nested: { baz: 'Yes' | translate } } } | json }}`;
+		const keys = parser.extract(contents, templateFilename).keys();
+		expect(keys).to.deep.equal(['Hello', 'World', 'Yes']);
+	});
+
 	it('should extract strings from ternary operators inside attribute bindings', () => {
 		const contents = `<span [attr]="(condition ? 'Hello' : 'World') | translate"></span>`;
+		const keys = parser.extract(contents, templateFilename).keys();
+		expect(keys).to.deep.equal(['Hello', 'World']);
+	});
+
+	it('should extract strings from nested expressions', () => {
+		const contents = `<span [attr]="{ foo: ['a' + ((condition ? 'Hello' : 'World') | translate) + 'b'] }"></span>`;
 		const keys = parser.extract(contents, templateFilename).keys();
 		expect(keys).to.deep.equal(['Hello', 'World']);
 	});

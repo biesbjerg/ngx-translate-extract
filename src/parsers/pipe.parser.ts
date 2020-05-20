@@ -1,4 +1,16 @@
-import { TmplAstNode, parseTemplate, BindingPipe, LiteralPrimitive, Conditional, TmplAstTextAttribute } from '@angular/compiler';
+import {
+	AST,
+	TmplAstNode,
+	parseTemplate,
+	BindingPipe,
+	LiteralPrimitive,
+	Conditional,
+	TmplAstTextAttribute,
+	Binary,
+	LiteralMap,
+	LiteralArray,
+	Interpolation
+} from '@angular/compiler';
 
 import { ParserInterface } from './parser.interface';
 import { TranslationCollection } from '../utils/translation.collection';
@@ -36,9 +48,8 @@ export class PipeParser implements ParserInterface {
 			);
 		}
 
-		if (node?.value?.ast?.expressions) {
-			const translateables = node.value.ast.expressions.filter((exp: any) => this.expressionIsOrHasBindingPipe(exp));
-			ret.push(...translateables);
+		if (node?.value?.ast) {
+			ret.push(...this.getTranslatablesFromAst(node.value.ast));
 		}
 
 		if (node?.attributes) {
@@ -51,17 +62,8 @@ export class PipeParser implements ParserInterface {
 		if (node?.inputs) {
 			node.inputs.forEach((input: any) => {
 				// <element [attrib]="'identifier' | translate">
-				if (input?.value?.ast && this.expressionIsOrHasBindingPipe(input.value.ast)) {
-					ret.push(input.value.ast);
-				}
-
-				// <element attrib="{{'identifier' | translate}}>"
-				if (input?.value?.ast?.expressions) {
-					input.value.ast.expressions.forEach((exp: BindingPipe) => {
-						if (this.expressionIsOrHasBindingPipe(exp)) {
-							ret.push(exp);
-						}
-					});
+				if (input?.value?.ast) {
+					ret.push(...this.getTranslatablesFromAst(input.value.ast));
 				}
 			});
 		}
@@ -84,7 +86,63 @@ export class PipeParser implements ParserInterface {
 		return ret;
 	}
 
-	protected expressionIsOrHasBindingPipe(exp: any): boolean {
+	protected getTranslatablesFromAst(ast: AST): BindingPipe[] {
+		// the entire expression is the translate pipe, e.g.:
+		// - 'foo' | translate
+		// - (condition ? 'foo' : 'bar') | translate
+		if (this.expressionIsOrHasBindingPipe(ast)) {
+			return [ast];
+		}
+
+		// angular double curly bracket interpolation, e.g.:
+		// - {{ expressions }}
+		if (ast instanceof Interpolation) {
+			return this.getTranslatablesFromAsts(ast.expressions);
+		}
+
+		// ternary operator, e.g.:
+		// - condition ? null : ('foo' | translate)
+		// - condition ? ('foo' | translate) : null
+		if (ast instanceof Conditional) {
+			return this.getTranslatablesFromAsts([ast.trueExp, ast.falseExp]);
+		}
+
+		// string concatenation, e.g.:
+		// - 'foo' + 'bar' + ('baz' | translate)
+		if (ast instanceof Binary) {
+			return this.getTranslatablesFromAsts([ast.left, ast.right]);
+		}
+
+		// a pipe on the outer expression, but not the translate pipe - ignore the pipe, visit the expression, e.g.:
+		// - { foo: 'Hello' | translate } | json
+		if (ast instanceof BindingPipe) {
+			return this.getTranslatablesFromAst(ast.exp);
+		}
+
+		// object - ignore the keys, visit all values, e.g.:
+		// - { key1: 'value1' | translate, key2: 'value2' | translate }
+		if (ast instanceof LiteralMap) {
+			return this.getTranslatablesFromAsts(ast.values);
+		}
+
+		// array - visit all its values, e.g.:
+		// - [ 'value1' | translate, 'value2' | translate ]
+		if (ast instanceof LiteralArray) {
+			return this.getTranslatablesFromAsts(ast.expressions);
+		}
+
+		return [];
+	}
+
+	protected getTranslatablesFromAsts(asts: AST[]): BindingPipe[] {
+		return this.flatten(asts.map(ast => this.getTranslatablesFromAst(ast)));
+	}
+
+	protected flatten<T extends AST>(array: T[][]): T[] {
+		return [].concat(...array);
+	}
+
+	protected expressionIsOrHasBindingPipe(exp: any): exp is BindingPipe {
 		if (exp.name && exp.name === TRANSLATE_PIPE_NAME) {
 			return true;
 		}
