@@ -1,74 +1,108 @@
+import {
+	parseTemplate,
+	TmplAstNode as Node,
+	TmplAstElement as Element,
+	TmplAstText as Text,
+	TmplAstTemplate as Template
+} from '@angular/compiler';
+
 import { ParserInterface } from './parser.interface';
 import { TranslationCollection } from '../utils/translation.collection';
 import { isPathAngularComponent, extractComponentInlineTemplate } from '../utils/utils';
 
-import { parseTemplate, TmplAstNode, TmplAstElement, TmplAstText, TmplAstTemplate } from '@angular/compiler';
+const TRANSLATE_ATTR_NAME = 'translate';
+type ElementLike = Element | Template;
 
 export class DirectiveParser implements ParserInterface {
 	public extract(source: string, filePath: string): TranslationCollection | null {
+		let collection: TranslationCollection = new TranslationCollection();
+
 		if (filePath && isPathAngularComponent(filePath)) {
 			source = extractComponentInlineTemplate(source);
 		}
+		const nodes: Node[] = this.parseTemplate(source, filePath);
+		const elements: ElementLike[] = this.getElementsWithTranslateAttribute(nodes);
 
-		let collection: TranslationCollection = new TranslationCollection();
-
-		const nodes: TmplAstNode[] = this.parseTemplate(source, filePath);
-		this.findTranslatableElements(nodes).forEach((element) => {
-			const key = this.getTranslateAttribValue(element);
-			if (key) {
-				collection = collection.add(key);
-			} else {
-				const keys = this.getTextNodeValues(element);
-				keys.forEach((k) => {
-					collection = collection.add(k);
-				});
+		elements.forEach((element) => {
+			const attr = this.getAttribute(element, TRANSLATE_ATTR_NAME);
+			if (attr) {
+				collection = collection.add(attr);
+				return;
 			}
+			const textNodes = this.getTextNodes(element);
+			textNodes.forEach((textNode: Text) => {
+				collection = collection.add(textNode.value.trim());
+			});
 		});
 		return collection;
 	}
 
-	protected findTranslatableElements(nodes: TmplAstNode[]): TmplAstElement[] {
-		return nodes
-			.reduce((elements: TmplAstElement[], node: TmplAstNode) => {
-				return [...elements, ...this.findChildrenElements(node)];
-			}, [])
-			.filter((element) => this.isTranslatable(element));
+	/**
+	 * Find all ElementLike nodes with a translate attribute
+	 * @param nodes
+	 */
+	protected getElementsWithTranslateAttribute(nodes: Node[]): ElementLike[] {
+		let elements: ElementLike[] = [];
+		nodes.filter(this.isElementLike)
+			.forEach((element) => {
+				if (this.hasAttribute(element, TRANSLATE_ATTR_NAME)) {
+					elements = [...elements, element];
+				}
+				const childElements = this.getElementsWithTranslateAttribute(element.children);
+				if (childElements.length) {
+					elements = [...elements, ...childElements];
+				}
+			});
+		return elements;
 	}
 
-	protected findChildrenElements(node: TmplAstNode): TmplAstElement[] {
-		if (!this.isElement(node)) {
-			return [];
-		}
-		return node.children.reduce(
-			(elements: TmplAstElement[], childNode: TmplAstNode) => {
-				return [...elements, ...this.findChildrenElements(childNode)];
-			},
-			[node]
-		);
+	/**
+	 * Get direct child nodes of type Text
+	 * @param element
+	 */
+	protected getTextNodes(element: ElementLike): Text[] {
+		return element.children.filter(this.isText);
 	}
 
-	protected parseTemplate(template: string, path: string): TmplAstNode[] {
+	/**
+	 * Check if attribute is present on element
+	 * @param element
+	 */
+	protected hasAttribute(element: ElementLike, name: string): boolean {
+		return this.getAttribute(element, name) !== undefined;
+	}
+
+	/**
+	 * Get attribute value if present on element
+	 * @param element
+	 */
+	protected getAttribute(element: ElementLike, name: string): string | undefined {
+		return element.attributes.find((attribute) => attribute.name === name)?.value;
+	}
+
+	/**
+	 * Check if node type is ElementLike
+	 * @param node
+	 */
+	protected isElementLike(node: Node): node is ElementLike {
+		return node instanceof Element || node instanceof Template;
+	}
+
+	/**
+	 * Check if node type is Text
+	 * @param node
+	 */
+	protected isText(node: Node): node is Text {
+		return node instanceof Text;
+	}
+
+	/**
+	 * Parse a template into nodes
+	 * @param template
+	 * @param path
+	 */
+	protected parseTemplate(template: string, path: string): Node[] {
 		return parseTemplate(template, path).nodes;
 	}
 
-	protected isElement(node: any): node is TmplAstElement {
-		return node instanceof TmplAstElement || node instanceof TmplAstTemplate;
-	}
-
-	protected isTranslatable(node: TmplAstElement): boolean {
-		if (node.attributes.some((attribute) => attribute.name === 'translate')) {
-			return true;
-		}
-		return false;
-	}
-
-	protected getTranslateAttribValue(element: TmplAstElement): string | undefined {
-		return element.attributes.find((attribute) => attribute.name === 'translate')?.value;
-	}
-
-	protected getTextNodeValues(element: TmplAstElement): string[] {
-		return element.children
-			.filter((child) => child instanceof TmplAstText)
-			.map((child: TmplAstText) => child.value.trim());
-	}
 }
