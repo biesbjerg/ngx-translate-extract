@@ -24,38 +24,25 @@ describe('DirectiveParser', () => {
 		expect(keys).to.deep.equal(['Wubba Lubba Dub Dub']);
 	});
 
-	// Source: // https://github.com/ngx-translate/core/blob/7241c863b2eead26e082cd0b7ee15bac3f9336fc/projects/ngx-translate/core/tests/translate.directive.spec.ts#L93
-	it('should extract keys the same way TranslateDirective is using them', () => {
-		const contents = `<div #withOtherElements translate>TEST1 <span>Hey</span> TEST2</div>`;
-		const keys = parser.extract(contents, templateFilename).keys();
-		expect(keys).to.deep.equal(['TEST1', 'TEST2']);
-	});
-
-	it('should not choke when no html is present in template', () => {
-		const contents = 'Hello World';
-		const keys = parser.extract(contents, templateFilename).keys();
-		expect(keys).to.deep.equal([]);
-	});
-
-	it('should use contents as key when there is no translate attribute value provided', () => {
+	it('should use element contents as key when no translate attribute value is present', () => {
 		const contents = '<div translate>Hello World</div>';
 		const keys = parser.extract(contents, templateFilename).keys();
 		expect(keys).to.deep.equal(['Hello World']);
 	});
 
-	it('should use translate attribute value as key when provided', () => {
+	it('should use translate attribute value as key when present', () => {
 		const contents = '<div translate="MY_KEY">Hello World<div>';
 		const keys = parser.extract(contents, templateFilename).keys();
 		expect(keys).to.deep.equal(['MY_KEY']);
 	});
 
-	it('should not process children when translate attribute is present', () => {
+	it('should extract keys from child elements when translate attribute is present', () => {
 		const contents = `<div translate>Hello <strong translate>World</strong></div>`;
 		const keys = parser.extract(contents, templateFilename).keys();
 		expect(keys).to.deep.equal(['Hello', 'World']);
 	});
 
-	it('should not exclude html tags in children', () => {
+	it('should not extract keys from child elements when translate attribute is not present', () => {
 		const contents = `<div translate>Hello <strong>World</strong></div>`;
 		const keys = parser.extract(contents, templateFilename).keys();
 		expect(keys).to.deep.equal(['Hello']);
@@ -91,40 +78,13 @@ describe('DirectiveParser', () => {
 		expect(collection.values).to.deep.equal({});
 	});
 
-	it('should extract contents from within custom tags', () => {
+	it('should extract contents from custom elements', () => {
 		const contents = `<custom-table><tbody><tr><td translate>Hello World</td></tr></tbody></custom-table>`;
 		const keys = parser.extract(contents, templateFilename).keys();
 		expect(keys).to.deep.equal(['Hello World']);
 	});
 
-	it('should not cause error when no html is present in template', () => {
-		const contents = `
-			import { Component } from '@angular/core';
-			@Component({
-				template: '{{ variable }}'
-			})
-			export class MyComponent {
-				variable: string
-			}
-		`;
-		const keys = parser.extract(contents, componentFilename).keys();
-		expect(keys).to.deep.equal([]);
-	});
-
-	it('should extract contents without line breaks', () => {
-		const contents = `
-			<p translate>
-				Please leave a message for your client letting them know why you
-				rejected the field and what they need to do to fix it.
-			</p>
-		`;
-		const keys = parser.extract(contents, templateFilename).keys();
-		expect(keys).to.deep.equal([
-			'Please leave a message for your client letting them know why you rejected the field and what they need to do to fix it.'
-		]);
-	});
-
-	it('should extract contents without indent spaces', () => {
+	it('should extract from template without leading/trailing whitespace', () => {
 		const contents = `
 			<div *ngIf="!isLoading && studentsToGrid && studentsToGrid.length == 0" class="no-students" mt-rtl translate>There
 				are currently no students in this class. The good news is, adding students is really easy! Just use the options
@@ -137,7 +97,7 @@ describe('DirectiveParser', () => {
 		]);
 	});
 
-	it('should extract contents without indent spaces and trim leading/trailing whitespace', () => {
+	it('should extract keys from element without leading/trailing whitespace', () => {
 		const contents = `
 			<div translate>
 				this is an example
@@ -147,11 +107,17 @@ describe('DirectiveParser', () => {
 			<div>
 				<p translate>
 					this is an example
-					of a long label
+					of another a long label
 				</p>
 			</div>
 		`;
 		const keys = parser.extract(contents, templateFilename).keys();
-		expect(keys).to.deep.equal(['this is an example of a long label']);
+		expect(keys).to.deep.equal(['this is an example of a long label', 'this is an example of another a long label']);
+	});
+
+	it('should collapse excessive whitespace', () => {
+		const contents = '<p translate>this      is an example</p>';
+		const keys = parser.extract(contents, templateFilename).keys();
+		expect(keys).to.deep.equal(['this is an example']);
 	});
 });
