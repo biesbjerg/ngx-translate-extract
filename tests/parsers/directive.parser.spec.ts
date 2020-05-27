@@ -12,6 +12,25 @@ describe('DirectiveParser', () => {
 		parser = new DirectiveParser();
 	});
 
+	it('should extract keys keeping proper whitespace', () => {
+		const contents = `
+			<div translate>
+				Wubba
+				Lubba
+				Dub Dub
+			</div>
+		`;
+		const keys = parser.extract(contents, templateFilename).keys();
+		expect(keys).to.deep.equal(['Wubba Lubba Dub Dub']);
+	});
+
+	// Source: // https://github.com/ngx-translate/core/blob/7241c863b2eead26e082cd0b7ee15bac3f9336fc/projects/ngx-translate/core/tests/translate.directive.spec.ts#L93
+	it('should extract keys the same way TranslateDirective is using them', () => {
+		const contents = `<div #withOtherElements translate>TEST1 <span>Hey</span> TEST2</div>`;
+		const keys = parser.extract(contents, templateFilename).keys();
+		expect(keys).to.deep.equal(['TEST1', 'TEST2']);
+	});
+
 	it('should not choke when no html is present in template', () => {
 		const contents = 'Hello World';
 		const keys = parser.extract(contents, templateFilename).keys();
@@ -33,13 +52,13 @@ describe('DirectiveParser', () => {
 	it('should not process children when translate attribute is present', () => {
 		const contents = `<div translate>Hello <strong translate>World</strong></div>`;
 		const keys = parser.extract(contents, templateFilename).keys();
-		expect(keys).to.deep.equal(['Hello <strong translate>World</strong>']);
+		expect(keys).to.deep.equal(['Hello', 'World']);
 	});
 
 	it('should not exclude html tags in children', () => {
 		const contents = `<div translate>Hello <strong>World</strong></div>`;
 		const keys = parser.extract(contents, templateFilename).keys();
-		expect(keys).to.deep.equal(['Hello <strong>World</strong>']);
+		expect(keys).to.deep.equal(['Hello']);
 	});
 
 	it('should extract and parse inline template', () => {
@@ -95,7 +114,7 @@ describe('DirectiveParser', () => {
 	it('should extract contents without line breaks', () => {
 		const contents = `
 			<p translate>
-				Please leave a message for your client letting them know why you 
+				Please leave a message for your client letting them know why you
 				rejected the field and what they need to do to fix it.
 			</p>
 		`;
@@ -107,8 +126,8 @@ describe('DirectiveParser', () => {
 
 	it('should extract contents without indent spaces', () => {
 		const contents = `
-			<div *ngIf="!isLoading && studentsToGrid && studentsToGrid.length == 0" class="no-students" mt-rtl translate>There 
-				are currently no students in this class. The good news is, adding students is really easy! Just use the options 
+			<div *ngIf="!isLoading && studentsToGrid && studentsToGrid.length == 0" class="no-students" mt-rtl translate>There
+				are currently no students in this class. The good news is, adding students is really easy! Just use the options
 				at the top.
 			</div>
 		`;
@@ -118,23 +137,17 @@ describe('DirectiveParser', () => {
 		]);
 	});
 
-	it('should extract contents without indent spaces', () => {
-		const contents = `<button mat-button (click)="search()" translate>client.search.searchBtn</button>`;
-		const keys = parser.extract(contents, templateFilename).keys();
-		expect(keys).to.deep.equal(['client.search.searchBtn']);
-	});
-
 	it('should extract contents without indent spaces and trim leading/trailing whitespace', () => {
 		const contents = `
 			<div translate>
-				this is an example 
-				of a long label 
+				this is an example
+				of a long label
 			</div>
 
 			<div>
 				<p translate>
-					this is an example 
-					of a long label 
+					this is an example
+					of a long label
 				</p>
 			</div>
 		`;
