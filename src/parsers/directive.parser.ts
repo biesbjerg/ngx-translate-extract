@@ -2,7 +2,7 @@ import { ParserInterface } from './parser.interface';
 import { TranslationCollection } from '../utils/translation.collection';
 import { isPathAngularComponent, extractComponentInlineTemplate } from '../utils/utils';
 
-import { parseTemplate, TmplAstNode, TmplAstElement, TmplAstTextAttribute } from '@angular/compiler';
+import { parseTemplate, TmplAstNode, TmplAstElement, TmplAstText, TmplAstTemplate } from '@angular/compiler';
 
 export class DirectiveParser implements ParserInterface {
 	public extract(source: string, filePath: string): TranslationCollection | null {
@@ -13,19 +13,24 @@ export class DirectiveParser implements ParserInterface {
 		let collection: TranslationCollection = new TranslationCollection();
 
 		const nodes: TmplAstNode[] = this.parseTemplate(source, filePath);
-		this.getTranslatableElements(nodes).forEach((element) => {
-			const key = this.getElementTranslateAttrValue(element) || this.getElementContent(element);
-			collection = collection.add(key);
+		this.findTranslatableElements(nodes).forEach((element) => {
+			const key = this.getTranslateAttribValue(element);
+			if (key) {
+				collection = collection.add(key);
+			} else {
+				const keys = this.getTextNodeValues(element);
+				keys.forEach((k) => {
+					collection = collection.add(k);
+				});
+			}
 		});
-
 		return collection;
 	}
 
-	protected getTranslatableElements(nodes: TmplAstNode[]): TmplAstElement[] {
+	protected findTranslatableElements(nodes: TmplAstNode[]): TmplAstElement[] {
 		return nodes
-			.filter((element) => this.isElement(element))
-			.reduce((result: TmplAstElement[], element: TmplAstElement) => {
-				return result.concat(this.findChildrenElements(element));
+			.reduce((elements: TmplAstElement[], node: TmplAstNode) => {
+				return [...elements, ...this.findChildrenElements(node)];
 			}, [])
 			.filter((element) => this.isTranslatable(element));
 	}
@@ -34,20 +39,9 @@ export class DirectiveParser implements ParserInterface {
 		if (!this.isElement(node)) {
 			return [];
 		}
-
-		// If element has translate attribute all its content is translatable
-		// so we don't need to traverse any deeper
-		if (this.isTranslatable(node)) {
-			return [node];
-		}
-
 		return node.children.reduce(
-			(result: TmplAstElement[], childNode: TmplAstNode) => {
-				if (this.isElement(childNode)) {
-					const children = this.findChildrenElements(childNode);
-					return result.concat(children);
-				}
-				return result;
+			(elements: TmplAstElement[], childNode: TmplAstNode) => {
+				return [...elements, ...this.findChildrenElements(childNode)];
 			},
 			[node]
 		);
@@ -58,30 +52,23 @@ export class DirectiveParser implements ParserInterface {
 	}
 
 	protected isElement(node: any): node is TmplAstElement {
-		return node?.attributes && node?.children;
+		return node instanceof TmplAstElement || node instanceof TmplAstTemplate;
 	}
 
-	protected isTranslatable(node: TmplAstNode): boolean {
-		if (this.isElement(node) && node.attributes.some((attribute) => attribute.name === 'translate')) {
+	protected isTranslatable(node: TmplAstElement): boolean {
+		if (node.attributes.some((attribute) => attribute.name === 'translate')) {
 			return true;
 		}
 		return false;
 	}
 
-	protected getElementTranslateAttrValue(element: TmplAstElement): string {
-		const attr: TmplAstTextAttribute = element.attributes.find((attribute) => attribute.name === 'translate');
-		return attr?.value ?? '';
+	protected getTranslateAttribValue(element: TmplAstElement): string | undefined {
+		return element.attributes.find((attribute) => attribute.name === 'translate')?.value;
 	}
 
-	protected getElementContent(element: TmplAstElement): string {
-		const content = element.sourceSpan.start.file.content;
-		const start = element.startSourceSpan.end.offset;
-		const end = element.endSourceSpan.start.offset;
-		const val = content.substring(start, end);
-		return this.cleanKey(val);
-	}
-
-	protected cleanKey(val: string): string {
-		return val.replace(/\r?\n|\r|\t/g, '').trim();
+	protected getTextNodeValues(element: TmplAstElement): string[] {
+		return element.children
+			.filter((child) => child instanceof TmplAstText)
+			.map((child: TmplAstText) => child.value.trim());
 	}
 }
