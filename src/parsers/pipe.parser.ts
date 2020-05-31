@@ -1,6 +1,10 @@
 import {
 	AST,
-	TmplAstNode,
+	TmplAstNode as Node,
+	TmplAstBoundText as BoundText,
+	TmplAstElement as Element,
+	TmplAstTemplate as Template,
+	TmplAstBoundAttribute as BoundAttribute,
 	parseTemplate,
 	BindingPipe,
 	LiteralPrimitive,
@@ -9,7 +13,9 @@ import {
 	Binary,
 	LiteralMap,
 	LiteralArray,
-	Interpolation
+	Interpolation,
+	ASTWithSource,
+	TmplAstBoundEvent as BoundEvent
 } from '@angular/compiler';
 
 import { ParserInterface } from './parser.interface';
@@ -17,142 +23,95 @@ import { TranslationCollection } from '../utils/translation.collection';
 import { isPathAngularComponent, extractComponentInlineTemplate } from '../utils/utils';
 
 const TRANSLATE_PIPE_NAME = 'translate';
+type ElementLike = Element | Template;
 
 export class PipeParser implements ParserInterface {
 	public extract(source: string, filePath: string): TranslationCollection | null {
+		let collection: TranslationCollection = new TranslationCollection();
+
 		if (filePath && isPathAngularComponent(filePath)) {
 			source = extractComponentInlineTemplate(source);
 		}
+		const nodes: Node[] = this.parseTemplate(source, filePath);
+		const pipes = this.getBindingPipes(nodes, TRANSLATE_PIPE_NAME);
 
-		let collection: TranslationCollection = new TranslationCollection();
-		const nodes: TmplAstNode[] = this.parseTemplate(source, filePath);
-		const pipes: BindingPipe[] = nodes.map((node) => this.findPipesInNode(node)).flat();
 		pipes.forEach((pipe) => {
-			this.parseTranslationKeysFromPipe(pipe).forEach((key: string) => {
-				collection = collection.add(key);
+			// Skip concatenated strings
+			if (pipe.exp instanceof Binary && pipe.exp.operation === '+') {
+				return;
+			}
+			this.visitEachChild(pipe, (exp) => {
+				if (exp instanceof LiteralPrimitive) {
+					collection = collection.add(exp.value);
+				}
 			});
 		});
+
 		return collection;
 	}
 
-	protected findPipesInNode(node: any): BindingPipe[] {
-		let ret: BindingPipe[] = [];
+	protected getBindingPipes(nodes: any[], name: string): BindingPipe[] {
+		let pipes: BindingPipe[] = [];
+		nodes.forEach((node) => {
+			if (this.isElementLike(node)) {
+				pipes = [
+					...pipes,
+					...this.getBindingPipes([
+						...node.inputs,
+						...node.children
+					], name)
+				];
+			}
 
-		if (node?.children) {
-			ret = node.children.reduce(
-				(result: BindingPipe[], childNode: TmplAstNode) => {
-					const children = this.findPipesInNode(childNode);
-					return result.concat(children);
-				},
-				[ret]
-			);
-		}
-
-		if (node?.value?.ast) {
-			ret.push(...this.getTranslatablesFromAst(node.value.ast));
-		}
-
-		if (node?.attributes) {
-			const translateableAttributes = node.attributes.filter((attr: TmplAstTextAttribute) => {
-				return attr.name === TRANSLATE_PIPE_NAME;
-			});
-			ret = [...ret, ...translateableAttributes];
-		}
-
-		if (node?.inputs) {
-			node.inputs.forEach((input: any) => {
-				// <element [attrib]="'identifier' | translate">
-				if (input?.value?.ast) {
-					ret.push(...this.getTranslatablesFromAst(input.value.ast));
+			this.visitEachChild(node, (exp) => {
+				if (exp instanceof BindingPipe && exp.name === name) {
+					pipes = [...pipes, exp];
 				}
 			});
-		}
-
-		return ret;
+		});
+		return pipes;
 	}
 
-	protected parseTranslationKeysFromPipe(pipeContent: BindingPipe | LiteralPrimitive | Conditional): string[] {
-		const ret: string[] = [];
-		if (pipeContent instanceof LiteralPrimitive) {
-			ret.push(pipeContent.value);
-		} else if (pipeContent instanceof Conditional) {
-			const trueExp: LiteralPrimitive | Conditional = pipeContent.trueExp as any;
-			ret.push(...this.parseTranslationKeysFromPipe(trueExp));
-			const falseExp: LiteralPrimitive | Conditional = pipeContent.falseExp as any;
-			ret.push(...this.parseTranslationKeysFromPipe(falseExp));
-		} else if (pipeContent instanceof BindingPipe) {
-			ret.push(...this.parseTranslationKeysFromPipe(pipeContent.exp as any));
+	protected visitEachChild(exp: AST, visitor: (exp: AST) => void): void {
+		visitor(exp);
+
+		let childExp: AST[] = [];
+		if (exp instanceof BoundText) {
+			childExp = [exp.value];
+		} else if (exp instanceof BoundAttribute) {
+			childExp = [exp.value];
+		} else if (exp instanceof BoundEvent) {
+			childExp = [exp.handler];
+		} else if (exp instanceof Interpolation) {
+			childExp = exp.expressions;
+		} else if (exp instanceof LiteralArray) {
+			childExp = exp.expressions;
+		} else if (exp instanceof LiteralMap) {
+			childExp = exp.values;
+		} else if (exp instanceof BindingPipe) {
+			childExp = [exp.exp, ...exp.args];
+		} else if (exp instanceof Conditional) {
+			childExp = [exp.trueExp, exp.falseExp];
+		} else if (exp instanceof Binary) {
+			childExp = [exp.left, exp.right];
+		} else if (exp instanceof ASTWithSource) {
+			childExp = [exp.ast];
 		}
-		return ret;
+
+		childExp.forEach((child) => {
+			this.visitEachChild(child, visitor);
+		});
 	}
 
-	protected getTranslatablesFromAst(ast: AST): BindingPipe[] {
-		// the entire expression is the translate pipe, e.g.:
-		// - 'foo' | translate
-		// - (condition ? 'foo' : 'bar') | translate
-		if (this.expressionIsOrHasBindingPipe(ast)) {
-			return [ast];
-		}
-
-		// angular double curly bracket interpolation, e.g.:
-		// - {{ expressions }}
-		if (ast instanceof Interpolation) {
-			return this.getTranslatablesFromAsts(ast.expressions);
-		}
-
-		// ternary operator, e.g.:
-		// - condition ? null : ('foo' | translate)
-		// - condition ? ('foo' | translate) : null
-		if (ast instanceof Conditional) {
-			return this.getTranslatablesFromAsts([ast.trueExp, ast.falseExp]);
-		}
-
-		// string concatenation, e.g.:
-		// - 'foo' + 'bar' + ('baz' | translate)
-		if (ast instanceof Binary) {
-			return this.getTranslatablesFromAsts([ast.left, ast.right]);
-		}
-
-		// a pipe on the outer expression, but not the translate pipe - ignore the pipe, visit the expression, e.g.:
-		// - { foo: 'Hello' | translate } | json
-		if (ast instanceof BindingPipe) {
-			return this.getTranslatablesFromAst(ast.exp);
-		}
-
-		// object - ignore the keys, visit all values, e.g.:
-		// - { key1: 'value1' | translate, key2: 'value2' | translate }
-		if (ast instanceof LiteralMap) {
-			return this.getTranslatablesFromAsts(ast.values);
-		}
-
-		// array - visit all its values, e.g.:
-		// - [ 'value1' | translate, 'value2' | translate ]
-		if (ast instanceof LiteralArray) {
-			return this.getTranslatablesFromAsts(ast.expressions);
-		}
-
-		return [];
+	/**
+	 * Check if node type is ElementLike
+	 * @param node
+	 */
+	protected isElementLike(node: Node): node is ElementLike {
+		return node instanceof Element || node instanceof Template;
 	}
 
-	protected getTranslatablesFromAsts(asts: AST[]): BindingPipe[] {
-		return this.flatten(asts.map((ast) => this.getTranslatablesFromAst(ast)));
-	}
-
-	protected flatten<T extends AST>(array: T[][]): T[] {
-		return [].concat(...array);
-	}
-
-	protected expressionIsOrHasBindingPipe(exp: any): exp is BindingPipe {
-		if (exp.name && exp.name === TRANSLATE_PIPE_NAME) {
-			return true;
-		}
-		if (exp.exp && exp.exp instanceof BindingPipe) {
-			return this.expressionIsOrHasBindingPipe(exp.exp);
-		}
-		return false;
-	}
-
-	protected parseTemplate(template: string, path: string): TmplAstNode[] {
+	protected parseTemplate(template: string, path: string): Node[] {
 		return parseTemplate(template, path).nodes;
 	}
 }
