@@ -1,21 +1,20 @@
 import {
 	AST,
+	ASTWithSource,
 	TmplAstNode as Node,
 	TmplAstBoundText as BoundText,
 	TmplAstElement as Element,
 	TmplAstTemplate as Template,
 	TmplAstBoundAttribute as BoundAttribute,
+	TmplAstBoundEvent as BoundEvent,
 	parseTemplate,
 	BindingPipe,
 	LiteralPrimitive,
 	Conditional,
-	TmplAstTextAttribute,
 	Binary,
 	LiteralMap,
 	LiteralArray,
-	Interpolation,
-	ASTWithSource,
-	TmplAstBoundEvent as BoundEvent
+	Interpolation
 } from '@angular/compiler';
 
 import { ParserInterface } from './parser.interface';
@@ -33,16 +32,12 @@ export class PipeParser implements ParserInterface {
 			source = extractComponentInlineTemplate(source);
 		}
 		const nodes: Node[] = this.parseTemplate(source, filePath);
-		const pipes = this.getBindingPipes(nodes, TRANSLATE_PIPE_NAME);
+		const pipes = this.getBindingPipes(nodes, TRANSLATE_PIPE_NAME).filter((pipe) => !this.pipeHasConcatenatedString(pipe));
 
 		pipes.forEach((pipe) => {
-			// Skip concatenated strings
-			if (pipe.exp instanceof Binary && pipe.exp.operation === '+') {
-				return;
-			}
-			this.visitEachChild(pipe, (exp) => {
-				if (exp instanceof LiteralPrimitive) {
-					collection = collection.add(exp.value);
+			this.visitEachChild(pipe, (child) => {
+				if (child instanceof LiteralPrimitive) {
+					collection = collection.add(child.value);
 				}
 			});
 		});
@@ -72,33 +67,33 @@ export class PipeParser implements ParserInterface {
 		return pipes;
 	}
 
-	protected visitEachChild(exp: AST, visitor: (exp: AST) => void): void {
+	protected visitEachChild(exp: AST, visitor: (child: AST) => void): void {
 		visitor(exp);
 
-		let childExp: AST[] = [];
+		let children: AST[] = [];
 		if (exp instanceof BoundText) {
-			childExp = [exp.value];
+			children = [exp.value];
 		} else if (exp instanceof BoundAttribute) {
-			childExp = [exp.value];
+			children = [exp.value];
 		} else if (exp instanceof BoundEvent) {
-			childExp = [exp.handler];
+			children = [exp.handler];
 		} else if (exp instanceof Interpolation) {
-			childExp = exp.expressions;
+			children = exp.expressions;
 		} else if (exp instanceof LiteralArray) {
-			childExp = exp.expressions;
+			children = exp.expressions;
 		} else if (exp instanceof LiteralMap) {
-			childExp = exp.values;
+			children = exp.values;
 		} else if (exp instanceof BindingPipe) {
-			childExp = [exp.exp, ...exp.args];
+			children = [exp.exp, ...exp.args];
 		} else if (exp instanceof Conditional) {
-			childExp = [exp.trueExp, exp.falseExp];
+			children = [exp.trueExp, exp.falseExp];
 		} else if (exp instanceof Binary) {
-			childExp = [exp.left, exp.right];
+			children = [exp.left, exp.right];
 		} else if (exp instanceof ASTWithSource) {
-			childExp = [exp.ast];
+			children = [exp.ast];
 		}
 
-		childExp.forEach((child) => {
+		children.forEach((child) => {
 			this.visitEachChild(child, visitor);
 		});
 	}
@@ -109,6 +104,14 @@ export class PipeParser implements ParserInterface {
 	 */
 	protected isElementLike(node: Node): node is ElementLike {
 		return node instanceof Element || node instanceof Template;
+	}
+
+	/**
+	 * Check if pipe concatenates string (in that case we don't want to extract it)
+	 * @param pipe
+	 */
+	protected pipeHasConcatenatedString(pipe: BindingPipe): boolean {
+		return pipe?.exp instanceof Binary && pipe.exp.operation === '+';
 	}
 
 	protected parseTemplate(template: string, path: string): Node[] {
