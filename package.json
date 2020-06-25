@@ -1,6 +1,6 @@
 {
   "name": "@biesbjerg/ngx-translate-extract",
-  "version": "7.0.1",
+  "version": "7.0.2",
   "description": "Extract strings from projects using ngx-translate",
   "main": "dist/index.js",
   "typings": "dist/index.d.ts",
@@ -86,7 +86,7 @@
     "typescript": "^3.9.5"
   },
   "peerDependencies": {
-    "@angular/compiler": "^8.0.0 || ^9.0.0 || 10.0.0^",
+    "@angular/compiler": "^8.0.0 || ^9.0.0 || ^10.0.0",
     "typescript": "^3.0.0"
   },
   "dependencies": {
