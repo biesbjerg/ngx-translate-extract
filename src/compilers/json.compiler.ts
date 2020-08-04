@@ -1,21 +1,22 @@
-import { CompilerInterface } from './compiler.interface';
 import { TranslationCollection } from '../utils/translation.collection';
 import { stripBOM } from '../utils/utils';
 
 import { flatten } from 'flat';
+import { CoreCompiler } from './core.compiler';
 
-export class JsonCompiler implements CompilerInterface {
+export class JsonCompiler extends CoreCompiler {
 	public indentation: string = '\t';
 
 	public extension: string = 'json';
 
 	public constructor(options?: any) {
+		super(options);
 		if (options && typeof options.indentation !== 'undefined') {
 			this.indentation = options.indentation;
 		}
 	}
 
-	public compile(collection: TranslationCollection): string {
+	protected compileSpecific(collection: TranslationCollection): string {
 		return JSON.stringify(collection.values, null, this.indentation);
 	}
 

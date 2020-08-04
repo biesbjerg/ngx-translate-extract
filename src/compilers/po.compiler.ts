@@ -1,9 +1,9 @@
-import { CompilerInterface } from './compiler.interface';
 import { TranslationCollection, TranslationType } from '../utils/translation.collection';
 
 import { po } from 'gettext-parser';
+import { CoreCompiler } from './core.compiler';
 
-export class PoCompiler implements CompilerInterface {
+export class PoCompiler extends CoreCompiler {
 	public extension: string = 'po';
 
 	/**
@@ -11,9 +11,11 @@ export class PoCompiler implements CompilerInterface {
 	 */
 	public domain: string = '';
 
-	public constructor(options?: any) {}
+	public constructor(options?: any) {
+		super(options);
+	}
 
-	public compile(collection: TranslationCollection): string {
+	protected compileSpecific(collection: TranslationCollection): string {
 		const data = {
 			charset: 'utf-8',
 			headers: {

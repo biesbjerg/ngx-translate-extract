@@ -5,9 +5,11 @@ import { NamespacedJsonCompiler } from '../../src/compilers/namespaced-json.comp
 
 describe('NamespacedJsonCompiler', () => {
 	let compiler: NamespacedJsonCompiler;
+	let eofNewlineCompiler: NamespacedJsonCompiler;
 
 	beforeEach(() => {
 		compiler = new NamespacedJsonCompiler();
+		eofNewlineCompiler = new NamespacedJsonCompiler({ eofNewline: true });
 	});
 
 	it('should flatten keys on parse', () => {
@@ -35,6 +37,8 @@ describe('NamespacedJsonCompiler', () => {
 		});
 		const result: string = compiler.compile(collection);
 		expect(result).to.equal('{\n\t"NAMESPACE": {\n\t\t"KEY": {\n\t\t\t"FIRST_KEY": "",\n\t\t\t"SECOND_KEY": "VALUE"\n\t\t}\n\t}\n}');
+		const resultNewline: string = eofNewlineCompiler.compile(collection);
+		expect(resultNewline).to.equal('{\n\t"NAMESPACE": {\n\t\t"KEY": {\n\t\t\t"FIRST_KEY": "",\n\t\t\t"SECOND_KEY": "VALUE"\n\t\t}\n\t}\n}\n');
 	});
 
 	it('should preserve numeric values on compile', () => {
@@ -45,6 +49,8 @@ describe('NamespacedJsonCompiler', () => {
 		});
 		const result: string = compiler.compile(collection);
 		expect(result).to.equal('{\n\t"option": {\n\t\t"0": "",\n\t\t"1": "",\n\t\t"2": ""\n\t}\n}');
+		const resultNewline: string = eofNewlineCompiler.compile(collection);
+		expect(resultNewline).to.equal('{\n\t"option": {\n\t\t"0": "",\n\t\t"1": "",\n\t\t"2": ""\n\t}\n}\n');
 	});
 
 	it('should use custom indentation chars', () => {
@@ -66,5 +72,7 @@ describe('NamespacedJsonCompiler', () => {
 		});
 		const result: string = compiler.compile(collection);
 		expect(result).to.equal('{\n\t"BROWSE": "",\n\t"LOGIN": ""\n}');
+		const resultNewline: string = eofNewlineCompiler.compile(collection);
+		expect(resultNewline).to.equal('{\n\t"BROWSE": "",\n\t"LOGIN": ""\n}\n');
 	});
 });
