@@ -101,6 +101,7 @@ Examples:
   ngx-translate-extract -i './src/**/*.{ts,tsx,html}' -o strings.json     Extract from ts, tsx and html
   ngx-translate-extract -i './src/**/!(*.spec).{ts,html}' -o              Extract from ts, html, excluding files with ".spec"
   strings.json
+```
 
 ## Note for GetText users
 
