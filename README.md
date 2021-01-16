@@ -20,7 +20,7 @@ Add a script to your project's `package.json`:
 }
 ...
 ```
-You can now run `npm run extract-i18n` and it will extract strings from your project.
+You can now run `npm run i18n:extract` and it will extract strings from your project.
 
 ## Usage
 
