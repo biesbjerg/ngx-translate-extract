@@ -157,10 +157,10 @@ export function getStringsFromExpression(expression: Expression): string[] {
 	return [];
 }
 
-export function getTranslationNamespace(node: Node, translationNamespaceImportName: string) {
+export function getTranslationNamespace(node: Node, translationNamespaceImportName: string): string | undefined {
 	const query = `ClassDeclaration > Decorator > CallExpression  ObjectLiteralExpression PropertyAssignment:has(Identifier[name='providers']) ArrayLiteralExpression ObjectLiteralExpression:has(PropertyAssignment:has(Identifier[name="${translationNamespaceImportName}"])) PropertyAssignment:has(Identifier[name="useValue"]) StringLiteral`;
 
 	const [namespace] = tsquery<StringLiteral>(node, query);
 
-	return namespace.text;
+	return namespace?.text ?? undefined;
 }
