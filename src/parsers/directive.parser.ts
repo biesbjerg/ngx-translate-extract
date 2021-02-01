@@ -21,10 +21,11 @@ import { ParserInterface } from './parser.interface';
 import { TranslationCollection } from '../utils/translation.collection';
 import { isPathAngularComponent, extractComponentInlineTemplate } from '../utils/utils';
 
-const TRANSLATE_ATTR_NAME = 'translate';
 type ElementLike = Element | Template;
 
 export class DirectiveParser implements ParserInterface {
+	protected TRANSLATE_ATTR_NAME = 'translate';
+
 	public extract(source: string, filePath: string): TranslationCollection | null {
 		let collection: TranslationCollection = new TranslationCollection();
 
@@ -35,13 +36,13 @@ export class DirectiveParser implements ParserInterface {
 		const elements: ElementLike[] = this.getElementsWithTranslateAttribute(nodes);
 
 		elements.forEach((element) => {
-			const attribute = this.getAttribute(element, TRANSLATE_ATTR_NAME);
+			const attribute = this.getAttribute(element, this.TRANSLATE_ATTR_NAME);
 			if (attribute?.value) {
 				collection = collection.add(attribute.value);
 				return;
 			}
 
-			const boundAttribute = this.getBoundAttribute(element, TRANSLATE_ATTR_NAME);
+			const boundAttribute = this.getBoundAttribute(element, this.TRANSLATE_ATTR_NAME);
 			if (boundAttribute?.value) {
 				this.getLiteralPrimitives(boundAttribute.value).forEach((literalPrimitive) => {
 					collection = collection.add(literalPrimitive.value);
@@ -64,10 +65,10 @@ export class DirectiveParser implements ParserInterface {
 	protected getElementsWithTranslateAttribute(nodes: Node[]): ElementLike[] {
 		let elements: ElementLike[] = [];
 		nodes.filter(this.isElementLike).forEach((element) => {
-			if (this.hasAttribute(element, TRANSLATE_ATTR_NAME)) {
+			if (this.hasAttribute(element, this.TRANSLATE_ATTR_NAME)) {
 				elements = [...elements, element];
 			}
-			if (this.hasBoundAttribute(element, TRANSLATE_ATTR_NAME)) {
+			if (this.hasBoundAttribute(element, this.TRANSLATE_ATTR_NAME)) {
 				elements = [...elements, element];
 			}
 			const childElements = this.getElementsWithTranslateAttribute(element.children);
