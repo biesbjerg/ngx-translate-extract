@@ -90,4 +90,10 @@ export class TranslationCollection {
 
 		return new TranslationCollection(values);
 	}
+
+	public prefixKeys(prefix: string): void {
+		const values: TranslationType = {};
+		this.forEach((key, value) => (values[prefix + '.' + key] = value));
+		this.values = values;
+	}
 }

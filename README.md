@@ -47,6 +47,8 @@ If you want to use spaces instead, you can do the following:
 ### Marker function
 If you want to extract strings that are not passed directly to `TranslateService`'s `get()`/`instant()`/`stream()` methods, you can wrap them in a marker function to let `ngx-translate-extract` know you want to extract them.
 
+> Do not use the marker function with the `NamespaceTranslateService`! The tool will extract the marker without adding the set namespace and the `NamespaceTranslateService` will search for the key, prefixed with the namespace!
+
 Install marker function:
 `npm install @biesbjerg/ngx-translate-extract-marker`
 
@@ -65,6 +67,8 @@ _('Extract me');
 ```
 
 _Note: `ngx-translate-extract` will automatically detect the import name_
+
+
 
 ### Commandline arguments
 ```
