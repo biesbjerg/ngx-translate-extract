@@ -24,7 +24,7 @@ export function extractNamespace(source: string, filePath: string): string {
 	const translationNamespaceImportName = getNamedImportAlias(sourceFile, NAMESPACE_MODULE_NAME, TRANSLATION_NAMESPACE_NAME);
 	if (!translationNamespaceImportName) {
 		throw new Error(
-			`${TRANSLATION_NAMESPACE_NAME} not imported in ${filePath}. Namespace has to be provided to component when using namespace translation service, pipe or directive form ${NAMESPACE_MODULE_NAME}!!`
+			`"${TRANSLATION_NAMESPACE_NAME}" not imported in "${filePath}". Namespace has to be provided to component when using namespace translation service, pipe or directive from "${NAMESPACE_MODULE_NAME}"!!`
 		);
 	}
 
@@ -32,7 +32,7 @@ export function extractNamespace(source: string, filePath: string): string {
 
 	if (!namespace || namespace === '') {
 		throw new Error(
-			`no ${TRANSLATION_NAMESPACE_NAME} provided in ${filePath}. Namespace has to be provided to component when using namespace translation service, pipe or directive form ${NAMESPACE_MODULE_NAME}!!`
+			`No ${TRANSLATION_NAMESPACE_NAME} provided in "${filePath}". Namespace has to be provided to component when using namespace translation service, pipe or directive from "${NAMESPACE_MODULE_NAME}"!!`
 		);
 	}
 
