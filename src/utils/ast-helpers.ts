@@ -12,7 +12,8 @@ import {
 	Expression,
 	isBinaryExpression,
 	isConditionalExpression,
-	PropertyAccessExpression
+	PropertyAccessExpression,
+	StringLiteral
 } from 'typescript';
 
 export function getNamedImports(node: Node, moduleName: string): NamedImports[] {
@@ -154,4 +155,12 @@ export function getStringsFromExpression(expression: Expression): string[] {
 		return result;
 	}
 	return [];
+}
+
+export function getTranslationNamespace(node: Node, translationNamespaceImportName: string) {
+	const query = `ClassDeclaration > Decorator > CallExpression  ObjectLiteralExpression PropertyAssignment:has(Identifier[name='providers']) ArrayLiteralExpression ObjectLiteralExpression:has(PropertyAssignment:has(Identifier[name="${translationNamespaceImportName}"])) PropertyAssignment:has(Identifier[name="useValue"]) StringLiteral`;
+
+	const [namespace] = tsquery<StringLiteral>(node, query);
+
+	return namespace.text;
 }
