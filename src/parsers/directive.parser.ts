@@ -21,10 +21,14 @@ import { ParserInterface } from './parser.interface';
 import { TranslationCollection } from '../utils/translation.collection';
 import { isPathAngularComponent, extractComponentInlineTemplate } from '../utils/utils';
 
-const TRANSLATE_ATTR_NAME = 'translate';
+const TRANSLATE_ATTR_NAMES = ['translate'];
 type ElementLike = Element | Template;
 
 export class DirectiveParser implements ParserInterface {
+	constructor(private readonly attrNames?: string[]) {
+		this.attrNames = attrNames && attrNames.length ? attrNames : TRANSLATE_ATTR_NAMES;
+	}
+
 	public extract(source: string, filePath: string): TranslationCollection | null {
 		let collection: TranslationCollection = new TranslationCollection();
 
@@ -35,16 +39,19 @@ export class DirectiveParser implements ParserInterface {
 		const elements: ElementLike[] = this.getElementsWithTranslateAttribute(nodes);
 
 		elements.forEach((element) => {
-			const attribute = this.getAttribute(element, TRANSLATE_ATTR_NAME);
-			if (attribute?.value) {
-				collection = collection.add(attribute.value);
+			const attributes = this.getAttributes(element, this.attrNames);
+			if (attributes?.length && attributes.filter(a => a?.value)?.length) {
+				attributes.filter(a => a?.value)
+					.forEach(attribute => collection = collection.add(attribute.value));
 				return;
 			}
 
-			const boundAttribute = this.getBoundAttribute(element, TRANSLATE_ATTR_NAME);
-			if (boundAttribute?.value) {
-				this.getLiteralPrimitives(boundAttribute.value).forEach((literalPrimitive) => {
-					collection = collection.add(literalPrimitive.value);
+			const boundAttributes = this.getBoundAttributes(element, this.attrNames);
+			if (boundAttributes?.length && boundAttributes.filter(a => a?.value)?.length) {
+				boundAttributes.filter(a => a?.value).forEach(boundAttribute => {
+					this.getLiteralPrimitives(boundAttribute.value).forEach((literalPrimitive) => {
+						collection = collection.add(literalPrimitive.value);
+					});
 				});
 				return;
 			}
@@ -64,12 +71,13 @@ export class DirectiveParser implements ParserInterface {
 	protected getElementsWithTranslateAttribute(nodes: Node[]): ElementLike[] {
 		let elements: ElementLike[] = [];
 		nodes.filter(this.isElementLike).forEach((element) => {
-			if (this.hasAttribute(element, TRANSLATE_ATTR_NAME)) {
+			if (this.hasAttribute(element, this.attrNames)) {
 				elements = [...elements, element];
 			}
-			if (this.hasBoundAttribute(element, TRANSLATE_ATTR_NAME)) {
+			if (this.hasBoundAttributes(element, this.attrNames)) {
 				elements = [...elements, element];
 			}
+
 			const childElements = this.getElementsWithTranslateAttribute(element.children);
 			if (childElements.length) {
 				elements = [...elements, ...childElements];
@@ -89,35 +97,37 @@ export class DirectiveParser implements ParserInterface {
 	/**
 	 * Check if attribute is present on element
 	 * @param element
+	 * @param names
 	 */
-	protected hasAttribute(element: ElementLike, name: string): boolean {
-		return this.getAttribute(element, name) !== undefined;
+	protected hasAttribute(element: ElementLike, names: string[]): boolean {
+		return this.getAttributes(element, names)?.length > 0 || false;
 	}
 
 	/**
 	 * Get attribute value if present on element
 	 * @param element
+	 * @param names
 	 */
-	protected getAttribute(element: ElementLike, name: string): TextAttribute {
-		return element.attributes.find((attribute) => attribute.name === name);
+	protected getAttributes(element: ElementLike, names: string[]): TextAttribute[] {
+		return element.attributes.filter((attribute) => names.includes(attribute.name));
 	}
 
 	/**
 	 * Check if bound attribute is present on element
 	 * @param element
-	 * @param name
+	 * @param names
 	 */
-	protected hasBoundAttribute(element: ElementLike, name: string): boolean {
-		return this.getBoundAttribute(element, name) !== undefined;
+	protected hasBoundAttributes(element: ElementLike, names: string[]): boolean {
+		return this.getBoundAttributes(element, names)?.length > 0 || false;
 	}
 
 	/**
 	 * Get bound attribute if present on element
 	 * @param element
-	 * @param name
+	 * @param names
 	 */
-	protected getBoundAttribute(element: ElementLike, name: string): BoundAttribute {
-		return element.inputs.find((input) => input.name === name);
+	protected getBoundAttributes(element: ElementLike, names: string[]): BoundAttribute[] {
+		return element.inputs.filter((input) => names.includes(input.name));
 	}
 
 	/**
