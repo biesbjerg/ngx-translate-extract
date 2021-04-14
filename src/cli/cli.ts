@@ -71,6 +71,11 @@ export const cli = y
 		default: '\t',
 		type: 'string'
 	})
+	.option('marker', {
+		alias: 'm',
+		describe: 'Use a default marker (overrides the default which looks for a direct import fron @biesjberg/ng-translate-extract-marker)',
+		type: 'string'
+	})
 	.option('replace', {
 		alias: 'r',
 		describe: 'Replace the contents of output file if it exists (Merges by default)',
@@ -122,7 +127,7 @@ const extractTask = new ExtractTask(cli.input, cli.output, {
 });
 
 // Parsers
-const parsers: ParserInterface[] = [new PipeParser(), new DirectiveParser(), new ServiceParser(), new MarkerParser()];
+const parsers: ParserInterface[] = [new PipeParser(), new DirectiveParser(), new ServiceParser(), new MarkerParser(cli.marker)];
 extractTask.setParsers(parsers);
 
 // Post processors
