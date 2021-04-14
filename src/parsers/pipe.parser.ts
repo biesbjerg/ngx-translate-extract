@@ -9,7 +9,8 @@ import {
 	Binary,
 	LiteralMap,
 	LiteralArray,
-	Interpolation
+	Interpolation,
+	MethodCall
 } from '@angular/compiler';
 
 import { ParserInterface } from './parser.interface';
@@ -129,6 +130,10 @@ export class PipeParser implements ParserInterface {
 		// - [ 'value1' | translate, 'value2' | translate ]
 		if (ast instanceof LiteralArray) {
 			return this.getTranslatablesFromAsts(ast.expressions);
+		}
+
+		if (ast instanceof MethodCall) {
+			return this.getTranslatablesFromAsts(ast.args);
 		}
 
 		return [];

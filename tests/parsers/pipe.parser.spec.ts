@@ -195,4 +195,10 @@ describe('PipeParser', () => {
 		const keys = parser.extract(contents, templateFilename).keys();
 		expect(keys).to.deep.equal([]);
 	});
+
+	it('should extract strings from piped arguments inside a function calls on templates', () => {
+		const contents = `{{ callMe('Hello' | translate, 'World' | translate ) }}`;
+		const keys = parser.extract(contents, templateFilename).keys();
+		expect(keys).to.deep.equal([`Hello`, `World`]);
+	});
 });
