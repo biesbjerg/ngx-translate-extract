@@ -7,7 +7,8 @@ Extract translatable (ngx-translate) strings and save as a JSON or Gettext pot f
 Merges with existing strings if the output file already exists.
 
 ## Install
-Install the package in your project:
+1. Make sure that you are using node v11.5 or greater.
+2. Install the package in your project using:
 
 `npm install @biesbjerg/ngx-translate-extract --save-dev`
 
