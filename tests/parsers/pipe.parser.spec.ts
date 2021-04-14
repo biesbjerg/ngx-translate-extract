@@ -17,6 +17,15 @@ describe('PipeParser', () => {
 		expect(keys).to.deep.equal(['SomeKey_NotWorking']);
 	});
 
+	it('should only extract string using pipe with custom pipe names', () => {
+		const contents = `
+			<button [style.background]="'lime'">{{ 'SomeKey_NotWorking' | translate }}</button>
+			<button [style.background]="'red'">{{ 'SomeKey2' | translate2 }}</button>
+		`;
+		const keys = new PipeParser(['translate', 'translate2']).extract(contents, templateFilename).keys();
+		expect(keys).to.deep.equal(['SomeKey_NotWorking', 'SomeKey2']);
+	});
+
 	it('should extract string using pipe, but between quotes only', () => {
 		const contents = `<input class="form-control" type="text" placeholder="{{'user.settings.form.phone.placeholder' | translate}}" [formControl]="settingsForm.controls['phone']">`;
 		const keys = parser.extract(contents, templateFilename).keys();

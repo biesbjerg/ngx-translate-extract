@@ -23,6 +23,33 @@ describe('ServiceParser', () => {
 		expect(keys).to.deep.equal(['It works!']);
 	});
 
+	it('should extract strings when TranslateService is accessed directly via constructor parameter, when custom service name is used', () => {
+		const contents = `
+			@Component({ })
+			export class MyComponent {
+				public constructor(protected translateService: AdvancedTranslateService) {
+					translateService.get('It works!');
+				}
+		`;
+		const keys = new ServiceParser('AdvancedTranslateService').extract(contents, componentFilename).keys();
+		expect(keys).to.deep.equal(['It works!']);
+	});
+
+	it('should extract strings when TranslateService is accessed directly via constructor parameter, when custom service name is used, with custom service method names', () => {
+		const contents = `
+			@Component({ })
+			export class MyComponent {
+				public constructor(protected translateService: AdvancedTranslateService) {
+					translateService.get('It works!');
+					translateService.instant('It works 2!');
+					translateService.someBrandNewMethod('It works 3!');
+				}
+		`;
+		const keys = new ServiceParser('AdvancedTranslateService', ['get', 'someBrandNewMethod', 'instant'])
+			.extract(contents, componentFilename).keys();
+		expect(keys).to.deep.equal(['It works!', 'It works 2!', 'It works 3!']);
+	});
+
 	it('should support extracting binary expressions', () => {
 		const contents = `
 			@Component({ })
@@ -51,7 +78,7 @@ describe('ServiceParser', () => {
 		expect(keys).to.deep.equal(['Fallback message']);
 	});
 
-	it("should extract strings in TranslateService's get() method", () => {
+	it('should extract strings in TranslateService\'s get() method', () => {
 		const contents = `
 			@Component({ })
 			export class AppComponent {
