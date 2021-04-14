@@ -104,6 +104,12 @@ export const cli = y
 		type: 'string',
 		conflicts: ['null-as-default-value', 'key-as-default-value']
 	})
+	.option('newline-at-eof', {
+		alias: 'nl',
+		describe: 'Add newline at the end of the generated file',
+		default: false,
+		type: 'boolean'
+	})
 	.group(['format', 'format-indentation', 'sort', 'clean', 'replace'], 'Output')
 	.group(['key-as-default-value', 'null-as-default-value', 'string-as-default-value'], 'Extracted key value (defaults to empty string)')
 	.conflicts('key-as-default-value', 'null-as-default-value')
@@ -145,7 +151,8 @@ extractTask.setPostProcessors(postProcessors);
 
 // Compiler
 const compiler: CompilerInterface = CompilerFactory.create(cli.format, {
-	indentation: cli.formatIndentation
+	indentation: cli.formatIndentation,
+	eofNewline: cli.newlineAtEof
 });
 extractTask.setCompiler(compiler);
 

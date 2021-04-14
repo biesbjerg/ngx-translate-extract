@@ -1,21 +1,22 @@
-import { CompilerInterface } from './compiler.interface';
 import { TranslationCollection } from '../utils/translation.collection';
 import { stripBOM } from '../utils/utils';
 
 import { flatten, unflatten } from 'flat';
+import { CoreCompiler } from './core.compiler';
 
-export class NamespacedJsonCompiler implements CompilerInterface {
+export class NamespacedJsonCompiler extends CoreCompiler {
 	public indentation: string = '\t';
 
 	public extension = 'json';
 
 	public constructor(options?: any) {
+		super(options);
 		if (options && typeof options.indentation !== 'undefined') {
 			this.indentation = options.indentation;
 		}
 	}
 
-	public compile(collection: TranslationCollection): string {
+	protected compileSpecific(collection: TranslationCollection): string {
 		const values: {} = unflatten(collection.values, {
 			object: true
 		});

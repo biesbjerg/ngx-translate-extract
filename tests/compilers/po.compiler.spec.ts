@@ -5,9 +5,11 @@ import { PoCompiler } from '../../src/compilers/po.compiler';
 
 describe('PoCompiler', () => {
 	let compiler: PoCompiler;
+	let eofNewlineCompiler: PoCompiler;
 
 	beforeEach(() => {
 		compiler = new PoCompiler();
+		eofNewlineCompiler = new PoCompiler({ eofNewline: true });
 	});
 
 	it('should still include html ', () => {
@@ -17,6 +19,8 @@ describe('PoCompiler', () => {
 		});
 		const result: Buffer = Buffer.from(compiler.compile(collection));
 		expect(result.toString('utf8')).to.equal('msgid ""\nmsgstr ""\n"mime-version: 1.0\\n"\n"Content-Type: text/plain; charset=utf-8\\n"\n"Content-Transfer-Encoding: 8bit\\n"\n\nmsgid "A <strong>test</strong>"\nmsgstr "Un <strong>test</strong>"\n\nmsgid "With a lot of <em>html</em> included"\nmsgstr "Avec beaucoup d\'<em>html</em> inclus"');
+		const resultNewline: Buffer = Buffer.from(eofNewlineCompiler.compile(collection));
+		expect(resultNewline.toString('utf8')).to.equal('msgid ""\nmsgstr ""\n"mime-version: 1.0\\n"\n"Content-Type: text/plain; charset=utf-8\\n"\n"Content-Transfer-Encoding: 8bit\\n"\n\nmsgid "A <strong>test</strong>"\nmsgstr "Un <strong>test</strong>"\n\nmsgid "With a lot of <em>html</em> included"\nmsgstr "Avec beaucoup d\'<em>html</em> inclus"\n');
 	});
 });
 
