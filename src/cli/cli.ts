@@ -2,6 +2,7 @@ import * as yargs from 'yargs';
 import { red, green } from 'colorette';
 
 import { ExtractTask } from './tasks/extract.task';
+import { LintTask } from './tasks/lint.task';
 import { ParserInterface } from '../parsers/parser.interface';
 import { PipeParser } from '../parsers/pipe.parser';
 import { DirectiveParser } from '../parsers/directive.parser';
@@ -58,6 +59,12 @@ export const cli = y
 		const paths = normalizePaths(output, parsed.patterns);
 		return paths;
 	})
+	.option('lint', {
+		alias: 'lt',
+		describe: 'Tests if given output files containing all keys',
+		default: false,
+		type: 'boolean'
+	})
 	.option('format', {
 		alias: 'f',
 		describe: 'Format',
@@ -98,6 +105,12 @@ export const cli = y
 		type: 'boolean',
 		conflicts: ['key-as-default-value', 'string-as-default-value']
 	})
+	.option('lint', {
+		alias: 'lt',
+		describe: 'Tests if given output files containing all keys',
+		default: false,
+		type: 'boolean'
+	})
 	.option('string-as-default-value', {
 		alias: 'd',
 		describe: 'Use string as default value',
@@ -117,13 +130,13 @@ export const cli = y
 	.exitProcess(true)
 	.parse(process.argv);
 
-const extractTask = new ExtractTask(cli.input, cli.output, {
+const task = cli.lint ? new LintTask(cli.input, cli.output) : new ExtractTask(cli.input, cli.output, {
 	replace: cli.replace
 });
 
 // Parsers
 const parsers: ParserInterface[] = [new PipeParser(), new DirectiveParser(), new ServiceParser(), new MarkerParser()];
-extractTask.setParsers(parsers);
+task.setParsers(parsers);
 
 // Post processors
 const postProcessors: PostProcessorInterface[] = [];
@@ -141,17 +154,17 @@ if (cli.keyAsDefaultValue) {
 if (cli.sort) {
 	postProcessors.push(new SortByKeyPostProcessor());
 }
-extractTask.setPostProcessors(postProcessors);
+task.setPostProcessors(postProcessors);
 
 // Compiler
 const compiler: CompilerInterface = CompilerFactory.create(cli.format, {
 	indentation: cli.formatIndentation
 });
-extractTask.setCompiler(compiler);
+task.setCompiler(compiler);
 
 // Run task
 try {
-	extractTask.execute();
+	task.execute();
 	console.log(green('\nDone.\n'));
 	console.log(donateMessage);
 	process.exit(0);

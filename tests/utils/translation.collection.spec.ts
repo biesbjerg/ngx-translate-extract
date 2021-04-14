@@ -96,4 +96,13 @@ describe('StringCollection', () => {
 			blue: 'mapped value'
 		});
 	});
+
+	it('should lint values', () => {
+		const extracted = new TranslationCollection({ key1: 'oldVal1', key2: 'oldVal2' });
+		const existing = new TranslationCollection({ key1: 'newVal1', key3: 'newVal3' });
+		const lintCollection = extracted.lintKeys(existing);
+		expect(lintCollection.values).to.deep.equal([
+			'key2'
+		]);
+	});
 });
