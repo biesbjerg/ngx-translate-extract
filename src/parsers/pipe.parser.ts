@@ -68,6 +68,14 @@ export class PipeParser implements ParserInterface {
 				}
 			});
 		}
+		if (node?.templateAttrs) {
+			node.templateAttrs.forEach((attr: any) => {
+				// <element *directive="'identifier' | translate">
+				if (attr?.value?.ast) {
+					ret.push(...this.getTranslatablesFromAst(attr.value.ast));
+				}
+			});
+		}
 
 		return ret;
 	}
