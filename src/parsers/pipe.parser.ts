@@ -88,11 +88,17 @@ export class PipeParser implements ParserInterface {
 	}
 
 	protected getTranslatablesFromAst(ast: AST): BindingPipe[] {
-		// the entire expression is the translate pipe, e.g.:
-		// - 'foo' | translate
-		// - (condition ? 'foo' : 'bar') | translate
-		if (this.expressionIsOrHasBindingPipe(ast)) {
-			return [ast];
+		if (ast instanceof BindingPipe) {
+			// the entire expression is the translate pipe, e.g.:
+			// - 'foo' | translate
+			// - (condition ? 'foo' : 'bar') | translate
+			if (ast.name === TRANSLATE_PIPE_NAME) {
+				return [ast];
+			}
+
+			// a pipe on the outer expression, but not the translate pipe - ignore the pipe, visit the expression, e.g.:
+			// - { foo: 'Hello' | translate } | json
+			return this.getTranslatablesFromAst(ast.exp);
 		}
 
 		// angular double curly bracket interpolation, e.g.:
@@ -112,12 +118,6 @@ export class PipeParser implements ParserInterface {
 		// - 'foo' + 'bar' + ('baz' | translate)
 		if (ast instanceof Binary) {
 			return this.getTranslatablesFromAsts([ast.left, ast.right]);
-		}
-
-		// a pipe on the outer expression, but not the translate pipe - ignore the pipe, visit the expression, e.g.:
-		// - { foo: 'Hello' | translate } | json
-		if (ast instanceof BindingPipe) {
-			return this.getTranslatablesFromAst(ast.exp);
 		}
 
 		// object - ignore the keys, visit all values, e.g.:
@@ -145,16 +145,6 @@ export class PipeParser implements ParserInterface {
 
 	protected flatten<T extends AST>(array: T[][]): T[] {
 		return [].concat(...array);
-	}
-
-	protected expressionIsOrHasBindingPipe(exp: any): exp is BindingPipe {
-		if (exp.name && exp.name === TRANSLATE_PIPE_NAME) {
-			return true;
-		}
-		if (exp.exp && exp.exp instanceof BindingPipe) {
-			return this.expressionIsOrHasBindingPipe(exp.exp);
-		}
-		return false;
 	}
 
 	protected parseTemplate(template: string, path: string): TmplAstNode[] {
