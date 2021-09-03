@@ -93,12 +93,14 @@ export class PipeParser implements ParserInterface {
 			// - 'foo' | translate
 			// - (condition ? 'foo' : 'bar') | translate
 			if (ast.name === TRANSLATE_PIPE_NAME) {
-				return [ast];
+				// also visit the pipe arguments - interpolateParams object
+				return [ast, ...this.getTranslatablesFromAsts(ast.args)];
 			}
 
-			// a pipe on the outer expression, but not the translate pipe - ignore the pipe, visit the expression, e.g.:
+			// not the translate pipe - ignore the pipe, visit the expression and arguments, e.g.:
 			// - { foo: 'Hello' | translate } | json
-			return this.getTranslatablesFromAst(ast.exp);
+			// - value | date: ('mediumDate' | translate)
+			return this.getTranslatablesFromAsts([ast.exp, ...ast.args]);
 		}
 
 		// angular double curly bracket interpolation, e.g.:
