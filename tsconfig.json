@@ -11,7 +11,9 @@
         "lib": [
             "es2019"
         ],
-        "module": "commonjs",
+        "module": "UMD",
+        "esModuleInterop": true,
+        "moduleResolution": "node",
         "outDir": "dist",
         "sourceMap": true,
         "typeRoots" : [
