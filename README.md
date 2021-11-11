@@ -74,7 +74,7 @@ ngx-translate-extract [options]
 Output
   --format, -f                Format    [string] [choices: "json", "namespaced-json", "pot"] [default: "json"]
   --format-indentation, --fi  Format indentation (JSON/Namedspaced JSON)                [string] [default: "	"]
-  --sort, -s                  Sort strings in alphabetical order                                     [boolean]
+  --sort, -s                  Sort strings in alphabetical order    [string] [choices: "", "case-insensitive"]
   --clean, -c                 Remove obsolete strings after merge                                    [boolean]
   --replace, -r               Replace the contents of output file if it exists (Merges by default)   [boolean]
 
