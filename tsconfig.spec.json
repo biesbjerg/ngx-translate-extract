@@ -1,0 +1,13 @@
+{
+    "extends": "./tsconfig.json",
+    "compilerOptions": {
+        "module": "commonjs",
+        "target": "es2015",
+        "declaration": false,
+        "noImplicitAny": false,
+        "removeComments": true,
+        "inlineSourceMap": true,
+        "moduleResolution": "node"
+    }, 
+    "include": ["tests/**/*.ts", "src/**/*.ts"]
+}
