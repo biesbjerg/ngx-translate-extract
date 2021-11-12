@@ -7,11 +7,13 @@
         "noImplicitUseStrict": true,
         "removeComments": true,
         "declaration": true,
-        "target": "es2019",
+        "target": "es6",
         "lib": [
-            "es2019"
+            "es2019",
+            "es2020",
+            "DOM"
         ],
-        "module": "UMD",
+        "module": "ES2020",
         "esModuleInterop": true,
         "moduleResolution": "node",
         "outDir": "dist",
