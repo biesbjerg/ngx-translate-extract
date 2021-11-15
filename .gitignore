@@ -9,6 +9,7 @@ npm-debug.log*
 # Compiled files
 src/**/*.js
 tests/**/*.js
+dist
 
 # Extracted strings
 strings.json
