@@ -29,6 +29,7 @@
     "useTabs": true,
     "singleQuote": true
   },
+  "type": "module",
   "lint-staged": {
     "{src,tests}/**/*.{ts}": [
       "tslint --project tsconfig.json -c tslint.commit.json --fix",
@@ -61,7 +62,7 @@
   },
   "config": {},
   "devDependencies": {
-    "@angular/compiler": "~12.2.13",
+    "@angular/compiler": "~13.0.1",
     "@types/braces": "^3.0.0",
     "@types/chai": "^4.2.16",
     "@types/flat": "^5.0.1",
@@ -70,7 +71,6 @@
     "@types/mkdirp": "^1.0.1",
     "@types/mocha": "^8.2.2",
     "@types/node": "^14.14.37",
-    "@types/yargs": "^16.0.1",
     "braces": "^3.0.2",
     "chai": "^4.3.4",
     "husky": "^6.0.0",
@@ -83,11 +83,11 @@
     "tslint-config-prettier": "^1.18.0",
     "tslint-eslint-rules": "^5.4.0",
     "tslint-etc": "^1.13.9",
-    "typescript": "^4.2.4"
+    "typescript": "^4.4.4"
   },
   "peerDependencies": {
-    "@angular/compiler": ">=12.0.0",
-    "typescript": ">=3.0.0"
+    "@angular/compiler": ">=13.0.0",
+    "typescript": ">=4.4.0"
   },
   "dependencies": {
     "@phenomnomnominal/tsquery": "^4.1.1",
@@ -99,6 +99,6 @@
     "mkdirp": "^1.0.4",
     "path": "^0.12.7",
     "terminal-link": "^2.1.1",
-    "yargs": "^16.2.0"
+    "yargs": "^17.2.1"
   }
 }

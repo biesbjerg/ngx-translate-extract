@@ -1,6 +1,5 @@
 {
     "compilerOptions": {
-        "allowSyntheticDefaultImports": true,
         "noImplicitAny": true,
         "noImplicitReturns": true,
         "noImplicitThis": true,
@@ -12,7 +11,7 @@
             "es2019",
             "DOM"
         ],
-        "module": "commonjs",
+        "module": "ES2020",
         "esModuleInterop": true,
         "moduleResolution": "node",
         "outDir": "dist",

@@ -1,3 +1,3 @@
 #! /usr/bin/env node
 
-require('../dist/cli/cli.js');
+import('../dist/cli/cli.js');
