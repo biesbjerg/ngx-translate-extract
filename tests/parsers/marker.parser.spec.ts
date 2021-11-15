@@ -1,6 +1,6 @@
 import { expect } from 'chai';
 
-import { MarkerParser } from '../../src/parsers/marker.parser';
+import { MarkerParser } from '../../src/parsers/marker.parser.js';
 
 describe('MarkerParser', () => {
 	const componentFilename: string = 'test.component.ts';

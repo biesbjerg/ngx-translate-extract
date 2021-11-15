@@ -1,17 +1,19 @@
 {
     "compilerOptions": {
-        "allowSyntheticDefaultImports": true,
         "noImplicitAny": true,
         "noImplicitReturns": true,
         "noImplicitThis": true,
         "noImplicitUseStrict": true,
         "removeComments": true,
         "declaration": true,
-        "target": "es2019",
+        "target": "esnext",
         "lib": [
-            "es2019"
+            "es2019",
+            "DOM"
         ],
-        "module": "commonjs",
+        "module": "ES2020",
+        "esModuleInterop": true,
+        "moduleResolution": "node",
         "outDir": "dist",
         "sourceMap": true,
         "typeRoots" : [
@@ -19,7 +21,7 @@
         ]
     },
     "include": [
-        "src/**/*.ts"
+        "src/**/*.ts",
     ],
     "exclude": []
 }

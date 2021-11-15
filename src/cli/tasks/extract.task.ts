@@ -1,11 +1,12 @@
-import { TranslationCollection } from '../../utils/translation.collection';
-import { TaskInterface } from './task.interface';
-import { ParserInterface } from '../../parsers/parser.interface';
-import { PostProcessorInterface } from '../../post-processors/post-processor.interface';
-import { CompilerInterface } from '../../compilers/compiler.interface';
+import { TranslationCollection } from '../../utils/translation.collection.js';
+import { TaskInterface } from './task.interface.js';
+import { ParserInterface } from '../../parsers/parser.interface.js';
+import { PostProcessorInterface } from '../../post-processors/post-processor.interface.js';
+import { CompilerInterface } from '../../compilers/compiler.interface.js';
 
 import { cyan, green, bold, dim, red } from 'colorette';
-import * as glob from 'glob';
+import pkg from 'glob';
+const { sync } = pkg;
 import * as fs from 'fs';
 import * as path from 'path';
 import * as mkdirp from 'mkdirp';
@@ -146,7 +147,7 @@ export class ExtractTask implements TaskInterface {
 	 * Get all files matching pattern
 	 */
 	protected getFiles(pattern: string): string[] {
-		return glob.sync(pattern).filter((filePath) => fs.statSync(filePath).isFile());
+		return sync(pattern).filter((filePath) => fs.statSync(filePath).isFile());
 	}
 
 	protected out(...args: any[]): void {

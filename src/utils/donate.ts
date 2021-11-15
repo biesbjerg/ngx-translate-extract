@@ -1,6 +1,6 @@
 import { yellow } from 'colorette';
-import * as boxen from 'boxen';
-import * as terminalLink from 'terminal-link';
+import boxen from 'boxen';
+import terminalLink from 'terminal-link';
 
 const url = 'https://donate.biesbjerg.com';
 const link = terminalLink(url, url);
