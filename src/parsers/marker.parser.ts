@@ -1,8 +1,8 @@
 import { tsquery } from '@phenomnomnominal/tsquery';
 
-import { ParserInterface } from './parser.interface';
-import { TranslationCollection } from '../utils/translation.collection';
-import { getNamedImportAlias, findFunctionCallExpressions, getStringsFromExpression } from '../utils/ast-helpers';
+import { ParserInterface } from './parser.interface.js';
+import { TranslationCollection } from '../utils/translation.collection.js';
+import { getNamedImportAlias, findFunctionCallExpressions, getStringsFromExpression } from '../utils/ast-helpers.js';
 
 const MARKER_MODULE_NAME = '@biesbjerg/ngx-translate-extract-marker';
 const MARKER_IMPORT_NAME = 'marker';

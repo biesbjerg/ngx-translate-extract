@@ -1,8 +1,8 @@
 import { expect } from 'chai';
 
-import { PostProcessorInterface } from '../../src/post-processors/post-processor.interface';
-import { KeyAsDefaultValuePostProcessor } from '../../src/post-processors/key-as-default-value.post-processor';
-import { TranslationCollection } from '../../src/utils/translation.collection';
+import { PostProcessorInterface } from '../../src/post-processors/post-processor.interface.js';
+import { KeyAsDefaultValuePostProcessor } from '../../src/post-processors/key-as-default-value.post-processor.js';
+import { TranslationCollection } from '../../src/utils/translation.collection.js';
 
 describe('KeyAsDefaultValuePostProcessor', () => {
 	let processor: PostProcessorInterface;

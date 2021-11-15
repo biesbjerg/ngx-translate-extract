@@ -1,25 +1,26 @@
-import * as yargs from 'yargs';
+// @ts-ignore
+import yargs from 'yargs';
 import { red, green } from 'colorette';
 
-import { ExtractTask } from './tasks/extract.task';
-import { ParserInterface } from '../parsers/parser.interface';
-import { PipeParser } from '../parsers/pipe.parser';
-import { DirectiveParser } from '../parsers/directive.parser';
-import { ServiceParser } from '../parsers/service.parser';
-import { MarkerParser } from '../parsers/marker.parser';
-import { PostProcessorInterface } from '../post-processors/post-processor.interface';
-import { SortByKeyPostProcessor } from '../post-processors/sort-by-key.post-processor';
-import { KeyAsDefaultValuePostProcessor } from '../post-processors/key-as-default-value.post-processor';
-import { NullAsDefaultValuePostProcessor } from '../post-processors/null-as-default-value.post-processor';
-import { StringAsDefaultValuePostProcessor } from '../post-processors/string-as-default-value.post-processor';
-import { PurgeObsoleteKeysPostProcessor } from '../post-processors/purge-obsolete-keys.post-processor';
-import { CompilerInterface } from '../compilers/compiler.interface';
-import { CompilerFactory } from '../compilers/compiler.factory';
-import { normalizePaths } from '../utils/fs-helpers';
-import { donateMessage } from '../utils/donate';
+import { ExtractTask } from './tasks/extract.task.js';
+import { ParserInterface } from '../parsers/parser.interface.js';
+import { PipeParser } from '../parsers/pipe.parser.js';
+import { DirectiveParser } from '../parsers/directive.parser.js';
+import { ServiceParser } from '../parsers/service.parser.js';
+import { MarkerParser } from '../parsers/marker.parser.js';
+import { PostProcessorInterface } from '../post-processors/post-processor.interface.js';
+import { SortByKeyPostProcessor } from '../post-processors/sort-by-key.post-processor.js';
+import { KeyAsDefaultValuePostProcessor } from '../post-processors/key-as-default-value.post-processor.js';
+import { NullAsDefaultValuePostProcessor } from '../post-processors/null-as-default-value.post-processor.js';
+import { StringAsDefaultValuePostProcessor } from '../post-processors/string-as-default-value.post-processor.js';
+import { PurgeObsoleteKeysPostProcessor } from '../post-processors/purge-obsolete-keys.post-processor.js';
+import { CompilerInterface } from '../compilers/compiler.interface.js';
+import { CompilerFactory } from '../compilers/compiler.factory.js';
+import { normalizePaths } from '../utils/fs-helpers.js';
+import { donateMessage } from '../utils/donate.js';
 
 // First parsing pass to be able to access pattern argument for use input/output arguments
-const y = yargs.option('patterns', {
+const y = yargs().option('patterns', {
 	alias: 'p',
 	describe: 'Default patterns',
 	type: 'array',
@@ -31,7 +32,7 @@ const parsed = y.parse();
 
 export const cli = y
 	.usage('Extract strings from files for translation.\nUsage: $0 [options]')
-	.version(require(__dirname + '/../../package.json').version)
+	.version(process.env.npm_package_version)
 	.alias('version', 'v')
 	.help('help')
 	.alias('help', 'h')

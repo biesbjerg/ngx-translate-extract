@@ -10,12 +10,12 @@ import {
 	LiteralMap,
 	LiteralArray,
 	Interpolation,
-	MethodCall
+	Call
 } from '@angular/compiler';
 
-import { ParserInterface } from './parser.interface';
-import { TranslationCollection } from '../utils/translation.collection';
-import { isPathAngularComponent, extractComponentInlineTemplate } from '../utils/utils';
+import { ParserInterface } from './parser.interface.js';
+import { TranslationCollection } from '../utils/translation.collection.js';
+import { isPathAngularComponent, extractComponentInlineTemplate } from '../utils/utils.js';
 
 const TRANSLATE_PIPE_NAME = 'translate';
 
@@ -132,7 +132,7 @@ export class PipeParser implements ParserInterface {
 			return this.getTranslatablesFromAsts(ast.expressions);
 		}
 
-		if (ast instanceof MethodCall) {
+		if (ast instanceof Call) {
 			return this.getTranslatablesFromAsts(ast.args);
 		}
 
@@ -148,11 +148,11 @@ export class PipeParser implements ParserInterface {
 	}
 
 	protected expressionIsOrHasBindingPipe(exp: any): exp is BindingPipe {
-		if (exp.name && exp.name === TRANSLATE_PIPE_NAME) {
+		if (exp && exp.name && exp.name === TRANSLATE_PIPE_NAME) {
 			return true;
 		}
-		if (exp.exp && exp.exp instanceof BindingPipe) {
-			return this.expressionIsOrHasBindingPipe(exp.exp);
+		if (exp && exp.exp && exp.exp instanceof BindingPipe) {
+			return this.expressionIsOrHasBindingPipe(exp?.exp);
 		}
 		return false;
 	}

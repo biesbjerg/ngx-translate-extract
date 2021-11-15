@@ -1,6 +1,6 @@
 import { expect } from 'chai';
 
-import { isPathAngularComponent, extractComponentInlineTemplate } from '../../src/utils/utils';
+import { isPathAngularComponent, extractComponentInlineTemplate } from '../../src/utils/utils.js';
 
 describe('Utils', () => {
 	it('should recognize js extension as angular component', () => {

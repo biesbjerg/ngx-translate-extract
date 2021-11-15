@@ -1,8 +1,9 @@
-import { CompilerInterface } from './compiler.interface';
-import { TranslationCollection } from '../utils/translation.collection';
-import { stripBOM } from '../utils/utils';
+import { CompilerInterface } from './compiler.interface.js';
+import { TranslationCollection } from '../utils/translation.collection.js';
+import { stripBOM } from '../utils/utils.js';
 
-import { flatten } from 'flat';
+import pkg from 'flat';
+const { flatten } = pkg;
 
 export class JsonCompiler implements CompilerInterface {
 	public indentation: string = '\t';
