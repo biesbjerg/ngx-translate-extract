@@ -1,4 +1,4 @@
-import { TranslationCollection } from '../utils/translation.collection';
+import { TranslationCollection } from '../utils/translation.collection.js';
 
 export interface CompilerInterface {
 	extension: string;
