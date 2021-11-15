@@ -1,6 +1,6 @@
 {
-  "name": "@misternick/ngx-translate-extract",
-  "version": "7.1.38",
+  "name": "@biesbjerg/ngx-translate-extract",
+  "version": "7.1.0",
   "description": "Extract strings from projects using ngx-translate",
   "main": "dist/index.js",
   "typings": "dist/index.d.ts",
@@ -37,7 +37,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/venraij/ngx-translate-extract.git"
+    "url": "https://github.com/biesbjerg/ngx-translate-extract.git"
   },
   "keywords": [
     "angular",
