@@ -16,7 +16,7 @@
     "watch": "npm run clean && tsc --watch",
     "clean": "rimraf ./dist",
     "lint": "tslint --force './src/**/*.ts'",
-    "test": "env TS_NODE_PROJECT=\"tsconfig.spec.json\" mocha -r ts-node/register tests/**/*.spec.ts"
+    "test": "env TS_NODE_PROJECT=\"tsconfig.spec.json\" mocha"
   },
   "husky": {
     "hooks": {
