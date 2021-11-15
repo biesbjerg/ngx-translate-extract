@@ -7,7 +7,12 @@
         "noImplicitAny": false,
         "removeComments": true,
         "inlineSourceMap": true,
-        "moduleResolution": "node"
+        "moduleResolution": "node",
+        "esModuleInterop": true,
+        "allowSyntheticDefaultImports": true,
+        "noImplicitReturns": true,
+        "noImplicitThis": true,
+        "noImplicitUseStrict": true,
     }, 
     "include": ["tests/**/*.ts", "src/**/*.ts"]
 }

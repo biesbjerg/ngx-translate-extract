@@ -1,6 +1,6 @@
 {
-  "name": "@biesbjerg/ngx-translate-extract",
-  "version": "7.1.0",
+  "name": "@misternick/ngx-translate-extract",
+  "version": "7.1.38",
   "description": "Extract strings from projects using ngx-translate",
   "main": "dist/index.js",
   "typings": "dist/index.d.ts",
@@ -8,7 +8,6 @@
     "bin/",
     "dist/"
   ],
-  "type": "module",
   "bin": {
     "ngx-translate-extract": "bin/cli.js"
   },
@@ -38,7 +37,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/biesbjerg/ngx-translate-extract.git"
+    "url": "https://github.com/venraij/ngx-translate-extract.git"
   },
   "keywords": [
     "angular",
@@ -62,7 +61,7 @@
   },
   "config": {},
   "devDependencies": {
-    "@angular/compiler": "^11.2.9",
+    "@angular/compiler": "~12.2.13",
     "@types/braces": "^3.0.0",
     "@types/chai": "^4.2.16",
     "@types/flat": "^5.0.1",
@@ -76,7 +75,7 @@
     "chai": "^4.3.4",
     "husky": "^6.0.0",
     "lint-staged": "^10.5.4",
-    "mocha": "^8.3.2",
+    "mocha": "^9.1.3",
     "prettier": "^2.2.1",
     "rimraf": "^3.0.2",
     "ts-node": "^9.1.1",
@@ -87,7 +86,7 @@
     "typescript": "^4.2.4"
   },
   "peerDependencies": {
-    "@angular/compiler": ">=8.0.0",
+    "@angular/compiler": ">=12.0.0",
     "typescript": ">=3.0.0"
   },
   "dependencies": {
