@@ -7,6 +7,7 @@ npm-debug.log*
 .DS_Store
 
 # Compiled files
+dist
 src/**/*.js
 tests/**/*.js
 
