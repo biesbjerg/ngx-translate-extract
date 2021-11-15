@@ -1,6 +1,6 @@
 import { expect } from 'chai';
 
-import { TranslationCollection } from '../../src/utils/translation.collection';
+import { TranslationCollection } from '../../src/utils/translation.collection.js';
 
 describe('StringCollection', () => {
 	let collection: TranslationCollection;
