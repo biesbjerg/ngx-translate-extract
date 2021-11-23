@@ -111,7 +111,9 @@ export class PipeParser implements ParserInterface {
 		// string concatenation, e.g.:
 		// - 'foo' + 'bar' + ('baz' | translate)
 		if (ast instanceof Binary) {
-			return this.getTranslatablesFromAsts([ast.left, ast.right]);
+			if (ast?.left && ast?.right) {
+				return this.getTranslatablesFromAsts([ast.left, ast.right]);
+			}
 		}
 
 		// a pipe on the outer expression, but not the translate pipe - ignore the pipe, visit the expression, e.g.:
