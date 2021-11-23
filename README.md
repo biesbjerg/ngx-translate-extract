@@ -3,15 +3,25 @@ If this tool saves you time, please consider making a donation towards the conti
 [![Donate](images/donate-badge.png)](https://donate.biesbjerg.com)
 
 # ngx-translate-extract
+
 Extract translatable (ngx-translate) strings and save as a JSON or Gettext pot file.
 Merges with existing strings if the output file already exists.
 
 ## Install
+
 Install the package in your project:
 
 `npm install @biesbjerg/ngx-translate-extract --save-dev`
 
+Choose the version corresponding to your Angular version:
+
+| Angular       | ngx-translate-extract |
+| ------------- | --------------------- |
+| 13 (IVY only) | 8.x+                  |
+| 8.x – 12.x    | 7.x                   |
+
 Add a script to your project's `package.json`:
+
 ```json
 ...
 "scripts": {
@@ -20,6 +30,7 @@ Add a script to your project's `package.json`:
 }
 ...
 ```
+
 You can now run `npm run i18n:extract` and it will extract strings from your project.
 
 ## Usage
@@ -32,19 +43,20 @@ You can now run `npm run i18n:extract` and it will extract strings from your pro
 
 `ngx-translate-extract --input ./src-a ./src-b --output ./src/assets/i18n/strings.json`
 
-
 **Extract and save to multiple files using path expansion**
 
 `ngx-translate-extract --input ./src --output ./src/i18n/{da,en}.json`
 
 ### JSON indentation
+
 Tabs are used by default for indentation when saving extracted strings in json formats:
 
 If you want to use spaces instead, you can do the following:
 
-`ngx-translate-extract --input ./src --output ./src/i18n/en.json --format-indentation '  '`
+`ngx-translate-extract --input ./src --output ./src/i18n/en.json --format-indentation ' '`
 
 ### Marker function
+
 If you want to extract strings that are not passed directly to `TranslateService`'s `get()`/`instant()`/`stream()` methods, you can wrap them in a marker function to let `ngx-translate-extract` know you want to extract them.
 
 Install marker function:
@@ -67,6 +79,7 @@ _('Extract me');
 _Note: `ngx-translate-extract` will automatically detect the import name_
 
 ### Commandline arguments
+
 ```
 Usage:
 ngx-translate-extract [options]
