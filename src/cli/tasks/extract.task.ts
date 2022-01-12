@@ -9,7 +9,6 @@ import pkg from 'glob';
 const { sync } = pkg;
 import * as fs from 'fs';
 import * as path from 'path';
-import * as mkdirp from 'mkdirp';
 
 export interface ExtractTaskOptionsInterface {
 	replace?: boolean;
@@ -138,7 +137,7 @@ export class ExtractTask implements TaskInterface {
 	protected save(output: string, collection: TranslationCollection): void {
 		const dir = path.dirname(output);
 		if (!fs.existsSync(dir)) {
-			mkdirp.sync(dir);
+			fs.mkdirSync(dir, { recursive: true });
 		}
 		fs.writeFileSync(output, this.compiler.compile(collection));
 	}

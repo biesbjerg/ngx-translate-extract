@@ -67,7 +67,6 @@
     "@types/flat": "^5.0.2",
     "@types/gettext-parser": "4.0.1",
     "@types/glob": "^7.2.0",
-    "@types/mkdirp": "^1.0.2",
     "@types/mocha": "^9.0.0",
     "@types/node": "^14.14.37",
     "braces": "^3.0.2",
@@ -90,14 +89,13 @@
     "typescript": ">=4.4.0"
   },
   "dependencies": {
-    "@angular/compiler": "^13.0.2",
+    "@angular/compiler": "^13.1.1",
     "@phenomnomnominal/tsquery": "^4.1.1",
     "boxen": "^6.2.1",
     "colorette": "^2.0.16",
     "flat": "^5.0.2",
     "gettext-parser": "^4.2.0",
     "glob": "^7.2.0",
-    "mkdirp": "^1.0.4",
     "path": "^0.12.7",
     "terminal-link": "^3.0.0",
     "yargs": "^17.2.1"
