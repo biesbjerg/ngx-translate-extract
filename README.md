@@ -1,8 +1,13 @@
-If this tool saves you time, please consider making a donation towards the continued maintainence and development: https://donate.biesbjerg.com
+This is a fork of a great library by Biesbjerg.
+(But the original Beisbjerg's library is unfortunately no longer being developed)
 
-[![Donate](images/donate-badge.png)](https://donate.biesbjerg.com)
+This library adds compatibility for **Angular 13** and **Angular 14**...
 
 # ngx-translate-extract
+
+> Angular translations extractor (plugin for [@ngx-translate](https://github.com/ngx-translate/core))
+
+> ✓ _Angular 14, Ivy and Angular Universal (SSR) compatible_
 
 Extract translatable (ngx-translate) strings and save as a JSON or Gettext pot file.
 Merges with existing strings if the output file already exists.
@@ -11,14 +16,18 @@ Merges with existing strings if the output file already exists.
 
 Install the package in your project:
 
-`npm install @bartholomej/ngx-translate-extract --save-dev`
+```bash
+npm install @bartholomej/ngx-translate-extract --save-dev
+# yarn add @bartholomej/ngx-translate-extract --dev
+```
 
 Choose the version corresponding to your Angular version:
 
-| Angular       | ngx-translate-extract |
-| ------------- | --------------------- |
-| 13 (IVY only) | 8.x+                  |
-| 8.x – 12.x    | 7.x                   |
+| Angular    | ngx-translate-extract                                                                      |
+| ---------- | ------------------------------------------------------------------------------------------ |
+| 14         | 8.x+                                                                                       |
+| 13         | 8.x+                                                                                       |
+| 8.x – 12.x | [@biesbjerg/ngx-translate-extract](https://github.com/biesbjerg/ngx-translate-extract) 7.x |
 
 Add a script to your project's `package.json`:
 
@@ -37,15 +46,21 @@ You can now run `npm run i18n:extract` and it will extract strings from your pro
 
 **Extract from dir and save to file**
 
-`ngx-translate-extract --input ./src --output ./src/assets/i18n/strings.json`
+```bash
+ngx-translate-extract --input ./src --output ./src/assets/i18n/strings.json
+```
 
 **Extract from multiple dirs**
 
-`ngx-translate-extract --input ./src-a ./src-b --output ./src/assets/i18n/strings.json`
+```bash
+ngx-translate-extract --input ./src-a ./src-b --output ./src/assets/i18n/strings.json
+```
 
 **Extract and save to multiple files using path expansion**
 
-`ngx-translate-extract --input ./src --output ./src/i18n/{da,en}.json`
+```bash
+ngx-translate-extract --input ./src --output ./src/i18n/{da,en}.json
+```
 
 ### JSON indentation
 
@@ -53,14 +68,19 @@ Tabs are used by default for indentation when saving extracted strings in json f
 
 If you want to use spaces instead, you can do the following:
 
-`ngx-translate-extract --input ./src --output ./src/i18n/en.json --format-indentation ' '`
+```bash
+ngx-translate-extract --input ./src --output ./src/i18n/en.json --format-indentation ' '
+```
 
 ### Marker function
 
 If you want to extract strings that are not passed directly to `TranslateService`'s `get()`/`instant()`/`stream()` methods, you can wrap them in a marker function to let `ngx-translate-extract` know you want to extract them.
 
 Install marker function:
-`npm install @biesbjerg/ngx-translate-extract-marker`
+
+```bash
+npm install @biesbjerg/ngx-translate-extract-marker
+```
 
 ```ts
 import { marker } from '@biesbjerg/ngx-translate-extract-marker';
@@ -119,3 +139,7 @@ Examples:
 ## Note for GetText users
 
 Please pay attention of which version of `gettext-parser` you actually use in your project. For instance, `gettext-parser:1.2.2` does not support HTML tags in translation keys.
+
+## Credits
+
+- Original library, idea and code: [@biesbjerg/ngx-translate-extract](https://github.com/biesbjerg/ngx-translate-extract) ❤️
