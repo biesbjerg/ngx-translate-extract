@@ -9,7 +9,7 @@ Merges with existing strings if the output file already exists.
 ## Install
 Install the package in your project:
 
-`npm install @biesbjerg/ngx-translate-extract --save-dev`
+`npm install @bartholomej/ngx-translate-extract --save-dev`
 
 Add a script to your project's `package.json`:
 ```json
