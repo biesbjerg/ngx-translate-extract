@@ -1,6 +1,6 @@
 import { expect } from 'chai';
 
-import { PipeParser } from '../../src/parsers/pipe.parser';
+import { PipeParser } from '../../src/parsers/pipe.parser.js';
 
 describe('PipeParser', () => {
 	const templateFilename: string = 'test.template.html';
@@ -200,5 +200,13 @@ describe('PipeParser', () => {
 		const contents = `{{ callMe('Hello' | translate, 'World' | translate ) }}`;
 		const keys = parser.extract(contents, templateFilename).keys();
 		expect(keys).to.deep.equal([`Hello`, `World`]);
+	});
+
+	it('should not break extraction in this special case with operators in template', () => {
+		const contents = `
+			<div [class.active]="+variable === -variable.item2">Active</div>
+		`;
+		const keys = parser.extract(contents, templateFilename).keys();
+		expect(keys).to.deep.equal([]);
 	});
 });

@@ -1,8 +1,8 @@
 import { expect } from 'chai';
 
-import { PostProcessorInterface } from '../../src/post-processors/post-processor.interface';
-import { SortByKeyPostProcessor } from '../../src/post-processors/sort-by-key.post-processor';
-import { TranslationCollection } from '../../src/utils/translation.collection';
+import { PostProcessorInterface } from '../../src/post-processors/post-processor.interface.js';
+import { SortByKeyPostProcessor } from '../../src/post-processors/sort-by-key.post-processor.js';
+import { TranslationCollection } from '../../src/utils/translation.collection.js';
 
 describe('SortByKeyPostProcessor', () => {
 	let processor: PostProcessorInterface;

@@ -1,8 +1,8 @@
 import { ClassDeclaration, CallExpression } from 'typescript';
 import { tsquery } from '@phenomnomnominal/tsquery';
 
-import { ParserInterface } from './parser.interface';
-import { TranslationCollection } from '../utils/translation.collection';
+import { ParserInterface } from './parser.interface.js';
+import { TranslationCollection } from '../utils/translation.collection.js';
 import {
 	findClassDeclarations,
 	findClassPropertyByType,
@@ -11,7 +11,7 @@ import {
 	getStringsFromExpression,
 	findMethodParameterByType,
 	findConstructorDeclaration
-} from '../utils/ast-helpers';
+} from '../utils/ast-helpers.js';
 
 const TRANSLATE_SERVICE_TYPE_REFERENCE = 'TranslateService';
 const TRANSLATE_SERVICE_METHOD_NAMES = ['get', 'instant', 'stream'];

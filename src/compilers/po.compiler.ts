@@ -1,7 +1,8 @@
-import { CompilerInterface } from './compiler.interface';
-import { TranslationCollection, TranslationType } from '../utils/translation.collection';
+import { CompilerInterface } from './compiler.interface.js';
+import { TranslationCollection, TranslationType } from '../utils/translation.collection.js';
 
-import { po } from 'gettext-parser';
+import pkg from 'gettext-parser';
+const { po } = pkg;
 
 export class PoCompiler implements CompilerInterface {
 	public extension: string = 'po';

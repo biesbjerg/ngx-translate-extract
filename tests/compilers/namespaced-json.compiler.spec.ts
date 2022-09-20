@@ -1,7 +1,7 @@
 import { expect } from 'chai';
 
-import { TranslationCollection } from '../../src/utils/translation.collection';
-import { NamespacedJsonCompiler } from '../../src/compilers/namespaced-json.compiler';
+import { TranslationCollection } from '../../src/utils/translation.collection.js';
+import { NamespacedJsonCompiler } from '../../src/compilers/namespaced-json.compiler.js';
 
 describe('NamespacedJsonCompiler', () => {
 	let compiler: NamespacedJsonCompiler;
