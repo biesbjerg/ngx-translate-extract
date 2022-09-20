@@ -17,9 +17,9 @@ import {
 	LiteralMap
 } from '@angular/compiler';
 
-import { ParserInterface } from './parser.interface';
-import { TranslationCollection } from '../utils/translation.collection';
-import { isPathAngularComponent, extractComponentInlineTemplate } from '../utils/utils';
+import { ParserInterface } from './parser.interface.js';
+import { TranslationCollection } from '../utils/translation.collection.js';
+import { isPathAngularComponent, extractComponentInlineTemplate } from '../utils/utils.js';
 
 const TRANSLATE_ATTR_NAME = 'translate';
 type ElementLike = Element | Template;

@@ -1,8 +1,8 @@
 import { expect } from 'chai';
 
-import { PostProcessorInterface } from '../../src/post-processors/post-processor.interface';
-import { PurgeObsoleteKeysPostProcessor } from '../../src/post-processors/purge-obsolete-keys.post-processor';
-import { TranslationCollection } from '../../src/utils/translation.collection';
+import { PostProcessorInterface } from '../../src/post-processors/post-processor.interface.js';
+import { PurgeObsoleteKeysPostProcessor } from '../../src/post-processors/purge-obsolete-keys.post-processor.js';
+import { TranslationCollection } from '../../src/utils/translation.collection.js';
 
 describe('PurgeObsoleteKeysPostProcessor', () => {
 	let postProcessor: PostProcessorInterface;

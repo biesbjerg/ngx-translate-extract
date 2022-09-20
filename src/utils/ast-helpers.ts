@@ -1,19 +1,17 @@
 import { tsquery } from '@phenomnomnominal/tsquery';
 import {
-	SyntaxKind,
 	Node,
 	NamedImports,
 	Identifier,
 	ClassDeclaration,
 	ConstructorDeclaration,
-	isStringLiteralLike,
-	isArrayLiteralExpression,
 	CallExpression,
 	Expression,
-	isBinaryExpression,
-	isConditionalExpression,
 	PropertyAccessExpression
 } from 'typescript';
+
+import pkg from 'typescript';
+const { SyntaxKind, isStringLiteralLike, isArrayLiteralExpression, isBinaryExpression, isConditionalExpression } = pkg;
 
 export function getNamedImports(node: Node, moduleName: string): NamedImports[] {
 	const query = `ImportDeclaration[moduleSpecifier.text="${moduleName}"] NamedImports`;

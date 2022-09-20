@@ -10,12 +10,12 @@ import {
 	LiteralMap,
 	LiteralArray,
 	Interpolation,
-	MethodCall
+	Call
 } from '@angular/compiler';
 
-import { ParserInterface } from './parser.interface';
-import { TranslationCollection } from '../utils/translation.collection';
-import { isPathAngularComponent, extractComponentInlineTemplate } from '../utils/utils';
+import { ParserInterface } from './parser.interface.js';
+import { TranslationCollection } from '../utils/translation.collection.js';
+import { isPathAngularComponent, extractComponentInlineTemplate } from '../utils/utils.js';
 
 const TRANSLATE_PIPE_NAME = 'translate';
 
@@ -111,7 +111,9 @@ export class PipeParser implements ParserInterface {
 		// string concatenation, e.g.:
 		// - 'foo' + 'bar' + ('baz' | translate)
 		if (ast instanceof Binary) {
-			return this.getTranslatablesFromAsts([ast.left, ast.right]);
+			if (ast?.left && ast?.right) {
+				return this.getTranslatablesFromAsts([ast.left, ast.right]);
+			}
 		}
 
 		// a pipe on the outer expression, but not the translate pipe - ignore the pipe, visit the expression, e.g.:
@@ -132,7 +134,7 @@ export class PipeParser implements ParserInterface {
 			return this.getTranslatablesFromAsts(ast.expressions);
 		}
 
-		if (ast instanceof MethodCall) {
+		if (ast instanceof Call) {
 			return this.getTranslatablesFromAsts(ast.args);
 		}
 
